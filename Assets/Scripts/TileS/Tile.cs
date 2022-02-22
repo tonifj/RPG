@@ -8,7 +8,7 @@ public class Tile : MonoBehaviour
     bool occupied; //tells if is there something in the tile
     int size;
 
-    Vector2 battle_map_pos;
+    Vector2Int battle_map_pos;
 
 
     private GameObject TileSelector;
@@ -46,12 +46,12 @@ public class Tile : MonoBehaviour
 
     }
 
-    public Vector2 GetBattleMapPos()
+    public Vector2Int GetBattleMapPos()
     {
         return battle_map_pos;
     }
 
-    public void SetBattleMapPos(Vector2 v)
+    public void SetBattleMapPos(Vector2Int v)
     {
         battle_map_pos = v;
     }

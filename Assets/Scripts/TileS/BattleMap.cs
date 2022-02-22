@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class BattleMap : MonoBehaviour
 {
+    public Material selection_material;
+    public int map_width;//x
+    public int map_depth;//z
     GameObject[] TilesGO;
     Tile[] Tiles;
-    Vector2 tile_matrix; //defines the matrix of tiles
+    Vector2Int tile_matrix; //defines the matrix of tiles
 
     void Start()
     {
@@ -15,9 +18,11 @@ public class BattleMap : MonoBehaviour
         Tiles = new Tile[TilesGO.Length];
         CopyMatrix();
 
-        tile_matrix = new Vector2(0, 0);
-        SetTileMatrix();
-        SetMap();
+        tile_matrix = new Vector2Int(0, 0);
+        SetTileMatrix(); //Sets the tile's positions like a matrix
+        SetMap(); //Places the tiles depending on its matrix index
+
+        HighlightTile(new Vector2Int(1, 0));
     }
 
     // Update is called once per frame
@@ -38,7 +43,7 @@ public class BattleMap : MonoBehaviour
         foreach (Tile t in Tiles)
         {
 
-            if (tile_matrix.x >= 10)
+            if (tile_matrix.x >= map_width)
             {
                 tile_matrix.x = 0;
                 ++tile_matrix.y;
@@ -56,6 +61,17 @@ public class BattleMap : MonoBehaviour
         {
             t.SetTilePos(t.GetBattleMapPos());
         }
+    }
+
+    Tile GetTile(Vector2Int v)
+    {
+        return Tiles[map_width * v.x + v.y].GetComponent<Tile>();
+    }
+
+    void HighlightTile(Vector2Int v)
+    {
+
+        Tiles[map_width * v.x + v.y].GetComponent<MeshRenderer>().material = selection_material;
     }
   
 }
