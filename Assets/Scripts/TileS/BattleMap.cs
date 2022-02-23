@@ -23,8 +23,8 @@ public class BattleMap : MonoBehaviour
         SetMap(); //Places the tiles depending on its matrix index
         invalidTile = new Tile();
 
-        HighlightTile(GetBackNeighborTile(GetTile(new Vector2Int(2, 1))));
-
+        TileDistance(GetTile(new Vector2Int(0, 0)), GetTile(new Vector2Int(2, 2)));
+       // ActionTileSelection(GetTile(new Vector2Int(3, 3)), 0);
     }
 
     // Update is called once per frame
@@ -72,22 +72,22 @@ public class BattleMap : MonoBehaviour
 
     void HighlightTile(Tile tile)
     {
-        if(IsValidTile(tile))
+        if (IsValidTile(tile))
             tile.gameObject.GetComponent<MeshRenderer>().material = selection_material;
     }
 
     Tile GetRightNeighborTile(Tile origin)
     {
-        if (origin.GetBattleMapPos().x < map_width-1)
-        return Tiles[(origin.GetBattleMapPos().x) + 1 + (map_width * origin.GetBattleMapPos().y)];
+        if (origin.GetBattleMapPos().x < map_width - 1)
+            return Tiles[(origin.GetBattleMapPos().x) + 1 + (map_width * origin.GetBattleMapPos().y)];
 
-         else
-           return invalidTile;
+        else
+            return invalidTile;
     }
 
     Tile GetLeftNeighborTile(Tile origin)
     {
-        if (origin.GetBattleMapPos().x -1 >= 0)
+        if (origin.GetBattleMapPos().x - 1 >= 0)
             return Tiles[(origin.GetBattleMapPos().x) - 1 + (map_width * origin.GetBattleMapPos().y)];
 
         else
@@ -96,8 +96,8 @@ public class BattleMap : MonoBehaviour
 
     Tile GetFrontNeighborTile(Tile origin)
     {
-        if (origin.GetBattleMapPos().y < map_depth -1)
-            return Tiles[origin.GetBattleMapPos().x + origin.GetBattleMapPos().y*map_depth + map_depth];
+        if (origin.GetBattleMapPos().y < map_depth - 1)
+            return Tiles[origin.GetBattleMapPos().x + origin.GetBattleMapPos().y * map_depth + map_depth];
 
         else
             return invalidTile;
@@ -105,22 +105,42 @@ public class BattleMap : MonoBehaviour
 
     Tile GetBackNeighborTile(Tile origin)
     {
-        if (origin.GetBattleMapPos().y-1 >= 0)
+        if (origin.GetBattleMapPos().y - 1 >= 0)
             return Tiles[origin.GetBattleMapPos().x + origin.GetBattleMapPos().y * map_depth - map_depth];
 
         else
             return invalidTile;
     }
 
-    void GetBackNeighborTile()
-    {
-
-    }
-
     bool IsValidTile(Tile t) //there is no tile with negative positions
     {
         Debug.Log(t.GetBattleMapPos());
         return t.GetBattleMapPos().x != -1;
+    }
+
+    void TileDistance(Tile origin, Tile end)
+    {
+        int dist = 0;
+
+        for (int i = origin.GetBattleMapPos().x; i < end.GetBattleMapPos().x; ++i)
+            ++dist;
+
+        for (int i = origin.GetBattleMapPos().y; i < end.GetBattleMapPos().y; ++i)
+            ++dist;
+
+        Debug.Log(dist);
+        //return dist;
+    }
+
+    void ActionTileSelection(Tile origin, int range)
+    {
+        for (int i = 0; i < Tiles.Length; ++i)
+        {
+            //if (TileDistance(origin, Tiles[i]) <= range)
+            //{
+            //    HighlightTile(Tiles[i]);
+            //}
+        }
     }
 
 }
