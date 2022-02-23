@@ -23,7 +23,7 @@ public class BattleMap : MonoBehaviour
         SetMap(); //Places the tiles depending on its matrix index
         invalidTile = new Tile();
 
-        HighlightTile(GetRightNeighborTile(GetTile(new Vector2Int(8, 0))));
+        HighlightTile(GetLeftNeighborTile(GetTile(new Vector2Int(0, 0))));
 
     }
 
@@ -70,24 +70,10 @@ public class BattleMap : MonoBehaviour
         return Tiles[v.x + (map_width * v.y)].GetComponent<Tile>();
     }
 
-    void HighlightTile(Vector2Int v)
-    {
-        Tiles[map_width * v.x + v.y].GetComponent<MeshRenderer>().material = selection_material;
-    }
-
     void HighlightTile(Tile tile)
     {
         if(IsValidTile(tile))
             tile.gameObject.GetComponent<MeshRenderer>().material = selection_material;
-    }
-
-    Tile GetRightNeighborTile(Vector2Int origin)
-    {
-        if (origin.x < map_width)
-            return Tiles[origin.x + 1 + (map_width * origin.y)];
-
-        else
-            return invalidTile;
     }
 
     Tile GetRightNeighborTile(Tile origin)
@@ -99,14 +85,13 @@ public class BattleMap : MonoBehaviour
            return invalidTile;
     }
 
-    Tile GetLeftNeighborTile(Vector2Int origin)
-    {
-        return Tiles[(map_width * origin.x) - 1 + origin.y];
-    }
-
     Tile GetLeftNeighborTile(Tile origin)
     {
-        return Tiles[(map_width * origin.GetBattleMapPos().x) - 1 + origin.GetBattleMapPos().y];
+        if (origin.GetBattleMapPos().x -1 >= 0)
+            return Tiles[(origin.GetBattleMapPos().x) - 1 + (map_width * origin.GetBattleMapPos().y)];
+
+        else
+            return invalidTile;
     }
 
     Tile GetFrontNeighborTile(Vector2Int origin)
