@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BattleMap : MonoBehaviour
 {
+    public Material origin_tile_material;
     public Material selection_material;
     public int map_width;//x
     public int map_depth;//z
@@ -23,8 +24,8 @@ public class BattleMap : MonoBehaviour
         SetMap(); //Places the tiles depending on its matrix index
         invalidTile = new Tile();
 
-        TileDistance(GetTile(new Vector2Int(0, 0)), GetTile(new Vector2Int(2, 2)));
-       // ActionTileSelection(GetTile(new Vector2Int(3, 3)), 0);
+
+        ActionTileSelection(GetTile(new Vector2Int(1, 1)), 2);
     }
 
     // Update is called once per frame
@@ -70,10 +71,18 @@ public class BattleMap : MonoBehaviour
         return Tiles[v.x + (map_width * v.y)].GetComponent<Tile>();
     }
 
-    void HighlightTile(Tile tile)
+    void HighlightTile(Tile tile, bool isOrigin)
     {
         if (IsValidTile(tile))
-            tile.gameObject.GetComponent<MeshRenderer>().material = selection_material;
+        {
+            if (isOrigin)
+                tile.gameObject.GetComponent<MeshRenderer>().material = origin_tile_material;
+            else
+                tile.gameObject.GetComponent<MeshRenderer>().material = selection_material;
+        }
+
+
+
     }
 
     Tile GetRightNeighborTile(Tile origin)
@@ -114,33 +123,56 @@ public class BattleMap : MonoBehaviour
 
     bool IsValidTile(Tile t) //there is no tile with negative positions
     {
-        Debug.Log(t.GetBattleMapPos());
         return t.GetBattleMapPos().x != -1;
     }
 
-    void TileDistance(Tile origin, Tile end)
+    int TileDistance(Tile origin, Tile end)
     {
         int dist = 0;
 
-        for (int i = origin.GetBattleMapPos().x; i < end.GetBattleMapPos().x; ++i)
-            ++dist;
+        if (origin.GetBattleMapPos().x < end.GetBattleMapPos().x)
+        {
+            for (int i = origin.GetBattleMapPos().x; i < end.GetBattleMapPos().x; ++i)
+                ++dist;
+        }
 
-        for (int i = origin.GetBattleMapPos().y; i < end.GetBattleMapPos().y; ++i)
-            ++dist;
+        else
+        {
+            for (int i = end.GetBattleMapPos().x; i < origin.GetBattleMapPos().x; ++i)
+                ++dist;
+        }
+
+
+        if (origin.GetBattleMapPos().y < end.GetBattleMapPos().y)
+        {
+            for (int i = origin.GetBattleMapPos().y; i < end.GetBattleMapPos().y; ++i)
+                ++dist;
+        }
+
+        else
+        {
+            for (int i = end.GetBattleMapPos().y; i < origin.GetBattleMapPos().y; ++i)
+                ++dist;
+        }
 
         Debug.Log(dist);
-        //return dist;
+        return dist;
     }
 
     void ActionTileSelection(Tile origin, int range)
     {
-        for (int i = 0; i < Tiles.Length; ++i)
+        if (range == 0)
+            HighlightTile(origin, true);
+        else
         {
-            //if (TileDistance(origin, Tiles[i]) <= range)
-            //{
-            //    HighlightTile(Tiles[i]);
-            //}
+            for (int i = 0; i < Tiles.Length; ++i)
+            {
+                if (TileDistance(origin, Tiles[i]) <= range)
+                    HighlightTile(Tiles[i], false);
+            }
+            HighlightTile(origin, true);
         }
+
     }
 
 }
