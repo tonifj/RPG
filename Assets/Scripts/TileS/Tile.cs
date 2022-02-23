@@ -13,6 +13,13 @@ public class Tile : MonoBehaviour
 
     private GameObject TileSelector;
 
+    public Tile()
+    {
+        occupied = false;
+        battle_map_pos = new Vector2Int(-1, -1);
+        size = 0;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -24,26 +31,6 @@ public class Tile : MonoBehaviour
     void Update()
     {
         
-    }
-
-    void GetRightNeighborTile()
-    {
-
-    }
-
-    void GetLeftNeighborTile()
-    {
-
-    }
-
-    void GetFrontNeighborTile()
-    {
-
-    }
-
-    void GetBackNeighborTile()
-    {
-
     }
 
     public Vector2Int GetBattleMapPos()
