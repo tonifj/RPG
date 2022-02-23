@@ -23,7 +23,7 @@ public class BattleMap : MonoBehaviour
         SetMap(); //Places the tiles depending on its matrix index
         invalidTile = new Tile();
 
-        HighlightTile(GetLeftNeighborTile(GetTile(new Vector2Int(0, 0))));
+        HighlightTile(GetFrontNeighborTile(GetTile(new Vector2Int(2, 0))));
 
     }
 
@@ -94,14 +94,13 @@ public class BattleMap : MonoBehaviour
             return invalidTile;
     }
 
-    Tile GetFrontNeighborTile(Vector2Int origin)
-    {
-        return Tiles[(map_width * origin.x) + origin.y];
-    }
-
     Tile GetFrontNeighborTile(Tile origin)
     {
-        return Tiles[(10 * origin.GetBattleMapPos().x) + origin.GetBattleMapPos().y];
+        if (origin.GetBattleMapPos().y < map_depth -1)
+            return Tiles[origin.GetBattleMapPos().x + origin.GetBattleMapPos().y*map_depth + map_depth];
+
+        else
+            return invalidTile;
     }
 
     void GetBackNeighborTile()
