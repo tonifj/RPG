@@ -24,8 +24,7 @@ public class BattleMap : MonoBehaviour
         SetMap(); //Places the tiles depending on its matrix index
         invalidTile = new Tile();
 
-
-        ActionTileSelection(GetTile(new Vector2Int(1, 1)), 2);
+        ActionTileSelection(GetTile(new Vector2Int(3, 3)), 2);
     }
 
     // Update is called once per frame
@@ -80,9 +79,6 @@ public class BattleMap : MonoBehaviour
             else
                 tile.gameObject.GetComponent<MeshRenderer>().material = selection_material;
         }
-
-
-
     }
 
     Tile GetRightNeighborTile(Tile origin)
@@ -155,7 +151,6 @@ public class BattleMap : MonoBehaviour
                 ++dist;
         }
 
-        Debug.Log(dist);
         return dist;
     }
 
@@ -172,8 +167,6 @@ public class BattleMap : MonoBehaviour
             }
             HighlightTile(origin, true);
         }
-
     }
-
 }
 

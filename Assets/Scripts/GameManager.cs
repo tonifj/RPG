@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject[] Units;
-    GameObject unit_on_top;
-    // Start is called before the first frame update
+    public Unit[] PlayerUnits;
+    public Mission current_mission;
+
+
+    Mission[] Missions;
     void Start()
     {
-        
+        Mission mission1;
     }
 
     // Update is called once per frame
@@ -18,6 +20,15 @@ public class GameManager : MonoBehaviour
         
     }
 
+    void PlayerWin()
+    {
+
+    }
+
+    void PlayerLose()
+    {
+
+    }
   
 
 }

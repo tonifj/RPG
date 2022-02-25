@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - tile
+  - player unit
+  - enemy unit
   layers:
   - Default
   - TransparentFX
