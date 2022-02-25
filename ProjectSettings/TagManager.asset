@@ -7,6 +7,7 @@ TagManager:
   - tile
   - player unit
   - enemy unit
+  - game manager
   layers:
   - Default
   - TransparentFX

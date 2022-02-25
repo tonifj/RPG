@@ -6,49 +6,46 @@ public class Mission : MonoBehaviour
 {
     int MAX_UNITS = 6;
     int pesetas_reward;
+
+    //TODO set equipment reward
+
     GameObject[] EnemyUnitsGO;
-    Unit[] EnemyUnits;
+    List <Unit> EnemyUnits = new List<Unit>();
     int id;
     void Start()
     {
-        EnemyUnitsGO = GameObject.FindGameObjectsWithTag("enemy unit");
-        EnemyUnits = new Unit[EnemyUnitsGO.Length];
-
-        CopyEnemyMatrix();
-
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-    }
-    void CopyEnemyMatrix()
-    {
-        for (int i = 0; i < EnemyUnitsGO.Length; ++i)
-        {
-            EnemyUnits[i] = EnemyUnitsGO[i].GetComponent<Unit>();
-            EnemyUnits[i].SetEnemyUnit();
-        }
+
     }
 
-    public Unit[] GetEnemyUnits()
+    public List<Unit> GetEnemyUnits()
     {
         return EnemyUnits;
     }
 
-    public void SetMissionUnits(ClassType type1, int lvl1, ClassType type2, int lvl2, ClassType type3, int lvl3,
-                                ClassType type4, int lvl4, ClassType type5, int lvl5, ClassType type6, int lvl6)
+    public void SetMission(int new_id, int reward)
     {
-       //TODO
+        id = new_id;
+        pesetas_reward = reward;
     }
 
-    Unit CreateUnit(ClassType type, int lvl)
+    public void CreateEnemyUnit(ClassType type, int lvl)
     {
-        Unit new_unit = gameObject.AddComponent<Unit>();
+        Unit new_unit = new Unit();
         new_unit.SetClass(type);
         new_unit.SetLvl(lvl); //Also sets the stats
-
-        return new_unit;
+        new_unit.SetEnemyUnit();
+        EnemyUnits.Add(new_unit);
     }
+
+    public void PlaceUnit(Unit unit, Vector2Int tile)
+    {
+        unit.SetPosition(tile);
+    }
+
 }

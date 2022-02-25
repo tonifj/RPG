@@ -4,6 +4,7 @@ using UnityEngine;
 
 public enum ClassType
 {
+    RECRUIT,
     AGENT,
     SPECIALIST,
     RIOT,
@@ -15,11 +16,24 @@ public enum ClassType
     WHITE_ARCANIST,
     MATTER_CONTROLLER,
     WEAPON_MASTER,
-    GOD
+    GOD,
+    EMPTY
 }
+
+public enum Genre
+{
+    MALE,
+    FEMALE
+}
+
 public class Unit : MonoBehaviour
 {
+    string name;
+
     public ClassType class_type;
+    Genre genre;
+
+    Vector2Int position;
 
     bool is_player_unit;
 
@@ -29,7 +43,6 @@ public class Unit : MonoBehaviour
 
     int hp;
     int psique;
-
     int physical_attack;
     int physical_resistance;
     int mental_attack;
@@ -45,6 +58,157 @@ public class Unit : MonoBehaviour
     {
 
     }
+    void LvlUp()
+    {
+        switch (class_type)
+        {
+            case ClassType.RECRUIT:
+                {
+                    hp += 6;
+                    psique += 1;
+                    physical_attack += 6;
+                    physical_resistance += 5;
+                    mental_attack += 4;
+                    mental_resistance += 5;
+                }
+                break;
+
+            case ClassType.AGENT:
+                {
+                    hp += 8;
+                    psique += 1;
+                    physical_attack += 7;
+                    physical_resistance += 7;
+                    mental_attack += 6;
+                    mental_resistance += 7;
+
+                }
+                break;
+
+            case ClassType.SPECIALIST:
+                {
+                    hp += 5;
+                    psique += 4;
+                    physical_attack += 6;
+                    physical_resistance += 7;
+                    mental_attack += 8;
+                    mental_resistance += 8;
+                }
+                break;
+
+            case ClassType.RIOT:
+                {
+                    hp += 7;
+                    psique += 1;
+                    physical_attack += 6;
+                    physical_resistance += 8;
+                    mental_attack += 5;
+                    mental_resistance += 7;
+                }
+                break;
+
+            case ClassType.SNIPER:
+                {
+                    hp += 6;
+                    psique += 2;
+                    physical_attack += 6;
+                    physical_resistance += 7;
+                    mental_attack += 6;
+                    mental_resistance += 7;
+                }
+                break;
+
+            case ClassType.COMBAT_MEDIC:
+                {
+                    hp += 6;
+                    psique += 5;
+                    physical_attack += 6;
+                    physical_resistance += 7;
+                    mental_attack += 8;
+                    mental_resistance += 8;
+                }
+                break;
+
+            case ClassType.ARCANIST:
+                {
+                    hp += 2;
+                    psique += 4;
+                    physical_attack += 6;
+                    physical_resistance += 6;
+                    mental_attack += 9;
+                    mental_resistance += 8;
+                }
+                break;
+
+            case ClassType.GEO:
+                {
+                    hp += 8;
+                    psique += 1;
+                    physical_attack += 7;
+                    physical_resistance += 9;
+                    mental_attack += 6;
+                    mental_resistance += 7;
+                }
+                break;
+
+            case ClassType.SPY:
+                {
+                    hp += 7;
+                    psique += 2;
+                    physical_attack += 8;
+                    physical_resistance += 6;
+                    mental_attack += 6;
+                    mental_resistance += 5;
+                }
+                break;
+
+            case ClassType.WHITE_ARCANIST:
+                {
+                    hp += 4;
+                    psique += 3;
+                    physical_attack += 6;
+                    physical_resistance += 6;
+                    mental_attack += 8;
+                    mental_resistance += 9;
+                }
+                break;
+
+            case ClassType.MATTER_CONTROLLER:
+                {
+                    hp += 4;
+                    psique += 3;
+                    physical_attack += 6;
+                    physical_resistance += 6;
+                    mental_attack += 10;
+                    mental_resistance += 8;
+                }
+                break;
+
+            case ClassType.WEAPON_MASTER:
+                {
+                    hp += 8;
+                    psique += 2;
+                    physical_attack += 9;
+                    physical_resistance += 8;
+                    mental_attack += 6;
+                    mental_resistance += 6;
+                }
+                break;
+
+            case ClassType.GOD:
+                {
+                    hp += 20;
+                    psique += 7;
+                    physical_attack += 9;
+                    physical_resistance += 10;
+                    mental_attack += 9;
+                    mental_resistance += 10;
+                }
+                break;
+
+        }
+    }
+
 
     public void SetEnemyUnit()
     {
@@ -55,6 +219,18 @@ public class Unit : MonoBehaviour
     {
         switch (class_type)
         {
+            case ClassType.RECRUIT:
+                {
+                    hp = 30;
+                    psique = 10;
+                    physical_attack = 50;
+                    physical_resistance = 50;
+                    mental_attack = 50;
+                    mental_resistance = 50;
+                    speed = 100;
+                    movement_range = 4;
+                }
+                break;
             case ClassType.AGENT:
                 {
                     hp = 40;
@@ -214,146 +390,6 @@ public class Unit : MonoBehaviour
         }
     }
 
-    void LvlUp()
-    {
-        switch (class_type)
-        {
-            case ClassType.AGENT:
-                {
-                    hp += 8;
-                    psique += 1;
-                    physical_attack += 7;
-                    physical_resistance += 7;
-                    mental_attack += 6;
-                    mental_resistance += 7;
-           
-                }
-                break;
-
-            case ClassType.SPECIALIST:
-                {
-                    hp += 5;
-                    psique += 4;
-                    physical_attack += 6;
-                    physical_resistance += 7;
-                    mental_attack += 8;
-                    mental_resistance += 8;
-                }
-                break;
-
-            case ClassType.RIOT:
-                {
-                    hp += 7;
-                    psique += 1;
-                    physical_attack += 6;
-                    physical_resistance += 8;
-                    mental_attack += 5;
-                    mental_resistance += 7;
-                }
-                break;
-
-            case ClassType.SNIPER:
-                {
-                    hp += 6;
-                    psique += 2;
-                    physical_attack += 6;
-                    physical_resistance += 7;
-                    mental_attack += 6;
-                    mental_resistance += 7;
-                }
-                break;
-
-            case ClassType.COMBAT_MEDIC:
-                {
-                    hp += 6;
-                    psique += 5;
-                    physical_attack += 6;
-                    physical_resistance += 7;
-                    mental_attack += 8;
-                    mental_resistance += 8;
-                }
-                break;
-
-            case ClassType.ARCANIST:
-                {
-                    hp += 2;
-                    psique += 4;
-                    physical_attack += 6;
-                    physical_resistance += 6;
-                    mental_attack += 9;
-                    mental_resistance += 8;
-                }
-                break;
-
-            case ClassType.GEO:
-                {
-                    hp += 8;
-                    psique += 1;
-                    physical_attack += 7;
-                    physical_resistance += 9;
-                    mental_attack += 6;
-                    mental_resistance += 7;
-                }
-                break;
-
-            case ClassType.SPY:
-                {
-                    hp += 7;
-                    psique += 2;
-                    physical_attack += 8;
-                    physical_resistance += 6;
-                    mental_attack += 6;
-                    mental_resistance += 5;
-                }
-                break;
-
-            case ClassType.WHITE_ARCANIST:
-                {
-                    hp += 4;
-                    psique += 3;
-                    physical_attack += 6;
-                    physical_resistance += 6;
-                    mental_attack += 8;
-                    mental_resistance += 9;
-                }
-                break;
-
-            case ClassType.MATTER_CONTROLLER:
-                {
-                    hp += 4;
-                    psique += 3;
-                    physical_attack += 6;
-                    physical_resistance += 6;
-                    mental_attack += 10;
-                    mental_resistance += 8;
-                }
-                break;
-
-            case ClassType.WEAPON_MASTER:
-                {
-                    hp += 8;
-                    psique += 2;
-                    physical_attack += 9;
-                    physical_resistance += 8;
-                    mental_attack += 6;
-                    mental_resistance += 6;
-                }
-                break;
-
-            case ClassType.GOD:
-                {
-                    hp += 20;
-                    psique += 7;
-                    physical_attack += 9;
-                    physical_resistance += 10;
-                    mental_attack += 9;
-                    mental_resistance += 10;
-                }
-                break;
-
-        }
-    }
-
     public void SetClass(ClassType type)
     {
         class_type = type;
@@ -367,4 +403,60 @@ public class Unit : MonoBehaviour
             LvlUp();
         }
     }
+
+    public int GetSpeed()
+    {
+        return speed;
+    }
+
+    public void SetPosition(Vector2Int new_pos)
+    {
+        position = new_pos;
+    }
+
+    void GenerateRandomName(Genre genre)
+    {
+        switch (genre)
+        {
+            case Genre.MALE:
+                {
+                    string[] male_names =
+                    {
+                        "Hugo","Martín","Lucas","Mateo","Lleó","Daniel","Alejandro","Pablo","Manuel","Álvaro","Adrián","David","Mario",
+                         "Enzo","Diego","Marcos","Izan","Javier","Marco","Álex","Bruno","Oliver","Miquel","Thiago","Antonio","Marc","Carlos",
+                         "Ángel","Juan","Gonzalo","Gael", "Sergio", "Nico" ,"Tobías","Gabi","Jorge","José","Adam","Liam","Eric","Samuel","Darío","Héctor",
+                         "Luca","Iker","Amir","Rodrigo","Saúl","Víctor","Francisco","Iván","Jesús","Jaime","Aarón","Rubén","Ian","Guille","Erik","Mohamed",
+                         "Julen","Luís","Pau","Unai","Rafa","Joel","Alberto","Pedro","Raúl","Aitor","Santi","Roberto","Pol","Nil","Noah","Jan","Asier","Fer",
+                         "Alonso","Matías","Biel","Andrés","Axel","Ismael","Martí","Arnau","Imran","Luka","Ignacio","Aleix","Alan","Elías","Omar","Isaac",
+                         "Pepe","Jon","Teo","Mauro","Óscar","Cristian","Leo"
+                    };
+
+                    name = male_names[Random.Range(0, male_names.Length - 1)];
+                }
+
+                break;
+
+            case Genre.FEMALE:
+                {
+                    string[] female_names =
+                        {
+                            "Lucía","Sofía","Martina","María","Julia","Paula","Valeria","Emma","Daniela","Carla","Alba","Noa","Alma","Sara",
+                             "Carmen","Vega","Lara","Mia","Valentina","Olivia ","Claudia","Jimena","Lola","Chlóe","Aitana","Abril","Ana","Laia",
+                             "Aura","Candela","Alejandra","Elena","Vera","Manuela","Adriana","Inés","Marta","Carlota","Irene","Vicky","Blanca",
+                             "Marina","Laura","Rocío","Alicia","Clara","Nora","Lía","Ariadna","Zoe","Samira","Marga","Celia","Leire","Eva","Ángela",
+                             "Andrea","África","Luna","Ainhoa","Ainara","India","Nerea","Ona","Elsa","Isabel","Leyre","Gabriela","Aina","Aida","Iria",
+                             "Ona","Mar","Goretti","Lina","Mariona","Adara","Naia","Iris","Maria","Mara","Elena","Yasmina","Natalia","Arlet","Diana",
+                             "Aroa","Amaia","Cristina","Nahia","Isabella","Malak","Elia","Carolina","Berta","Fátima","Nuria","Azahara","Macarena","Aurora",
+                             "Gaia", "Gina", "Irati", "Jade","Lila", "Eris"
+                    };
+
+                    name = female_names[Random.Range(0, female_names.Length - 1)];
+
+                }
+                break;
+        }
+
+    }
+
+  
 }
