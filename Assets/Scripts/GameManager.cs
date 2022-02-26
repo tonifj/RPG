@@ -18,9 +18,12 @@ public class GameManager : MonoBehaviour
         battleManagerGO = GameObject.FindGameObjectWithTag("battle manager");
         battleManager = battleManagerGO.GetComponent<BattleManager>();
 
+        playerUnits[0].SetSpeed(16);
+
         //Mission 1
         Mission introduction = CreateMission(1, 50);
         introduction.CreateEnemyUnit(ClassType.RECRUIT, 1);
+        introduction.GetEnemyUnits()[0].SetSpeed(15);
         introduction.PlaceUnit(introduction.GetEnemyUnits()[0], new Vector2Int(2, 2));
         missions.Add(introduction);
 

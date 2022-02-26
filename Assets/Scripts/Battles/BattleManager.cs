@@ -23,14 +23,14 @@ public class BattleManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        SetTurnOrder();
     }
 
-    public void SetTurnOrder()
+    void SetTurnOrder()
     {
         for (int i = 0; i < TurnOrder.Count; ++i)
         {
-            if (i < TurnOrder.Count && TurnOrder[i].GetSpeed() < TurnOrder[i + 1].GetSpeed())
+            if (i < TurnOrder.Count-1 && TurnOrder[i].GetSpeed() < TurnOrder[i + 1].GetSpeed())
             {
                 Unit temp = TurnOrder[i];
                 TurnOrder[i] = TurnOrder[i + 1];

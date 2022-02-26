@@ -390,6 +390,11 @@ public class Unit : MonoBehaviour
         }
     }
 
+    public void SetSpeed(int s)
+    {
+        speed = s;
+    }
+
     public void SetClass(ClassType type)
     {
         class_type = type;
@@ -457,6 +462,5 @@ public class Unit : MonoBehaviour
         }
 
     }
-
   
 }
