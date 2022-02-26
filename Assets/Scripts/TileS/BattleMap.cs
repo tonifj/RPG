@@ -17,13 +17,6 @@ public class BattleMap : MonoBehaviour
     void Start()
     {
 
-
-
-        //SetTileMatrix(); //Sets the tile's positions like a matrix
-        // SetMap(); //Places the tiles depending on its matrix index
-
-
-        // ActionTileSelection(GetTile(new Vector2Int(3, 3)), 2);
     }
 
     // Update is called once per frame

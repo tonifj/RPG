@@ -34,11 +34,12 @@ public class Mission : MonoBehaviour
         pesetas_reward = reward;
     }
 
-    public void CreateEnemyUnit(ClassType type, int lvl)
+    public void CreateEnemyUnit(ClassType type, Genre genre, int lvl)
     {
         Unit new_unit = new Unit();
         new_unit.SetClass(type);
         new_unit.SetLvl(lvl); //Also sets the stats
+        new_unit.GenerateRandomName(genre);
         new_unit.SetEnemyUnit();
         EnemyUnits.Add(new_unit);
     }

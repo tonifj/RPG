@@ -6,7 +6,6 @@ public class Tile : MonoBehaviour
 {
     Vector3 tile_position;
     bool occupied; //tells if is there something in the tile
-    int size;
 
     Vector2Int battle_map_pos;
 
@@ -17,13 +16,12 @@ public class Tile : MonoBehaviour
     {
         occupied = false;
         battle_map_pos = new Vector2Int(-1, -1);
-        size = 3;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        transform.localScale = new Vector3(size, 1, size);
+        transform.localScale = new Vector3(Globals.TILE_SIZE, 1, Globals.TILE_SIZE);
     }
 
     // Update is called once per frame
@@ -32,7 +30,7 @@ public class Tile : MonoBehaviour
         
     }
 
-    public Vector2Int GetBattleMapPos()
+    public Vector2Int GetBattleMapPos() //Returns position in tilepos (vector2int)
     {
         return battle_map_pos;
     }
@@ -44,7 +42,12 @@ public class Tile : MonoBehaviour
 
     public void SetTilePos(Vector2 pos)
     {
-        transform.position = new Vector3(size*pos.x, 0, size*pos.y);
+        transform.position = new Vector3(Globals.TILE_SIZE * pos.x, 0, Globals.TILE_SIZE * pos.y);
+    }
+
+    public Vector3 GetWorldPos() //returns position in vec3
+    {
+        return transform.position;
     }
 
 }

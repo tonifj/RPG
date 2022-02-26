@@ -28,14 +28,15 @@ public enum Genre
 
 public class Unit : MonoBehaviour
 {
-    string name;
+    public string name;
+    GameObject model;
 
-    public ClassType class_type;
+    ClassType class_type;
     Genre genre;
 
     Vector2Int position;
 
-    bool is_player_unit;
+    public bool is_player_unit;
 
     int movement_range;
     int lvl;
@@ -56,7 +57,7 @@ public class Unit : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        //transform.position = new Vector3(position.x * Globals.TILE_SIZE, 0, position.y * Globals.TILE_SIZE);
     }
     void LvlUp()
     {
@@ -213,6 +214,11 @@ public class Unit : MonoBehaviour
     public void SetEnemyUnit()
     {
         is_player_unit = false;
+    }
+
+    public bool IsPlayerUnit()
+    {
+        return is_player_unit;
     }
 
     void SetBaseStats()
@@ -402,24 +408,28 @@ public class Unit : MonoBehaviour
     public void SetLvl(int level)
     {
         lvl = level;
-
+        SetBaseStats();
         for (int i = 0; i < lvl; ++i)
         {
             LvlUp();
         }
     }
 
+    public void SetPosition(Vector2Int new_pos)
+    {
+        position = new_pos;
+    }
     public int GetSpeed()
     {
         return speed;
     }
 
-    public void SetPosition(Vector2Int new_pos)
+    public Vector2Int GetPosition()
     {
-        position = new_pos;
+        return position;
     }
 
-    void GenerateRandomName(Genre genre)
+    public void GenerateRandomName(Genre genre)
     {
         switch (genre)
         {
@@ -436,7 +446,7 @@ public class Unit : MonoBehaviour
                          "Pepe","Jon","Teo","Mauro","Óscar","Cristian","Leo"
                     };
 
-                    name = male_names[Random.Range(0, male_names.Length - 1)];
+                    name = male_names[Random.Range(0, male_names.Length)];
                 }
 
                 break;
@@ -455,12 +465,12 @@ public class Unit : MonoBehaviour
                              "Gaia", "Gina", "Irati", "Jade","Lila", "Eris"
                     };
 
-                    name = female_names[Random.Range(0, female_names.Length - 1)];
+                    name = female_names[Random.Range(0, female_names.Length)];
 
                 }
                 break;
         }
 
     }
-  
+
 }

@@ -7,30 +7,55 @@ public class BattleManager : MonoBehaviour
     int MAX_UNITS = 6;
 
     public List<Unit> TurnOrder;
-    BattleMap battleMap;
+    BattleMap battleMap = new BattleMap();
     GameObject gameManagerGO;
     GameManager gameManager;
+    Mission current_mission;
 
-    
+    public GameObject PlayerUnitPrefab;
+    public GameObject EnemyUnitPrefab;
+
+    enum BattleState
+    {
+        SET,
+        START,
+        BATTLE,
+        VICTORY,
+        DEFEAT
+    }
+
+    BattleState battleState;
 
     void Start()
     {
-        battleMap = new BattleMap();
+        battleState = BattleState.SET;
         battleMap.SetSize(6, 5);
         battleMap.SetMap();
+        SetTurnOrder();
+
+        for (int i = 0; i < TurnOrder.Count; ++i)
+        {
+
+            Vector3 new_position = new Vector3(TurnOrder[i].GetPosition().x * Globals.TILE_SIZE, 0, TurnOrder[i].GetPosition().y * Globals.TILE_SIZE);
+            if (TurnOrder[i].IsPlayerUnit())
+                Instantiate(PlayerUnitPrefab, new_position, Quaternion.identity);
+
+            else
+                Instantiate(EnemyUnitPrefab, new_position, Quaternion.identity);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        SetTurnOrder();
+
     }
 
     void SetTurnOrder()
     {
         for (int i = 0; i < TurnOrder.Count; ++i)
         {
-            if (i < TurnOrder.Count-1 && TurnOrder[i].GetSpeed() < TurnOrder[i + 1].GetSpeed())
+            if (i < TurnOrder.Count - 1 && TurnOrder[i].GetSpeed() < TurnOrder[i + 1].GetSpeed())
             {
                 Unit temp = TurnOrder[i];
                 TurnOrder[i] = TurnOrder[i + 1];
@@ -41,7 +66,7 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    public void AddUnits(List<Unit> playerUnits, List <Unit> enemyUnits)
+    public void AddUnits(List<Unit> playerUnits, List<Unit> enemyUnits)
     {
         for (int i = 0; i < playerUnits.Count; ++i)
         {
@@ -52,5 +77,15 @@ public class BattleManager : MonoBehaviour
         {
             TurnOrder.Add(enemyUnits[i]);
         }
+    }
+
+    public void SetMission(Mission mission)
+    {
+        current_mission = mission;
+    }
+
+    public BattleMap GetBattleMap()
+    {
+        return battleMap;
     }
 }
