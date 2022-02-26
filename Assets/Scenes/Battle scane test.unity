@@ -4778,7 +4778,7 @@ GameObject:
   - component: {fileID: 1572731085}
   m_Layer: 0
   m_Name: GameManager
-  m_TagString: Untagged
+  m_TagString: game manager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4795,7 +4795,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ea13fa8bf26bfc4d8504617e56025e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerUnits: []
+  playerUnits: []
+  missions: []
   current_mission: {fileID: 0}
 --- !u!4 &1572731086
 Transform:
@@ -6016,7 +6017,7 @@ GameObject:
   - component: {fileID: 1869545639}
   m_Layer: 0
   m_Name: BattleManager
-  m_TagString: Untagged
+  m_TagString: battle manager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6607,7 +6608,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2031613551
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6615,15 +6616,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2031613550}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2b53ad0e0f984b3448c206e453fa069d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   origin_tile_material: {fileID: 2100000, guid: cd21d916fd5690348921f6c2c71c008d, type: 2}
   selection_material: {fileID: 2100000, guid: 167382f3a48fa4e468b3ed11bc248606, type: 2}
-  map_width: 6
-  map_depth: 5
 --- !u!4 &2031613552
 Transform:
   m_ObjectHideFlags: 0

@@ -17,13 +17,12 @@ public class Tile : MonoBehaviour
     {
         occupied = false;
         battle_map_pos = new Vector2Int(-1, -1);
-        size = 0;
+        size = 3;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        size = 3;
         transform.localScale = new Vector3(size, 1, size);
     }
 

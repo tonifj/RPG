@@ -8,6 +8,7 @@ TagManager:
   - player unit
   - enemy unit
   - game manager
+  - battle manager
   layers:
   - Default
   - TransparentFX
