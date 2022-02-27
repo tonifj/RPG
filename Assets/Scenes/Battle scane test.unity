@@ -6925,6 +6925,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TurnOrder: []
   ActionSelectorGO: {fileID: 1175175225}
+  BattleUI: {fileID: 1985899030}
+  FirstMenu: {fileID: 8400403}
   MoveSelectorGO: {fileID: 1927205338}
   AttackSelectorGO: {fileID: 1753583851}
   SkillSelectorGO: {fileID: 273326064}
@@ -6932,6 +6934,7 @@ MonoBehaviour:
   WaitSelectorGO: {fileID: 1758910647}
   PlayerUnitPrefab: {fileID: 404203412}
   EnemyUnitPrefab: {fileID: 2129010885}
+  SelectableTilesMaterial: {fileID: 2100000, guid: 167382f3a48fa4e468b3ed11bc248606, type: 2}
 --- !u!4 &1869545640
 Transform:
   m_ObjectHideFlags: 0
@@ -7710,8 +7713,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b53ad0e0f984b3448c206e453fa069d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  origin_tile_material: {fileID: 2100000, guid: cd21d916fd5690348921f6c2c71c008d, type: 2}
-  selection_material: {fileID: 2100000, guid: 167382f3a48fa4e468b3ed11bc248606, type: 2}
 --- !u!4 &2031613552
 Transform:
   m_ObjectHideFlags: 0

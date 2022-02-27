@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
     Mission[] Missions;
     void Start()
     {
+       
+
         battleManagerGO = GameObject.FindGameObjectWithTag("battle manager");
         battleManager = battleManagerGO.GetComponent<BattleManager>();
 
@@ -25,9 +27,17 @@ public class GameManager : MonoBehaviour
         introduction.PlaceUnit(introduction.GetEnemyUnits()[1], new Vector2Int(5, 3));
         introduction.CreateEnemyUnit(ClassType.SNIPER, Genre.FEMALE, 1);
         introduction.PlaceUnit(introduction.GetEnemyUnits()[2], new Vector2Int(5, 2));
+
+        for (int i = 0; i < playerUnits.Count; ++i)
+        {
+            playerUnits[i].SetClass(ClassType.RECRUIT);
+            playerUnits[i].SetBaseStats();
+            playerUnits[i].SetSpeed(190);
+            introduction.PlaceUnit(playerUnits[i], new Vector2Int(i+1, 0));
+        }
+
         missions.Add(introduction);
 
-        playerUnits[0].SetSpeed(190);
 
         battleManager.AddUnits(playerUnits);
         battleManager.AddUnits(introduction.GetEnemyUnits());

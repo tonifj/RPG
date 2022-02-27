@@ -49,6 +49,8 @@ public class Unit : MonoBehaviour
     int mental_attack;
     int mental_resistance;
     int speed;
+
+    int attack_range = 1;
     void Start()
     {
     }
@@ -225,7 +227,7 @@ public class Unit : MonoBehaviour
         return is_player_unit;
     }
 
-    void SetBaseStats()
+    public void SetBaseStats()
     {
         switch (class_type)
         {
@@ -441,6 +443,16 @@ public class Unit : MonoBehaviour
     public Genre GetGenre()
     {
         return genre;
+    }
+
+    public int GetAttackRange()
+    {
+        return attack_range;
+    }
+
+    public int GetMovementRange()
+    {
+        return movement_range;
     }
 
 }

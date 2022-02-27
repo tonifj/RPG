@@ -4,18 +4,21 @@ using UnityEngine;
 
 public class BattleMap : MonoBehaviour
 {
-    public Material origin_tile_material;
-    public Material selection_material;
+    
     int map_width;//x
     int map_depth;//z
     GameObject[] TilesGO;
     List<Tile> Tiles = new List<Tile>();
+
+    Material selection_material;
+
 
     Vector2Int tile_matrix; //defines the matrix of tiles
     Tile invalidTile;
 
     void Start()
     {
+       
 
     }
 
@@ -56,19 +59,24 @@ public class BattleMap : MonoBehaviour
         }
     }
 
-    Tile GetTile(Vector2Int v)
+    public Tile GetTile(Vector2Int v)
     {
         return Tiles[v.x + (map_width * v.y)].GetComponent<Tile>();
     }
 
-    void HighlightTile(Tile tile, bool isOrigin)
+    void HighlightTile(Tile tile)
+    {
+        if (IsValidTile(tile))
+        {       
+            tile.gameObject.GetComponent<MeshRenderer>().material = selection_material;
+        }
+    }
+
+    void ResetTileMaterial(Tile tile)
     {
         if (IsValidTile(tile))
         {
-            // if (isOrigin)
-            // tile.gameObject.GetComponent<MeshRenderer>().material = origin_tile_material;
-            // else
-            //tile.gameObject.GetComponent<MeshRenderer>().material = selection_material;
+            tile.ResetTileMaterial();
         }
     }
 
@@ -145,18 +153,35 @@ public class BattleMap : MonoBehaviour
         return dist;
     }
 
-    void ActionTileSelection(Tile origin, int range)
+    public void ActionTileSelection(Tile origin, int range, Material select_mat)
     {
+        selection_material = select_mat;
+
         if (range == 0)
-            HighlightTile(origin, true);
+            HighlightTile(origin);
         else
         {
             for (int i = 0; i < Tiles.Count; ++i)
             {
                 if (TileDistance(origin, Tiles[i]) <= range)
-                    HighlightTile(Tiles[i], false);
+                    HighlightTile(Tiles[i]);
             }
-            HighlightTile(origin, true);
+            HighlightTile(origin);
+        }
+    }
+
+    public void ResetMaterials(Tile origin, int range)
+    {
+        if (range == 0)
+            ResetTileMaterial(origin);
+        else
+        {
+            for (int i = 0; i < Tiles.Count; ++i)
+            {
+                if (TileDistance(origin, Tiles[i]) <= range)
+                    ResetTileMaterial(Tiles[i]);
+            }
+            ResetTileMaterial(origin);
         }
     }
 
@@ -166,10 +191,6 @@ public class BattleMap : MonoBehaviour
         map_depth = d;
     }
 
-    public int GetTilesSize()
-    {
-        return Tiles.Count;
-    }
 
     public void SetMap()
     {

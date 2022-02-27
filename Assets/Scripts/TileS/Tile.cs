@@ -9,6 +9,7 @@ public class Tile : MonoBehaviour
 
     Vector2Int battle_map_pos;
 
+    Material original_material;
 
     private GameObject TileSelector;
 
@@ -21,6 +22,8 @@ public class Tile : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        original_material = GetComponent<MeshRenderer>().material;
+
         transform.localScale = new Vector3(Globals.TILE_SIZE, 1, Globals.TILE_SIZE);
     }
 
@@ -48,6 +51,11 @@ public class Tile : MonoBehaviour
     public Vector3 GetWorldPos() //returns position in vec3
     {
         return transform.position;
+    }
+
+    public void ResetTileMaterial()
+    {
+        GetComponent<MeshRenderer>().material = original_material;
     }
 
 }
