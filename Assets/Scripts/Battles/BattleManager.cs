@@ -8,6 +8,10 @@ public class BattleManager : MonoBehaviour
     int current_turn;
 
     BattleMap battleMap = new BattleMap();
+
+    GameObject BattleCameraGO;
+    Camera BattleCamera;
+
     public GameObject ActionSelectorGO;
 
     public GameObject BattleUI;
@@ -56,6 +60,7 @@ public class BattleManager : MonoBehaviour
     void Start()
     {
         currentSubmenu = CurrentSubmenu.FIRST;
+        BattleCameraGO = GameObject.FindGameObjectWithTag("MainCamera");
 
         optionIndex = 0;
         battleState = BattleState.SET;
@@ -71,7 +76,7 @@ public class BattleManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(currentSubmenu);
+        
 
         switch (battleState)
         {
@@ -87,12 +92,16 @@ public class BattleManager : MonoBehaviour
             case (BattleState.BATTLE):
                 {
                     if (TurnOrder[current_turn].IsPlayerUnit())
-                        HandleSubmenus();
+                    {
+                        PlayerTurn();
+                    }
+                        
                     else
                         EnemyTurn();
                 }
                 break;
         }
+        CenterCameraToCurrentUnit(battleMap.GetTile(TurnOrder[current_turn].GetPosition()).GetWorldPos());
     }
 
     void SetTurnOrder()
@@ -146,7 +155,7 @@ public class BattleManager : MonoBehaviour
 
     void EnemyTurn()
     {
-
+        EndTurn();
     }
 
     void EnemyMovement()
@@ -192,6 +201,21 @@ public class BattleManager : MonoBehaviour
                 break;
 
             case CurrentSubmenu.ATTACK:
+                {
+                    AttackAction();
+                }
+                break;
+            case CurrentSubmenu.SKILL:
+                {
+                    AttackAction();
+                }
+                break;
+            case CurrentSubmenu.ITEM:
+                {
+                    AttackAction();
+                }
+                break;
+            case CurrentSubmenu.WAIT:
                 {
                     AttackAction();
                 }
@@ -282,7 +306,40 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+
+    void MoveAction()
+    {
+        HideBattleUI();
+        battleMap.ActionTileSelection(battleMap.GetTile(TurnOrder[current_turn].GetPosition()), TurnOrder[current_turn].GetMovementRange(), SelectableTilesMaterial);
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            battleMap.ResetMaterials(battleMap.GetTile(TurnOrder[current_turn].GetPosition()), TurnOrder[current_turn].GetMovementRange());
+            ShowBattleUI();
+            currentSubmenu = CurrentSubmenu.FIRST;
+
+        }
+    }
+
     void AttackAction()
+    {
+        HideBattleUI();
+
+        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow) ||
+            Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow)) //so it doesn't iterate all the time inside this
+        {
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            ShowBattleUI();
+            currentSubmenu = CurrentSubmenu.FIRST;
+            
+        }
+    }
+
+    void SkillAction()
     {
         BattleUI.SetActive(false);
 
@@ -293,18 +350,44 @@ public class BattleManager : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            ShowFirstMenu();
             currentSubmenu = CurrentSubmenu.FIRST;
+
+        }
     }
 
-    void MoveAction()
+    void ItemAction()
     {
-        Debug.Log(TurnOrder[current_turn].GetPosition());
-        battleMap.ActionTileSelection(battleMap.GetTile(TurnOrder[current_turn].GetPosition()), TurnOrder[current_turn].GetMovementRange(), SelectableTilesMaterial);
-        
+        HideFirstMenu();
+
+        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow) ||
+            Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow)) //so it doesn't iterate all the time inside this
+        {
+
+        }
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            battleMap.ResetMaterials(battleMap.GetTile(TurnOrder[current_turn].GetPosition()), TurnOrder[current_turn].GetMovementRange());
+            ShowBattleUI();
+            currentSubmenu = CurrentSubmenu.FIRST;
 
+        }
+    }
+
+    void WaitAction()
+    {
+        HideBattleUI();
+
+        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow) ||
+            Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow)) //so it doesn't iterate all the time inside this
+        {
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            ShowBattleUI();
             currentSubmenu = CurrentSubmenu.FIRST;
 
         }
@@ -313,6 +396,40 @@ public class BattleManager : MonoBehaviour
     void HideBattleUI()
     {
         BattleUI.SetActive(false);
+    }
+
+    void ShowBattleUI()
+    {
+        BattleUI.SetActive(true);
+    }
+
+    void HideFirstMenu()
+    {
+        FirstMenu.SetActive(false);
+    }
+
+    void ShowFirstMenu()
+    {
+        FirstMenu.SetActive(true);
+    }
+
+    void CenterCameraToCurrentUnit(Vector3 target_pos)
+    {
+        BattleCameraGO.transform.LookAt(target_pos);
+    }
+
+    void PlayerTurn()
+    {
+       
+        HandleSubmenus();
+    }
+
+    void EndTurn()
+    {
+        if (current_turn < TurnOrder.Count)
+            ++current_turn;
+        else
+            current_turn = 0;
     }
 
 

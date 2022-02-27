@@ -1644,17 +1644,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1351812565883068030, guid: 4f473b111c6b0ac4994e6018f4b5131d, type: 3}
   m_PrefabInstance: {fileID: 1351812565747448298}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &404203417 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1351812565883068019, guid: 4f473b111c6b0ac4994e6018f4b5131d, type: 3}
-  m_PrefabInstance: {fileID: 1351812565747448298}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 404203412}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf336a2bea5d53f4d90b52c06bcd504a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &418108469
 GameObject:
   m_ObjectHideFlags: 0
@@ -5573,8 +5562,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ea13fa8bf26bfc4d8504617e56025e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerUnits:
-  - {fileID: 404203417}
+  playerUnits: []
   missions: []
 --- !u!4 &1572731086
 Transform:

@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     Mission[] Missions;
     void Start()
     {
-       
+
 
         battleManagerGO = GameObject.FindGameObjectWithTag("battle manager");
         battleManager = battleManagerGO.GetComponent<BattleManager>();
@@ -28,13 +28,12 @@ public class GameManager : MonoBehaviour
         introduction.CreateEnemyUnit(ClassType.SNIPER, Genre.FEMALE, 1);
         introduction.PlaceUnit(introduction.GetEnemyUnits()[2], new Vector2Int(5, 2));
 
+        CreatePlayerUnit(ClassType.RECRUIT, Genre.MALE, 1);
+
         for (int i = 0; i < playerUnits.Count; ++i)
-        {
-            playerUnits[i].SetClass(ClassType.RECRUIT);
-            playerUnits[i].SetBaseStats();
-            playerUnits[i].SetSpeed(190);
-            introduction.PlaceUnit(playerUnits[i], new Vector2Int(i+1, 0));
-        }
+            introduction.PlaceUnit(playerUnits[i], new Vector2Int(i + 1, 0));
+
+
 
         missions.Add(introduction);
 
@@ -46,7 +45,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     Mission CreateMission(int id, int pesetas_reward)
@@ -56,6 +55,18 @@ public class GameManager : MonoBehaviour
         return mission;
     }
 
-  
+    void CreatePlayerUnit(ClassType type, Genre genre, int lvl)
+    {
+        Unit new_unit = new Unit();
+        new_unit.SetClass(type);
+        new_unit.SetLvl(lvl); //Also sets the stats
+        new_unit.SetPlayerUnit();
+        new_unit.SetBaseStats();
+        new_unit.SetSpeed(190);
+        new_unit.SetName(Globals.GenerateRandomName(genre));
+        playerUnits.Add(new_unit);
+    }
+
+
 
 }
