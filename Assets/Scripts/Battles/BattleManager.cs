@@ -11,7 +11,7 @@ public class BattleManager : MonoBehaviour
 
     GameObject battleCameraGO;
     BattleCamera battleCamera;
-   
+
 
     public GameObject ActionSelectorGO;
 
@@ -30,7 +30,7 @@ public class BattleManager : MonoBehaviour
     public Material SelectableTilesMaterial;
 
     bool menu_is_reset = false;
-    bool turn_finished = false;
+    bool enemy_turn_finished = true;
     bool is_turn_unit_ally = false;
 
 
@@ -81,6 +81,7 @@ public class BattleManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(currentSubmenu);
         switch (battleState)
         {
             case (BattleState.START):
@@ -98,9 +99,13 @@ public class BattleManager : MonoBehaviour
                     {
                         PlayerTurn();
                     }
-                        
+
                     else
-                        EnemyTurn();
+                    {
+                        if (enemy_turn_finished)
+                            StartCoroutine(EnemyTurn());
+
+                    }
                 }
                 break;
         }
@@ -158,11 +163,6 @@ public class BattleManager : MonoBehaviour
 
     }
 
-    void EnemyTurn()
-    {
-        EndTurn();
-    }
-
     void EnemyMovement()
     {
         //IA to decide where to move
@@ -179,8 +179,10 @@ public class BattleManager : MonoBehaviour
     void ResetActionMenu()
     {
 
-        FirstMenu.SetActive(true);
+        ShowBattleUI();
+        ShowFirstMenu();
         currentSubmenu = CurrentSubmenu.FIRST;
+        optionIndex = 0;
 
         //set all other submenus to false
         ActionSelectorGO.transform.position = MoveSelectorGO.transform.position;
@@ -194,7 +196,6 @@ public class BattleManager : MonoBehaviour
         {
             case CurrentSubmenu.FIRST:
                 {
-                    ResetActionMenu();
                     FirstMenuNav();
                 }
                 break;
@@ -222,7 +223,8 @@ public class BattleManager : MonoBehaviour
                 break;
             case CurrentSubmenu.WAIT:
                 {
-                    AttackAction();
+                    WaitAction();
+
                 }
                 break;
 
@@ -340,7 +342,7 @@ public class BattleManager : MonoBehaviour
         {
             ShowBattleUI();
             currentSubmenu = CurrentSubmenu.FIRST;
-            
+
         }
     }
 
@@ -390,12 +392,20 @@ public class BattleManager : MonoBehaviour
 
         }
 
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            EndTurn();
+        }
+
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             ShowBattleUI();
             currentSubmenu = CurrentSubmenu.FIRST;
 
         }
+
+
     }
 
     void HideBattleUI()
@@ -420,16 +430,31 @@ public class BattleManager : MonoBehaviour
 
     void PlayerTurn()
     {
-       
         HandleSubmenus();
     }
 
     void EndTurn()
     {
-        if (current_turn < TurnOrder.Count)
-            ++current_turn;
-        else
+        if (current_turn >= TurnOrder.Count - 1)
             current_turn = 0;
+        else
+            ++current_turn;
+
+        if (TurnOrder[current_turn].IsPlayerUnit())
+        {
+            ResetActionMenu();
+            menu_is_reset = false;
+        }
+
+    }
+
+    IEnumerator EnemyTurn()
+    {
+        enemy_turn_finished = false;
+        yield return new WaitForSeconds(2);
+        EndTurn();
+        enemy_turn_finished = true;
+
     }
 
 }
