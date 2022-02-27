@@ -28,7 +28,7 @@ public enum Genre
 
 public class Unit : MonoBehaviour
 {
-    public string name;
+    public string unit_name;
     GameObject model;
 
     ClassType class_type;
@@ -51,13 +51,12 @@ public class Unit : MonoBehaviour
     int speed;
     void Start()
     {
-        is_player_unit = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //transform.position = new Vector3(position.x * Globals.TILE_SIZE, 0, position.y * Globals.TILE_SIZE);
+
     }
     void LvlUp()
     {
@@ -214,6 +213,11 @@ public class Unit : MonoBehaviour
     public void SetEnemyUnit()
     {
         is_player_unit = false;
+    }
+
+    public void SetPlayerUnit()
+    {
+        is_player_unit = true;
     }
 
     public bool IsPlayerUnit()
@@ -446,7 +450,7 @@ public class Unit : MonoBehaviour
                          "Pepe","Jon","Teo","Mauro","Óscar","Cristian","Leo"
                     };
 
-                    name = male_names[Random.Range(0, male_names.Length)];
+                    unit_name = male_names[Random.Range(0, male_names.Length)];
                 }
 
                 break;
@@ -465,7 +469,7 @@ public class Unit : MonoBehaviour
                              "Gaia", "Gina", "Irati", "Jade","Lila", "Eris"
                     };
 
-                    name = female_names[Random.Range(0, female_names.Length)];
+                    unit_name = female_names[Random.Range(0, female_names.Length)];
 
                 }
                 break;

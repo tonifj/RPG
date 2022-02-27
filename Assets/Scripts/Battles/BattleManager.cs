@@ -70,11 +70,13 @@ public class BattleManager : MonoBehaviour
     {
         for (int i = 0; i < playerUnits.Count; ++i)
         {
+            playerUnits[i].SetPlayerUnit();
             TurnOrder.Add(playerUnits[i]);
         }
 
         for (int i = 0; i < enemyUnits.Count; ++i)
         {
+            enemyUnits[i].SetEnemyUnit();
             TurnOrder.Add(enemyUnits[i]);
         }
     }

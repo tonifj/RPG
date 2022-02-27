@@ -28,6 +28,9 @@ public class GameManager : MonoBehaviour
         missions.Add(introduction);
 
         battleManager.AddUnits(playerUnits, introduction.GetEnemyUnits());
+
+        for (int i = 0; i < playerUnits.Count; ++i)
+            playerUnits[i].SetPlayerUnit();
  
     }
 
@@ -44,15 +47,6 @@ public class GameManager : MonoBehaviour
         return mission;
     }
 
-    void PlayerWin()
-    {
-
-    }
-
-    void PlayerLose()
-    {
-
-    }
   
 
 }
