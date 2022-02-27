@@ -9,8 +9,9 @@ public class BattleManager : MonoBehaviour
 
     BattleMap battleMap = new BattleMap();
 
-    GameObject BattleCameraGO;
-    Camera BattleCamera;
+    GameObject battleCameraGO;
+    BattleCamera battleCamera;
+   
 
     public GameObject ActionSelectorGO;
 
@@ -60,7 +61,9 @@ public class BattleManager : MonoBehaviour
     void Start()
     {
         currentSubmenu = CurrentSubmenu.FIRST;
-        BattleCameraGO = GameObject.FindGameObjectWithTag("MainCamera");
+
+        battleCameraGO = GameObject.FindGameObjectWithTag("MainCamera");
+        battleCamera = battleCameraGO.GetComponent<BattleCamera>();
 
         optionIndex = 0;
         battleState = BattleState.SET;
@@ -71,13 +74,13 @@ public class BattleManager : MonoBehaviour
 
         battleState = BattleState.START;
 
+        battleCamera.SetTarget(battleMap.GetTile(TurnOrder[current_turn].GetPosition()).transform);
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-
         switch (battleState)
         {
             case (BattleState.START):
@@ -101,7 +104,9 @@ public class BattleManager : MonoBehaviour
                 }
                 break;
         }
-        CenterCameraToCurrentUnit(battleMap.GetTile(TurnOrder[current_turn].GetPosition()).GetWorldPos());
+
+        battleCamera.SetTarget(battleMap.GetTile(TurnOrder[current_turn].GetPosition()).transform);
+
     }
 
     void SetTurnOrder()
@@ -413,11 +418,6 @@ public class BattleManager : MonoBehaviour
         FirstMenu.SetActive(true);
     }
 
-    void CenterCameraToCurrentUnit(Vector3 target_pos)
-    {
-        BattleCameraGO.transform.LookAt(target_pos);
-    }
-
     void PlayerTurn()
     {
        
@@ -431,7 +431,5 @@ public class BattleManager : MonoBehaviour
         else
             current_turn = 0;
     }
-
-
 
 }
