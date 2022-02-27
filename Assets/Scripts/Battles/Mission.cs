@@ -14,7 +14,8 @@ public class Mission : MonoBehaviour
     int id;
     void Start()
     {
-        
+       
+
     }
 
     // Update is called once per frame
@@ -39,8 +40,8 @@ public class Mission : MonoBehaviour
         Unit new_unit = new Unit();
         new_unit.SetClass(type);
         new_unit.SetLvl(lvl); //Also sets the stats
-        new_unit.GenerateRandomName(genre);
         new_unit.SetEnemyUnit();
+        new_unit.SetName(Globals.GenerateRandomName(genre));
         EnemyUnits.Add(new_unit);
     }
 
@@ -48,5 +49,4 @@ public class Mission : MonoBehaviour
     {
         unit.SetPosition(tile);
     }
-
 }

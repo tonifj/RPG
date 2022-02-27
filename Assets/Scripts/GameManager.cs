@@ -27,11 +27,10 @@ public class GameManager : MonoBehaviour
         introduction.PlaceUnit(introduction.GetEnemyUnits()[2], new Vector2Int(5, 2));
         missions.Add(introduction);
 
-        battleManager.AddUnits(playerUnits, introduction.GetEnemyUnits());
+        playerUnits[0].SetSpeed(190);
 
-        for (int i = 0; i < playerUnits.Count; ++i)
-            playerUnits[i].SetPlayerUnit();
- 
+        battleManager.AddUnits(playerUnits);
+        battleManager.AddUnits(introduction.GetEnemyUnits());
     }
 
     // Update is called once per frame
