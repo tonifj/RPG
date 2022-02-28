@@ -58,4 +58,9 @@ public class Tile : MonoBehaviour
         GetComponent<MeshRenderer>().material = original_material;
     }
 
+    public Material GetMaterial()
+    {
+        return GetComponent<MeshRenderer>().material;
+    }
+
 }

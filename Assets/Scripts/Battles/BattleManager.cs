@@ -4,17 +4,10 @@ using UnityEngine;
 
 public class BattleManager : MonoBehaviour
 {
-    public List<Unit> TurnOrder;
-    int current_turn;
-
-    BattleMap battleMap = new BattleMap();
-
-    GameObject battleCameraGO;
-    BattleCamera battleCamera;
 
 
+    //GO
     public GameObject ActionSelectorGO;
-
     public GameObject BattleUI;
     public GameObject FirstMenu;
     public GameObject MoveSelectorGO;
@@ -23,17 +16,21 @@ public class BattleManager : MonoBehaviour
     public GameObject ItemSelectorGO;
     public GameObject WaitSelectorGO;
 
-
+    //Prefabs
     public GameObject PlayerUnitPrefab;
     public GameObject EnemyUnitPrefab;
 
+    //Materials
     public Material SelectableTilesMaterial;
+    public Material SelectedTileMaterial;
 
+    //booleans
     bool menu_is_reset = false;
     bool enemy_turn_finished = true;
     bool is_turn_unit_ally = false;
+    bool action_tile_reseted = false;
 
-
+    //enums
     enum BattleState
     {
         SET,
@@ -54,10 +51,22 @@ public class BattleManager : MonoBehaviour
         NONE
     }
 
-    int optionIndex;
-
     BattleState battleState;
     CurrentSubmenu currentSubmenu;
+
+    //other variables
+    int optionIndex;
+    int current_turn;
+
+    public List<Unit> TurnOrder;
+
+    BattleMap battleMap = new BattleMap();
+
+    GameObject battleCameraGO;
+    BattleCamera battleCamera;
+
+    Vector2Int action_tile; //used to select a tile where to cast an action
+
     void Start()
     {
         currentSubmenu = CurrentSubmenu.FIRST;
@@ -317,11 +326,18 @@ public class BattleManager : MonoBehaviour
     void MoveAction()
     {
         HideBattleUI();
+
+        //paint all tiles where the movement is possible
         battleMap.ActionTileSelection(battleMap.GetTile(TurnOrder[current_turn].GetPosition()), TurnOrder[current_turn].GetMovementRange(), SelectableTilesMaterial);
+
+        //paint the current selected tile with a different color
+        SelectTileForAction();
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            //Reset tile material
             battleMap.ResetMaterials(battleMap.GetTile(TurnOrder[current_turn].GetPosition()), TurnOrder[current_turn].GetMovementRange());
+
             ShowBattleUI();
             currentSubmenu = CurrentSubmenu.FIRST;
 
@@ -430,6 +446,12 @@ public class BattleManager : MonoBehaviour
 
     void PlayerTurn()
     {
+        if (!action_tile_reseted)
+        {
+            action_tile = TurnOrder[current_turn].GetPosition();
+            action_tile_reseted = true;
+        }
+
         HandleSubmenus();
     }
 
@@ -446,14 +468,59 @@ public class BattleManager : MonoBehaviour
             menu_is_reset = false;
         }
 
+        action_tile_reseted = false;
+
     }
 
     IEnumerator EnemyTurn()
     {
+        action_tile = TurnOrder[current_turn].GetPosition(); //reset action tile to the turn unit's position
         enemy_turn_finished = false;
         yield return new WaitForSeconds(2);
         EndTurn();
         enemy_turn_finished = true;
+
+    }
+
+    void SelectTileForAction()
+    {
+        if (Input.GetKeyDown(KeyCode.UpArrow)) //so it doesn't iterate all the time inside this
+        {
+            Vector2Int tile_to_select = action_tile;
+            ++tile_to_select.y;
+
+            if(battleMap.IsValidTile(tile_to_select) && battleMap.GetTile(tile_to_select).GetMaterial().color == SelectableTilesMaterial.color)
+                ++action_tile.y;
+        }
+
+        else if (Input.GetKeyDown(KeyCode.DownArrow)) //so it doesn't iterate all the time inside this
+        {
+            Vector2Int tile_to_select = action_tile;
+            --tile_to_select.y;
+
+            if (battleMap.IsValidTile(tile_to_select) && battleMap.GetTile(tile_to_select).GetMaterial().color == SelectableTilesMaterial.color)
+                --action_tile.y;
+        }
+
+        else if (Input.GetKeyDown(KeyCode.LeftArrow)) //so it doesn't iterate all the time inside this
+        {
+            Vector2Int tile_to_select = action_tile;
+            --tile_to_select.x;
+
+            if (battleMap.IsValidTile(tile_to_select) && battleMap.GetTile(tile_to_select).GetMaterial().color == SelectableTilesMaterial.color)
+                --action_tile.x;
+        }
+
+        else if (Input.GetKeyDown(KeyCode.RightArrow)) //so it doesn't iterate all the time inside this
+        {
+            Vector2Int tile_to_select = action_tile;
+            ++tile_to_select.x;
+
+            if (battleMap.IsValidTile(tile_to_select) && battleMap.GetTile(tile_to_select).GetMaterial().color == SelectableTilesMaterial.color)
+                ++action_tile.x;
+        }
+
+        battleMap.HighlightTile(battleMap.GetTile(action_tile), SelectedTileMaterial);
 
     }
 

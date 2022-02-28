@@ -64,17 +64,17 @@ public class BattleMap : MonoBehaviour
         return Tiles[v.x + (map_width * v.y)].GetComponent<Tile>();
     }
 
-    void HighlightTile(Tile tile)
+    public void HighlightTile(Tile tile, Material highlight_material)
     {
-        if (IsValidTile(tile))
+        if (IsValidTile(tile.GetBattleMapPos()))
         {       
-            tile.gameObject.GetComponent<MeshRenderer>().material = selection_material;
+            tile.gameObject.GetComponent<MeshRenderer>().material = highlight_material;
         }
     }
 
     void ResetTileMaterial(Tile tile)
     {
-        if (IsValidTile(tile))
+        if (IsValidTile(tile.GetBattleMapPos()))
         {
             tile.ResetTileMaterial();
         }
@@ -116,9 +116,13 @@ public class BattleMap : MonoBehaviour
             return invalidTile;
     }
 
-    bool IsValidTile(Tile t) //there is no tile with negative positions
+    public bool IsValidTile(Vector2Int tile_pos) //there is no tile with negative positions
     {
-        return t.GetBattleMapPos().x != -1;
+        return tile_pos.x > -1 &&
+            tile_pos.x < map_width &&
+
+           tile_pos.y > -1 &&
+           tile_pos.y < map_depth;
     }
 
     int TileDistance(Tile origin, Tile end)
@@ -158,15 +162,15 @@ public class BattleMap : MonoBehaviour
         selection_material = select_mat;
 
         if (range == 0)
-            HighlightTile(origin);
+            HighlightTile(origin, select_mat);
         else
         {
             for (int i = 0; i < Tiles.Count; ++i)
             {
                 if (TileDistance(origin, Tiles[i]) <= range)
-                    HighlightTile(Tiles[i]);
+                    HighlightTile(Tiles[i], select_mat);
             }
-            HighlightTile(origin);
+            HighlightTile(origin, select_mat);
         }
     }
 
