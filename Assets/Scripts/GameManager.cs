@@ -33,10 +33,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < playerUnits.Count; ++i)
             introduction.PlaceUnit(playerUnits[i], new Vector2Int(i + 1, 0));
 
-
-
         missions.Add(introduction);
-
 
         battleManager.AddUnits(playerUnits);
         battleManager.AddUnits(introduction.GetEnemyUnits());

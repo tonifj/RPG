@@ -63,4 +63,14 @@ public class Tile : MonoBehaviour
         return GetComponent<MeshRenderer>().material;
     }
 
+    public bool IsOccupied()
+    {
+        return occupied;
+    }
+
+    public void SetOccupied(bool b)
+    {
+        occupied = b;
+    }
+
 }

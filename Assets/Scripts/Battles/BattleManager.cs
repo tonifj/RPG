@@ -90,7 +90,8 @@ public class BattleManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(currentSubmenu);
+        battleCamera.SetTarget(TurnOrder[current_turn].transform);
+
         switch (battleState)
         {
             case (BattleState.START):
@@ -119,7 +120,6 @@ public class BattleManager : MonoBehaviour
                 break;
         }
 
-        battleCamera.SetTarget(TurnOrder[current_turn].transform);
 
     }
 
@@ -163,7 +163,6 @@ public class BattleManager : MonoBehaviour
             {
                 GameObject new_player_unit = Instantiate(PlayerUnitPrefab, new_position, Quaternion.identity);
                 new_player_unit.transform.SetParent(TurnOrder[i].transform);
-
             }
 
             else
@@ -171,6 +170,9 @@ public class BattleManager : MonoBehaviour
                 GameObject new_enemy_unit = Instantiate(EnemyUnitPrefab, new_position, Quaternion.identity);
                 new_enemy_unit.transform.SetParent(TurnOrder[i].transform);
             }
+
+            battleMap.OccupyTile(battleMap.GetTile(TurnOrder[i].GetComponent<Unit>().GetPosition()));
+
         }
     }
 
@@ -343,9 +345,10 @@ public class BattleManager : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Space))
         {
             //Move to the action tile
+            battleMap.ResetMaterials(battleMap.GetTile(TurnOrder[current_turn].GetComponent<Unit>().GetPosition()), TurnOrder[current_turn].GetComponent<Unit>().GetMovementRange());
+            battleMap.GetTile(TurnOrder[current_turn].GetComponent<Unit>().GetPosition()).SetOccupied(false);
             MoveUnitToTile(action_tile);
- 
-        }
+         }
 
          else if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -498,7 +501,6 @@ public class BattleManager : MonoBehaviour
 
     void SelectTileForAction()
     {
-        Debug.Log(action_tile);
 
         if (Input.GetKeyDown(KeyCode.UpArrow)) //so it doesn't iterate all the time inside this
         {
@@ -537,12 +539,14 @@ public class BattleManager : MonoBehaviour
         }
 
         battleMap.HighlightTile(battleMap.GetTile(action_tile), SelectedTileMaterial);
+        battleCamera.SetTarget(battleMap.GetTile(action_tile).gameObject.transform);
 
     }
 
     void MoveUnitToTile(Vector2Int new_pos)
     {
         Vector3 new_position = new Vector3(new_pos.x * Globals.TILE_SIZE, 0, new_pos.y * Globals.TILE_SIZE);
+        TurnOrder[current_turn].GetComponent<Unit>().SetPosition(new_pos);
         TurnOrder[current_turn].transform.position = new_position;
         EndTurn();
     }

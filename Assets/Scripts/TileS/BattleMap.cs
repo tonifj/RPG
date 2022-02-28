@@ -122,7 +122,8 @@ public class BattleMap : MonoBehaviour
             tile_pos.x < map_width &&
 
            tile_pos.y > -1 &&
-           tile_pos.y < map_depth;
+           tile_pos.y < map_depth &&
+           !GetTile(tile_pos).IsOccupied();
     }
 
     int TileDistance(Tile origin, Tile end)
@@ -205,7 +206,16 @@ public class BattleMap : MonoBehaviour
         CopyMatrix(); //Copy the Tile component of each TileGO to a different array
         SetTileMatrix();
         PlaceTiles();
+    }
 
+    public void OccupyTile(Tile t)
+    {
+        t.SetOccupied(true);
+    }
+
+    public void FreeTile(Tile t)
+    {
+        t.SetOccupied(false);
     }
 }
 
