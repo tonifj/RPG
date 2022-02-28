@@ -58,7 +58,7 @@ public class BattleManager : MonoBehaviour
     int optionIndex;
     int current_turn;
 
-    public List<Unit> TurnOrder;
+    public List<GameObject> TurnOrder;
 
     BattleMap battleMap = new BattleMap();
 
@@ -83,7 +83,7 @@ public class BattleManager : MonoBehaviour
 
         battleState = BattleState.START;
 
-        battleCamera.SetTarget(battleMap.GetTile(TurnOrder[current_turn].GetPosition()).transform);
+        battleCamera.SetTarget(TurnOrder[current_turn].transform);
 
     }
 
@@ -104,7 +104,7 @@ public class BattleManager : MonoBehaviour
 
             case (BattleState.BATTLE):
                 {
-                    if (TurnOrder[current_turn].IsPlayerUnit())
+                    if (TurnOrder[current_turn].GetComponent<Unit>().IsPlayerUnit())
                     {
                         PlayerTurn();
                     }
@@ -119,7 +119,7 @@ public class BattleManager : MonoBehaviour
                 break;
         }
 
-        battleCamera.SetTarget(battleMap.GetTile(TurnOrder[current_turn].GetPosition()).transform);
+        battleCamera.SetTarget(TurnOrder[current_turn].transform);
 
     }
 
@@ -127,9 +127,9 @@ public class BattleManager : MonoBehaviour
     {
         for (int i = 0; i < TurnOrder.Count; ++i)
         {
-            if (i < TurnOrder.Count - 1 && TurnOrder[i].GetSpeed() < TurnOrder[i + 1].GetSpeed())
+            if (i < TurnOrder.Count - 1 && TurnOrder[i].GetComponent<Unit>().GetSpeed() < TurnOrder[i + 1].GetComponent<Unit>().GetSpeed())
             {
-                Unit temp = TurnOrder[i];
+                GameObject temp = TurnOrder[i];
                 TurnOrder[i] = TurnOrder[i + 1];
 
                 TurnOrder[i + 1] = temp;
@@ -138,12 +138,12 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    public void AddUnits(List<Unit> units)
+    public void AddUnits(List<GameObject> units)
     {
         for (int i = 0; i < units.Count; ++i)
         {
-            if (units[i].IsPlayerUnit())
-                units[i].SetSpeed(190);
+            if (units[i].GetComponent<Unit>().IsPlayerUnit())
+                units[i].GetComponent<Unit>().SetSpeed(190);
             TurnOrder.Add(units[i]);
         }
     }
@@ -158,12 +158,19 @@ public class BattleManager : MonoBehaviour
         for (int i = 0; i < TurnOrder.Count; ++i)
         {
 
-            Vector3 new_position = new Vector3(TurnOrder[i].GetPosition().x * Globals.TILE_SIZE, 0, TurnOrder[i].GetPosition().y * Globals.TILE_SIZE);
-            if (TurnOrder[i].IsPlayerUnit())
-                Instantiate(PlayerUnitPrefab, new_position, Quaternion.identity);
+            Vector3 new_position = new Vector3(TurnOrder[i].GetComponent<Unit>().GetPosition().x * Globals.TILE_SIZE, 0, TurnOrder[i].GetComponent<Unit>().GetPosition().y * Globals.TILE_SIZE);
+            if (TurnOrder[i].GetComponent<Unit>().IsPlayerUnit())
+            {
+                GameObject new_player_unit = Instantiate(PlayerUnitPrefab, new_position, Quaternion.identity);
+                new_player_unit.transform.SetParent(TurnOrder[i].transform);
+
+            }
 
             else
-                Instantiate(EnemyUnitPrefab, new_position, Quaternion.identity);
+            {
+                GameObject new_enemy_unit = Instantiate(EnemyUnitPrefab, new_position, Quaternion.identity);
+                new_enemy_unit.transform.SetParent(TurnOrder[i].transform);
+            }
         }
     }
 
@@ -328,15 +335,22 @@ public class BattleManager : MonoBehaviour
         HideBattleUI();
 
         //paint all tiles where the movement is possible
-        battleMap.ActionTileSelection(battleMap.GetTile(TurnOrder[current_turn].GetPosition()), TurnOrder[current_turn].GetMovementRange(), SelectableTilesMaterial);
+        battleMap.ActionTileSelection(battleMap.GetTile(TurnOrder[current_turn].GetComponent<Unit>().GetPosition()), TurnOrder[current_turn].GetComponent<Unit>().GetMovementRange(), SelectableTilesMaterial);
 
         //paint the current selected tile with a different color
         SelectTileForAction();
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            //Move to the action tile
+            MoveUnitToTile(action_tile);
+ 
+        }
+
+         else if (Input.GetKeyDown(KeyCode.Escape))
         {
             //Reset tile material
-            battleMap.ResetMaterials(battleMap.GetTile(TurnOrder[current_turn].GetPosition()), TurnOrder[current_turn].GetMovementRange());
+            battleMap.ResetMaterials(battleMap.GetTile(TurnOrder[current_turn].GetComponent<Unit>().GetPosition()), TurnOrder[current_turn].GetComponent<Unit>().GetMovementRange());
 
             ShowBattleUI();
             currentSubmenu = CurrentSubmenu.FIRST;
@@ -448,7 +462,7 @@ public class BattleManager : MonoBehaviour
     {
         if (!action_tile_reseted)
         {
-            action_tile = TurnOrder[current_turn].GetPosition();
+            action_tile = TurnOrder[current_turn].GetComponent<Unit>().GetPosition();
             action_tile_reseted = true;
         }
 
@@ -462,7 +476,7 @@ public class BattleManager : MonoBehaviour
         else
             ++current_turn;
 
-        if (TurnOrder[current_turn].IsPlayerUnit())
+        if (TurnOrder[current_turn].GetComponent<Unit>().IsPlayerUnit())
         {
             ResetActionMenu();
             menu_is_reset = false;
@@ -474,7 +488,7 @@ public class BattleManager : MonoBehaviour
 
     IEnumerator EnemyTurn()
     {
-        action_tile = TurnOrder[current_turn].GetPosition(); //reset action tile to the turn unit's position
+        action_tile = TurnOrder[current_turn].GetComponent<Unit>().GetPosition(); //reset action tile to the turn unit's position
         enemy_turn_finished = false;
         yield return new WaitForSeconds(2);
         EndTurn();
@@ -484,6 +498,8 @@ public class BattleManager : MonoBehaviour
 
     void SelectTileForAction()
     {
+        Debug.Log(action_tile);
+
         if (Input.GetKeyDown(KeyCode.UpArrow)) //so it doesn't iterate all the time inside this
         {
             Vector2Int tile_to_select = action_tile;
@@ -522,6 +538,13 @@ public class BattleManager : MonoBehaviour
 
         battleMap.HighlightTile(battleMap.GetTile(action_tile), SelectedTileMaterial);
 
+    }
+
+    void MoveUnitToTile(Vector2Int new_pos)
+    {
+        Vector3 new_position = new Vector3(new_pos.x * Globals.TILE_SIZE, 0, new_pos.y * Globals.TILE_SIZE);
+        TurnOrder[current_turn].transform.position = new_position;
+        EndTurn();
     }
 
 }

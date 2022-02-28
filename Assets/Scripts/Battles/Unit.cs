@@ -423,12 +423,13 @@ public class Unit : MonoBehaviour
 
     public void SetPosition(Vector2Int new_pos)
     {
-        position = new_pos;
+        position = new_pos;        
     }
 
     public void SetName(string new_name)
     {
         unit_name = new_name;
+        this.name = unit_name;
     }
     public int GetSpeed()
     {

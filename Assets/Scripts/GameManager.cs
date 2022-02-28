@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public List<Unit> playerUnits = new List<Unit>();
+    public List<GameObject> playerUnits = new List<GameObject>();
     public List<Mission> missions = new List<Mission>();
 
     GameObject battleManagerGO;
@@ -57,13 +57,14 @@ public class GameManager : MonoBehaviour
 
     void CreatePlayerUnit(ClassType type, Genre genre, int lvl)
     {
-        Unit new_unit = new Unit();
-        new_unit.SetClass(type);
-        new_unit.SetLvl(lvl); //Also sets the stats
-        new_unit.SetPlayerUnit();
-        new_unit.SetBaseStats();
-        new_unit.SetSpeed(190);
-        new_unit.SetName(Globals.GenerateRandomName(genre));
+        GameObject new_unit = new GameObject();
+        new_unit.AddComponent<Unit>();
+        new_unit.GetComponent<Unit>().SetClass(type);
+        new_unit.GetComponent<Unit>().SetLvl(lvl); //Also sets the stats
+        new_unit.GetComponent<Unit>().SetPlayerUnit();
+        new_unit.GetComponent<Unit>().SetBaseStats();
+        new_unit.GetComponent<Unit>().SetSpeed(190);
+        new_unit.GetComponent<Unit>().SetName(Globals.GenerateRandomName(genre));
         playerUnits.Add(new_unit);
     }
 

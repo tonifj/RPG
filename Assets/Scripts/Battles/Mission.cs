@@ -10,7 +10,7 @@ public class Mission : MonoBehaviour
     //TODO set equipment reward
 
     GameObject[] EnemyUnitsGO;
-    List <Unit> EnemyUnits = new List<Unit>();
+    List <GameObject> EnemyUnits = new List<GameObject>();
     int id;
     void Start()
     {
@@ -24,7 +24,7 @@ public class Mission : MonoBehaviour
 
     }
 
-    public List<Unit> GetEnemyUnits()
+    public List<GameObject> GetEnemyUnits()
     {
         return EnemyUnits;
     }
@@ -37,16 +37,18 @@ public class Mission : MonoBehaviour
 
     public void CreateEnemyUnit(ClassType type, Genre genre, int lvl)
     {
-        Unit new_unit = new Unit();
-        new_unit.SetClass(type);
-        new_unit.SetLvl(lvl); //Also sets the stats
-        new_unit.SetEnemyUnit();
-        new_unit.SetName(Globals.GenerateRandomName(genre));
+        GameObject new_unit = new GameObject();
+        new_unit.AddComponent<Unit>();
+        new_unit.GetComponent<Unit>().SetClass(type);
+        new_unit.GetComponent<Unit>().SetLvl(lvl); //Also sets the stats
+        new_unit.GetComponent<Unit>().SetEnemyUnit();
+        new_unit.GetComponent<Unit>().SetName(Globals.GenerateRandomName(genre));
         EnemyUnits.Add(new_unit);
     }
 
-    public void PlaceUnit(Unit unit, Vector2Int tile)
+    public void PlaceUnit(GameObject unit, Vector2Int tile)
     {
-        unit.SetPosition(tile);
+        unit.GetComponent<Unit>().SetPosition(tile);
+        unit.transform.position = new Vector3(unit.GetComponent<Unit>().GetPosition().x * Globals.TILE_SIZE, 0, unit.GetComponent<Unit>().GetPosition().y * Globals.TILE_SIZE);
     }
 }
