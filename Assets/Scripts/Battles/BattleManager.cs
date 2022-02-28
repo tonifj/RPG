@@ -171,6 +171,7 @@ public class BattleManager : MonoBehaviour
                 new_enemy_unit.transform.SetParent(TurnOrder[i].transform);
             }
 
+            battleMap.GetTile(TurnOrder[i].GetComponent<Unit>().GetPosition()).SetOccupiedByPlayerUnit(TurnOrder[i].GetComponent<Unit>().IsPlayerUnit());
             battleMap.OccupyTile(battleMap.GetTile(TurnOrder[i].GetComponent<Unit>().GetPosition()));
 
         }
@@ -339,18 +340,28 @@ public class BattleManager : MonoBehaviour
         //paint all tiles where the movement is possible
         battleMap.ActionTileSelection(battleMap.GetTile(TurnOrder[current_turn].GetComponent<Unit>().GetPosition()), TurnOrder[current_turn].GetComponent<Unit>().GetMovementRange(), SelectableTilesMaterial);
 
+        //unpaint all tiles where the movement is not possible
+        //HERE
         //paint the current selected tile with a different color
         SelectTileForAction();
 
-        if(Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            //Move to the action tile
-            battleMap.ResetMaterials(battleMap.GetTile(TurnOrder[current_turn].GetComponent<Unit>().GetPosition()), TurnOrder[current_turn].GetComponent<Unit>().GetMovementRange());
-            battleMap.GetTile(TurnOrder[current_turn].GetComponent<Unit>().GetPosition()).SetOccupied(false);
-            MoveUnitToTile(action_tile);
-         }
+            if(!battleMap.GetTile(action_tile).IsOccupied())
+            {
+                //Reset tile materials
+                battleMap.ResetMaterials(battleMap.GetTile(TurnOrder[current_turn].GetComponent<Unit>().GetPosition()), TurnOrder[current_turn].GetComponent<Unit>().GetMovementRange());
 
-         else if (Input.GetKeyDown(KeyCode.Escape))
+                //free the previous tile
+                FreeTile(battleMap.GetTile(TurnOrder[current_turn].GetComponent<Unit>().GetPosition()));
+
+                //move unit to the tile
+                MoveUnitToTile(action_tile);
+            }
+            
+        }
+
+        else if (Input.GetKeyDown(KeyCode.Escape))
         {
             //Reset tile material
             battleMap.ResetMaterials(battleMap.GetTile(TurnOrder[current_turn].GetComponent<Unit>().GetPosition()), TurnOrder[current_turn].GetComponent<Unit>().GetMovementRange());
@@ -501,13 +512,12 @@ public class BattleManager : MonoBehaviour
 
     void SelectTileForAction()
     {
-
         if (Input.GetKeyDown(KeyCode.UpArrow)) //so it doesn't iterate all the time inside this
         {
             Vector2Int tile_to_select = action_tile;
             ++tile_to_select.y;
 
-            if(battleMap.IsValidTile(tile_to_select) && battleMap.GetTile(tile_to_select).GetMaterial().color == SelectableTilesMaterial.color)
+            if (battleMap.IsValidTileMovement(tile_to_select, TurnOrder[current_turn].GetComponent<Unit>().IsPlayerUnit()) && battleMap.GetTile(tile_to_select).GetMaterial().color == SelectableTilesMaterial.color)
                 ++action_tile.y;
         }
 
@@ -516,7 +526,7 @@ public class BattleManager : MonoBehaviour
             Vector2Int tile_to_select = action_tile;
             --tile_to_select.y;
 
-            if (battleMap.IsValidTile(tile_to_select) && battleMap.GetTile(tile_to_select).GetMaterial().color == SelectableTilesMaterial.color)
+            if (battleMap.IsValidTileMovement(tile_to_select, TurnOrder[current_turn].GetComponent<Unit>().IsPlayerUnit()) && battleMap.GetTile(tile_to_select).GetMaterial().color == SelectableTilesMaterial.color)
                 --action_tile.y;
         }
 
@@ -525,7 +535,7 @@ public class BattleManager : MonoBehaviour
             Vector2Int tile_to_select = action_tile;
             --tile_to_select.x;
 
-            if (battleMap.IsValidTile(tile_to_select) && battleMap.GetTile(tile_to_select).GetMaterial().color == SelectableTilesMaterial.color)
+            if (battleMap.IsValidTileMovement(tile_to_select, TurnOrder[current_turn].GetComponent<Unit>().IsPlayerUnit()) && battleMap.GetTile(tile_to_select).GetMaterial().color == SelectableTilesMaterial.color)
                 --action_tile.x;
         }
 
@@ -534,7 +544,7 @@ public class BattleManager : MonoBehaviour
             Vector2Int tile_to_select = action_tile;
             ++tile_to_select.x;
 
-            if (battleMap.IsValidTile(tile_to_select) && battleMap.GetTile(tile_to_select).GetMaterial().color == SelectableTilesMaterial.color)
+            if (battleMap.IsValidTileMovement(tile_to_select, TurnOrder[current_turn].GetComponent<Unit>().IsPlayerUnit()) && battleMap.GetTile(tile_to_select).GetMaterial().color == SelectableTilesMaterial.color)
                 ++action_tile.x;
         }
 
@@ -545,10 +555,26 @@ public class BattleManager : MonoBehaviour
 
     void MoveUnitToTile(Vector2Int new_pos)
     {
+        //occupy the tile
+        battleMap.GetTile(action_tile).SetOccupied(true);
+
+        //if the tile is occupied by a player unit, indicate it
+        battleMap.GetTile(action_tile).SetOccupiedByPlayerUnit(TurnOrder[current_turn].GetComponent<Unit>().IsPlayerUnit());
+
+        //Set the tilepos
         Vector3 new_position = new Vector3(new_pos.x * Globals.TILE_SIZE, 0, new_pos.y * Globals.TILE_SIZE);
         TurnOrder[current_turn].GetComponent<Unit>().SetPosition(new_pos);
+
+        //set the new world pos
         TurnOrder[current_turn].transform.position = new_position;
         EndTurn();
+    }
+
+    void FreeTile(Tile t)
+    {
+        t.SetOccupied(false);
+        t.SetOccupiedByPlayerUnit(false);
+
     }
 
 }

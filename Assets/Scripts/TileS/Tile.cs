@@ -5,11 +5,14 @@ using UnityEngine;
 public class Tile : MonoBehaviour
 {
     Vector3 tile_position;
-    bool occupied; //tells if is there something in the tile
+    bool occupied; //tells if is there something in the tile.
+    bool occupied_by_player_unit;
 
     Vector2Int battle_map_pos;
 
     Material original_material;
+
+    
 
     private GameObject TileSelector;
 
@@ -71,6 +74,16 @@ public class Tile : MonoBehaviour
     public void SetOccupied(bool b)
     {
         occupied = b;
+    }
+
+    public void SetOccupiedByPlayerUnit(bool b)
+    {
+        occupied_by_player_unit = b;
+    }
+
+    public bool IsOccupiedByPlayerUnit()
+    {
+        return occupied_by_player_unit;
     }
 
 }

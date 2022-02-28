@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BattleMap : MonoBehaviour
 {
-    
+
     int map_width;//x
     int map_depth;//z
     GameObject[] TilesGO;
@@ -18,7 +18,7 @@ public class BattleMap : MonoBehaviour
 
     void Start()
     {
-       
+
 
     }
 
@@ -67,7 +67,7 @@ public class BattleMap : MonoBehaviour
     public void HighlightTile(Tile tile, Material highlight_material)
     {
         if (IsValidTile(tile.GetBattleMapPos()))
-        {       
+        {
             tile.gameObject.GetComponent<MeshRenderer>().material = highlight_material;
         }
     }
@@ -115,15 +115,40 @@ public class BattleMap : MonoBehaviour
         else
             return invalidTile;
     }
-
     public bool IsValidTile(Vector2Int tile_pos) //there is no tile with negative positions
     {
         return tile_pos.x > -1 &&
             tile_pos.x < map_width &&
 
            tile_pos.y > -1 &&
-           tile_pos.y < map_depth &&
-           !GetTile(tile_pos).IsOccupied();
+           tile_pos.y < map_depth;
+    }
+
+    public bool IsValidTileMovement(Vector2Int tile_pos, bool is_player_unit)
+    {
+
+        Debug.Log(tile_pos);
+
+        if(IsValidTile(tile_pos))
+        {
+            if (GetTile(tile_pos).IsOccupied())
+            {
+                if (is_player_unit == GetTile(tile_pos).IsOccupiedByPlayerUnit())
+                {
+                    return true;
+                }
+                return false;
+            }
+            return true;
+        }
+       
+
+        else
+        {
+            return false;
+        }
+
+
     }
 
     int TileDistance(Tile origin, Tile end)

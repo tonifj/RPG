@@ -7,7 +7,7 @@ public class BattleCamera : MonoBehaviour
     Camera cam;
 
     Transform target;
-    float smoothSpeed = 0.075f;
+    float smoothSpeed = 0.0325f/2f;
     Vector3 offset;
     Vector3 desiredPosition;
     Vector3 smoothedPosition;
