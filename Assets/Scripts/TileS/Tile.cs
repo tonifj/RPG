@@ -4,37 +4,54 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    Vector3 tile_position;
-    bool occupied; //tells if is there something in the tile.
-    bool occupied_by_player_unit;
-    int weight = 1;
+    public bool walkable = false;
+    public bool current = false;
+    public bool target = false;
+    public bool selectable = false; //selectable to move to
 
-    Vector2Int battle_map_pos;
+    public Vector2Int battle_map_pos;
 
-    Material original_material;
+    public List<Tile> adjacents = new List<Tile>();
 
-    
-
-    private GameObject TileSelector;
+    //BFS
+    public bool visited = false;
+    public Tile parent = null;
+    public int distance = 0;
 
     public Tile()
     {
-        occupied = false;
         battle_map_pos = new Vector2Int(-1, -1);
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        original_material = GetComponent<MeshRenderer>().material;
-
         transform.localScale = new Vector3(Globals.TILE_SIZE, 1, Globals.TILE_SIZE);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (current)
+        {
+            GetComponent<Renderer>().material.color = Color.magenta;
+        }
+
+        else if (target)
+        {
+            GetComponent<Renderer>().material.color = Color.green;
+        }
+
+        else if (selectable)
+        {
+            GetComponent<Renderer>().material.color = Color.red;
+        }
+
+        else
+        {
+            GetComponent<Renderer>().material.color = Color.white;
+        }
+
     }
 
     public Vector2Int GetBattleMapPos() //Returns position in tilepos (vector2int)
@@ -59,7 +76,7 @@ public class Tile : MonoBehaviour
 
     public void ResetTileMaterial()
     {
-        GetComponent<MeshRenderer>().material = original_material;
+        GetComponent<MeshRenderer>().material.color = Color.white;
     }
 
     public Material GetMaterial()
@@ -67,39 +84,22 @@ public class Tile : MonoBehaviour
         return GetComponent<MeshRenderer>().material;
     }
 
-    public bool IsOccupied()
+    public void ResetTile()
     {
-        return occupied;
+        adjacents.Clear();
+        current = false;
+        target = false;
+        selectable = false; //selectable to move to
+
+        visited = false;
+        parent = null;
+        distance = 0;
     }
 
-    public void SetOccupied(bool b)
+    public void SetNeighbors(List<Tile> new_adjacents)
     {
-        occupied = b;
-    }
-
-    public void SetOccupiedByPlayerUnit(bool b)
-    {
-        occupied_by_player_unit = b;
-    }
-
-    public bool IsOccupiedByPlayerUnit()
-    {
-        return occupied_by_player_unit;
-    }
-
-    public int GetWeight()
-    {
-        return weight;
-    }
-
-    public void SetWeight(int new_weight)
-    {
-        weight = new_weight;
-    }
-
-    public void ResetWeight()
-    {
-        weight = 1;
+        ResetTile();
+        adjacents = new_adjacents;
     }
 
 }

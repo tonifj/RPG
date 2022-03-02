@@ -86,13 +86,13 @@ public class BattleMap : MonoBehaviour
         if (IsValidTile(GetBackNeighborTile(origin).GetBattleMapPos()))
             neighbors.Add(GetBackNeighborTile(origin));
 
-        else if (IsValidTile(GetFrontNeighborTile(origin).GetBattleMapPos()))
+        if (IsValidTile(GetFrontNeighborTile(origin).GetBattleMapPos()))
             neighbors.Add(GetFrontNeighborTile(origin));
 
-        else if (IsValidTile(GetRightNeighborTile(origin).GetBattleMapPos()))
+       if (IsValidTile(GetRightNeighborTile(origin).GetBattleMapPos()))
             neighbors.Add(GetRightNeighborTile(origin));
 
-        else if (IsValidTile(GetLeftNeighborTile(origin).GetBattleMapPos()))
+       if (IsValidTile(GetLeftNeighborTile(origin).GetBattleMapPos()))
             neighbors.Add(GetLeftNeighborTile(origin));
 
         return neighbors;
@@ -142,32 +142,13 @@ public class BattleMap : MonoBehaviour
            tile_pos.y < map_depth;
     }
 
-    public bool IsValidTileMovement(Vector2Int tile_pos, bool is_player_unit)
-    {
-
-        Debug.Log(tile_pos);
-
-        if (IsValidTile(tile_pos))
-        {
-            if (GetTile(tile_pos).IsOccupied())
-            {
-                if (is_player_unit == GetTile(tile_pos).IsOccupiedByPlayerUnit())
-                {
-                    return true;
-                }
-                return false;
-            }
-            return true;
-        }
+    //public bool IsValidTileMovement(Vector2Int tile_pos, bool is_player_unit)
+   // {
 
 
-        else
-        {
-            return false;
-        }
 
 
-    }
+    //}
 
     int TileDistance(Tile origin, Tile end)
     {
@@ -220,25 +201,7 @@ public class BattleMap : MonoBehaviour
 
     public void MovementTileSelection(Tile origin, int range, Material select_mat, bool is_player_unit)
     {
-        int movements_left = range;
-        selection_material = select_mat;
-
-        if (range == 0)
-            HighlightTile(origin, select_mat);
-        else
-        {
-            for (int i = 0; i < Tiles.Count; ++i)
-            {
-                if (TileDistance(origin, Tiles[i]) <= range && IsValidTileMovement(Tiles[i].GetBattleMapPos(), is_player_unit))
-                {
-                    HighlightTile(Tiles[i], select_mat);
-                    // --movements_left;
-                }
-
-
-            }
-            HighlightTile(origin, select_mat);
-        }
+        
     }
 
     public void ResetMaterials(Tile origin, int range)
@@ -262,6 +225,14 @@ public class BattleMap : MonoBehaviour
         map_depth = d;
     }
 
+    void SetTileNeighbors()
+    {
+        for(int i = 0; i < Tiles.Count; ++i)
+        {
+            Tiles[i].SetNeighbors(GetNeighbors(Tiles[i]));
+        }
+    }
+
 
     public void SetMap()
     {
@@ -272,6 +243,7 @@ public class BattleMap : MonoBehaviour
         CopyMatrix(); //Copy the Tile component of each TileGO to a different array
         SetTileMatrix();
         PlaceTiles();
+        SetTileNeighbors();
     }
 
     public void OccupyTile(Tile t)
