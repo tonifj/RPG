@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
         //Mission 1
         Mission introduction = CreateMission(1, 50);
         introduction.CreateEnemyUnit(ClassType.SNIPER, Genre.FEMALE, 1);
-        introduction.PlaceUnit(introduction.GetEnemyUnits()[0], new Vector2Int(5, 4));
+        introduction.PlaceUnit(introduction.GetEnemyUnits()[0], new Vector2Int(2, 2));
         introduction.CreateEnemyUnit(ClassType.SNIPER, Genre.FEMALE, 1);
         introduction.PlaceUnit(introduction.GetEnemyUnits()[1], new Vector2Int(5, 3));
         introduction.CreateEnemyUnit(ClassType.SNIPER, Genre.FEMALE, 1);

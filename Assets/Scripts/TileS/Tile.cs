@@ -7,6 +7,7 @@ public class Tile : MonoBehaviour
     Vector3 tile_position;
     bool occupied; //tells if is there something in the tile.
     bool occupied_by_player_unit;
+    int weight = 1;
 
     Vector2Int battle_map_pos;
 
@@ -84,6 +85,21 @@ public class Tile : MonoBehaviour
     public bool IsOccupiedByPlayerUnit()
     {
         return occupied_by_player_unit;
+    }
+
+    public int GetWeight()
+    {
+        return weight;
+    }
+
+    public void SetWeight(int new_weight)
+    {
+        weight = new_weight;
+    }
+
+    public void ResetWeight()
+    {
+        weight = 1;
     }
 
 }

@@ -18,8 +18,7 @@ public class BattleMap : MonoBehaviour
 
     void Start()
     {
-
-
+        invalidTile.SetTilePos(new Vector2Int(-1, -1));
     }
 
     // Update is called once per frame
@@ -80,6 +79,25 @@ public class BattleMap : MonoBehaviour
         }
     }
 
+    List<Tile> GetNeighbors(Tile origin)
+    {
+        List<Tile> neighbors = new List<Tile>();
+
+        if (IsValidTile(GetBackNeighborTile(origin).GetBattleMapPos()))
+            neighbors.Add(GetBackNeighborTile(origin));
+
+        else if (IsValidTile(GetFrontNeighborTile(origin).GetBattleMapPos()))
+            neighbors.Add(GetFrontNeighborTile(origin));
+
+        else if (IsValidTile(GetRightNeighborTile(origin).GetBattleMapPos()))
+            neighbors.Add(GetRightNeighborTile(origin));
+
+        else if (IsValidTile(GetLeftNeighborTile(origin).GetBattleMapPos()))
+            neighbors.Add(GetLeftNeighborTile(origin));
+
+        return neighbors;
+    }
+
     Tile GetRightNeighborTile(Tile origin)
     {
         if (origin.GetBattleMapPos().x < map_width - 1)
@@ -129,7 +147,7 @@ public class BattleMap : MonoBehaviour
 
         Debug.Log(tile_pos);
 
-        if(IsValidTile(tile_pos))
+        if (IsValidTile(tile_pos))
         {
             if (GetTile(tile_pos).IsOccupied())
             {
@@ -141,7 +159,7 @@ public class BattleMap : MonoBehaviour
             }
             return true;
         }
-       
+
 
         else
         {
@@ -183,7 +201,7 @@ public class BattleMap : MonoBehaviour
         return dist;
     }
 
-    public void ActionTileSelection(Tile origin, int range, Material select_mat)
+    public void AttackSkillTileSelection(Tile origin, int range, Material select_mat)
     {
         selection_material = select_mat;
 
@@ -195,6 +213,29 @@ public class BattleMap : MonoBehaviour
             {
                 if (TileDistance(origin, Tiles[i]) <= range)
                     HighlightTile(Tiles[i], select_mat);
+            }
+            HighlightTile(origin, select_mat);
+        }
+    }
+
+    public void MovementTileSelection(Tile origin, int range, Material select_mat, bool is_player_unit)
+    {
+        int movements_left = range;
+        selection_material = select_mat;
+
+        if (range == 0)
+            HighlightTile(origin, select_mat);
+        else
+        {
+            for (int i = 0; i < Tiles.Count; ++i)
+            {
+                if (TileDistance(origin, Tiles[i]) <= range && IsValidTileMovement(Tiles[i].GetBattleMapPos(), is_player_unit))
+                {
+                    HighlightTile(Tiles[i], select_mat);
+                    // --movements_left;
+                }
+
+
             }
             HighlightTile(origin, select_mat);
         }
@@ -235,12 +276,20 @@ public class BattleMap : MonoBehaviour
 
     public void OccupyTile(Tile t)
     {
-        t.SetOccupied(true);
+
     }
 
     public void FreeTile(Tile t)
     {
-        t.SetOccupied(false);
     }
+
+    void CalculateAvailableTilesForMovement(Tile origin, int movement_range, bool is_player_unit)
+    {
+
+    }
+
+ 
+
+
 }
 
