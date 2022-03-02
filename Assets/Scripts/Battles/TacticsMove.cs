@@ -24,6 +24,7 @@ public class TacticsMove : MonoBehaviour
     {
         tiles = GameObject.FindGameObjectsWithTag("tile");
         halfHeight = GetComponent<Collider>().bounds.extents.y; //used to jump tiles
+
     }
 
     public void SetCurrentTile()
@@ -167,5 +168,12 @@ public class TacticsMove : MonoBehaviour
     void SetHorizontalVelocity()
     {
         velocity = heading * moveSpeed;
+    }
+
+    void ResetUnit()
+    {
+        moving = false;
+        GetTargetTile(gameObject).target = false;
+        path.Clear();
     }
 }

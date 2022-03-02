@@ -158,7 +158,7 @@ public class BattleManager : MonoBehaviour
         for (int i = 0; i < TurnOrder.Count; ++i)
         {
 
-            Vector3 new_position = new Vector3(TurnOrder[i].GetComponent<Unit>().GetPosition().x * Globals.TILE_SIZE, 1.4f, TurnOrder[i].GetComponent<Unit>().GetPosition().y * Globals.TILE_SIZE);
+            Vector3 new_position = new Vector3(TurnOrder[i].GetComponent<Unit>().GetPosition().x * Globals.TILE_SIZE, 1.5f, TurnOrder[i].GetComponent<Unit>().GetPosition().y * Globals.TILE_SIZE);
             if (TurnOrder[i].GetComponent<Unit>().IsPlayerUnit())
             {
                 GameObject new_player_unit = Instantiate(PlayerUnitPrefab, new_position, Quaternion.identity);
