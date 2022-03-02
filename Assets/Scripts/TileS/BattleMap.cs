@@ -83,16 +83,16 @@ public class BattleMap : MonoBehaviour
     {
         List<Tile> neighbors = new List<Tile>();
 
-        if (IsValidTile(GetBackNeighborTile(origin).GetBattleMapPos()))
+        if (IsValidTile(GetBackNeighborTile(origin).GetBattleMapPos()) && GetBackNeighborTile(origin).IsWalkable())
             neighbors.Add(GetBackNeighborTile(origin));
 
-        if (IsValidTile(GetFrontNeighborTile(origin).GetBattleMapPos()))
+        if (IsValidTile(GetFrontNeighborTile(origin).GetBattleMapPos()) && GetFrontNeighborTile(origin).IsWalkable())
             neighbors.Add(GetFrontNeighborTile(origin));
 
-       if (IsValidTile(GetRightNeighborTile(origin).GetBattleMapPos()))
+       if (IsValidTile(GetRightNeighborTile(origin).GetBattleMapPos()) && GetRightNeighborTile(origin).IsWalkable())
             neighbors.Add(GetRightNeighborTile(origin));
 
-       if (IsValidTile(GetLeftNeighborTile(origin).GetBattleMapPos()))
+       if (IsValidTile(GetLeftNeighborTile(origin).GetBattleMapPos()) && GetLeftNeighborTile(origin).IsWalkable())
             neighbors.Add(GetLeftNeighborTile(origin));
 
         return neighbors;
@@ -225,15 +225,6 @@ public class BattleMap : MonoBehaviour
         map_depth = d;
     }
 
-    void SetTileNeighbors()
-    {
-        for(int i = 0; i < Tiles.Count; ++i)
-        {
-            Tiles[i].SetNeighbors(GetNeighbors(Tiles[i]));
-        }
-    }
-
-
     public void SetMap()
     {
         tile_matrix = new Vector2Int(0, 0);
@@ -243,7 +234,6 @@ public class BattleMap : MonoBehaviour
         CopyMatrix(); //Copy the Tile component of each TileGO to a different array
         SetTileMatrix();
         PlaceTiles();
-        SetTileNeighbors();
     }
 
     public void OccupyTile(Tile t)

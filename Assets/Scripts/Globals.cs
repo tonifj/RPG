@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Globals : MonoBehaviour
 {
-    public static int TILE_SIZE = 3;
+    public static int TILE_SIZE = 1;
     public static int MAX_BATTLE_UNITS = 6;
 
     public static string GenerateRandomName(Genre genre)

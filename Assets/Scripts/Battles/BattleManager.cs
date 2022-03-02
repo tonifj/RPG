@@ -158,7 +158,7 @@ public class BattleManager : MonoBehaviour
         for (int i = 0; i < TurnOrder.Count; ++i)
         {
 
-            Vector3 new_position = new Vector3(TurnOrder[i].GetComponent<Unit>().GetPosition().x * Globals.TILE_SIZE, 0, TurnOrder[i].GetComponent<Unit>().GetPosition().y * Globals.TILE_SIZE);
+            Vector3 new_position = new Vector3(TurnOrder[i].GetComponent<Unit>().GetPosition().x * Globals.TILE_SIZE, 1.4f, TurnOrder[i].GetComponent<Unit>().GetPosition().y * Globals.TILE_SIZE);
             if (TurnOrder[i].GetComponent<Unit>().IsPlayerUnit())
             {
                 GameObject new_player_unit = Instantiate(PlayerUnitPrefab, new_position, Quaternion.identity);
@@ -341,7 +341,7 @@ public class BattleManager : MonoBehaviour
         battleMap.MovementTileSelection(battleMap.GetTile(TurnOrder[current_turn].GetComponent<Unit>().GetPosition()), TurnOrder[current_turn].GetComponent<Unit>().GetMovementRange(), SelectableTilesMaterial, TurnOrder[current_turn].GetComponent<Unit>().IsPlayerUnit());
 
         //unpaint all tiles where the movement is not possible
-        //HERE
+
         //paint the current selected tile with a different color
         SelectTileForAction();
 

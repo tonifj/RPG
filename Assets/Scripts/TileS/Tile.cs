@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    public bool walkable = false;
+    public bool walkable = true;
     public bool current = false;
     public bool target = false;
     public bool selectable = false; //selectable to move to
@@ -79,11 +79,6 @@ public class Tile : MonoBehaviour
         GetComponent<MeshRenderer>().material.color = Color.white;
     }
 
-    public Material GetMaterial()
-    {
-        return GetComponent<MeshRenderer>().material;
-    }
-
     public void ResetTile()
     {
         adjacents.Clear();
@@ -96,10 +91,44 @@ public class Tile : MonoBehaviour
         distance = 0;
     }
 
-    public void SetNeighbors(List<Tile> new_adjacents)
+    public void FindNeighbors(float jumpHeight)
     {
         ResetTile();
-        adjacents = new_adjacents;
+        CheckTile(Vector3.forward, jumpHeight);
+        CheckTile(-Vector3.forward, jumpHeight);
+        CheckTile(Vector3.right, jumpHeight);
+        CheckTile(-Vector3.right, jumpHeight);
+
+
     }
 
+    public void CheckTile(Vector3 direction, float jumpHeight)
+    {
+        Vector3 halfExtents = new Vector3(0.25f, (Globals.TILE_SIZE+jumpHeight)/2, 0.25f);
+        Collider[] colliders = Physics.OverlapBox(transform.position + direction, halfExtents);
+
+        foreach(Collider collider in colliders)
+        {
+            Tile tile = collider.GetComponent<Tile>();
+            if(tile != null && tile.walkable)
+            {
+                RaycastHit hit;
+                if (!Physics.Raycast(tile.transform.position, Vector3.up, out hit, 1)); //if there isn't something on top of the tile
+                {
+                    adjacents.Add(tile);
+                }
+            }
+        }
+    }
+  
+
+    public bool IsWalkable()
+    {
+        return walkable;
+    }
+
+    public void BeingVisited()
+    {
+        visited = true;
+    }
 }
