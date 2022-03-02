@@ -10,6 +10,7 @@ public class TacticsMove : MonoBehaviour
     Stack<Tile> path = new Stack<Tile>();
     Tile currentTile;
 
+    public bool moving = false;
     public int move = 5;
     public int jumpHeight = 2;
     public int moveSpeed = 2;
@@ -25,10 +26,14 @@ public class TacticsMove : MonoBehaviour
         halfHeight = GetComponent<Collider>().bounds.extents.y; //used to jump tiles
     }
 
-    public void GetCurrentTile()
+    public void SetCurrentTile()
     {
-        currentTile = GetTargetTile(gameObject); //return the tile where the unit stands
-        
+        currentTile = GetTargetTile(gameObject); // tile where the unit stands       
+    }
+
+    public Tile GetCurrenntTile()
+    {
+        return GetTargetTile(gameObject);
     }
 
     public Tile GetTargetTile(GameObject target)
@@ -58,7 +63,7 @@ public class TacticsMove : MonoBehaviour
     public void FindSelectableTiles() //BFS
     {
         ComputeAdjacencyLists();
-        GetCurrentTile();
+        SetCurrentTile();
 
         Queue<Tile> process = new Queue<Tile>();
 
@@ -87,5 +92,80 @@ public class TacticsMove : MonoBehaviour
             }
             
         }
+    }
+
+    public void MoveToTile(Tile tile)
+    {
+        path.Clear();
+        tile.target = true;
+        moving = true;
+
+        Tile next = tile;
+
+        while(next != null)
+        {
+            path.Push(next);
+            next = next.parent;
+        }
+    }
+
+    protected void Move()
+    {
+        if(path.Count > 0)
+        {
+            Tile t = path.Peek();
+            Vector3 target = t.transform.position;
+
+            //calculate the unit's position on top on the target tile
+            target.y += halfHeight + t.GetComponent<Collider>().bounds.extents.y;
+
+            if(Vector3.Distance(transform.position, target) >= 0.05f)
+            {
+                CalculateHeading(target);
+                SetHorizontalVelocity();
+                transform.forward = heading;
+                transform.position += velocity * Time.deltaTime;
+            }
+
+            else
+            {
+                //Tile center reached
+                transform.position = target;
+                path.Pop();
+            }
+        }
+
+        else
+        {
+            RemoveSelectableTiles();
+            moving = false;
+        }
+    }
+
+    protected void RemoveSelectableTiles()
+    {
+        if(currentTile != null)
+        {
+            currentTile.current = false;
+            currentTile = null;
+        }
+
+        foreach (Tile tile in selectableTiles)
+        {
+            tile.ResetTile();
+        }
+
+        selectableTiles.Clear();
+    }
+
+    void CalculateHeading(Vector3 target)
+    {
+        heading = target - transform.position;
+        heading.Normalize();
+    }
+
+    void SetHorizontalVelocity()
+    {
+        velocity = heading * moveSpeed;
     }
 }

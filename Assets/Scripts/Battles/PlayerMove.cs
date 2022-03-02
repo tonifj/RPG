@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class PlayerMove : TacticsMove
 {
-    // Start is called before the first frame update
+    Tile selectedTileForKeyboardMovement;
+
     void Start()
     {
         Init();
@@ -13,6 +14,43 @@ public class PlayerMove : TacticsMove
     // Update is called once per frame
     void Update()
     {
-        FindSelectableTiles(); 
+        if(!moving)
+        {
+            FindSelectableTiles();
+            SelectTileMouse();
+        }
+
+        else
+        {
+            Move();
+        }
+    }
+
+    void SelectTileMouse()
+    {
+        if(Input.GetMouseButtonUp(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            RaycastHit hit;
+            if(Physics.Raycast(ray, out hit))
+            {
+                if(hit.collider.tag == "tile")
+                {
+                    Tile t = hit.collider.GetComponent<Tile>();
+
+                    if(t.selectable)
+                    {
+                        //move
+                        MoveToTile(t);
+                    }
+                }
+            }
+        }
+    }
+
+    void SelectTileKeyboard()
+    {
+        
     }
 }

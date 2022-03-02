@@ -29,7 +29,6 @@ public class GameManager : MonoBehaviour
         introduction.PlaceUnit(introduction.GetEnemyUnits()[2], new Vector2Int(5, 2));
 
         CreatePlayerUnit(ClassType.RECRUIT, Genre.MALE, 1);
-        CreatePlayerUnit(ClassType.RECRUIT, Genre.MALE, 1);
 
         for (int i = 0; i < playerUnits.Count; ++i)
             introduction.PlaceUnit(playerUnits[i], new Vector2Int(i + 1, 0));
