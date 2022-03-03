@@ -172,7 +172,7 @@ public class BattleManager : MonoBehaviour
             }
 
             //battleMap.GetTile(TurnOrder[i].GetComponent<Unit>().GetPosition()).SetOccupiedByPlayerUnit(TurnOrder[i].GetComponent<Unit>().IsPlayerUnit());
-            battleMap.OccupyTile(battleMap.GetTile(TurnOrder[i].GetComponent<Unit>().GetPosition()));
+           // battleMap.OccupyTile(battleMap.GetTile(TurnOrder[i].GetComponent<Unit>().GetPosition()));
 
         }
     }
@@ -338,7 +338,7 @@ public class BattleManager : MonoBehaviour
         HideBattleUI();
 
         //paint all tiles where the movement is possible
-        battleMap.MovementTileSelection(battleMap.GetTile(TurnOrder[current_turn].GetComponent<Unit>().GetPosition()), TurnOrder[current_turn].GetComponent<Unit>().GetMovementRange(), SelectableTilesMaterial, TurnOrder[current_turn].GetComponent<Unit>().IsPlayerUnit());
+       // battleMap.MovementTileSelection(battleMap.GetTile(TurnOrder[current_turn].GetComponent<Unit>().GetPosition()), TurnOrder[current_turn].GetComponent<Unit>().GetMovementRange(), SelectableTilesMaterial, TurnOrder[current_turn].GetComponent<Unit>().IsPlayerUnit());
 
         //unpaint all tiles where the movement is not possible
 

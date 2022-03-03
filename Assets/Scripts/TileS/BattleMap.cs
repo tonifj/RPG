@@ -18,7 +18,7 @@ public class BattleMap : MonoBehaviour
 
     void Start()
     {
-        invalidTile.SetTilePos(new Vector2Int(-1, -1));
+        invalidTile.SetTilePos(new Vector3(-1, 0, -1));
     }
 
     // Update is called once per frame
@@ -54,7 +54,8 @@ public class BattleMap : MonoBehaviour
     {
         foreach (Tile t in Tiles)
         {
-            t.SetTilePos(t.GetBattleMapPos());
+            Vector3 pos = new Vector3(t.GetBattleMapPos().x, 0, t.GetBattleMapPos().y);
+            t.SetTilePos(pos);
         }
     }
 
@@ -89,10 +90,10 @@ public class BattleMap : MonoBehaviour
         if (IsValidTile(GetFrontNeighborTile(origin).GetBattleMapPos()) && GetFrontNeighborTile(origin).IsWalkable())
             neighbors.Add(GetFrontNeighborTile(origin));
 
-       if (IsValidTile(GetRightNeighborTile(origin).GetBattleMapPos()) && GetRightNeighborTile(origin).IsWalkable())
+        if (IsValidTile(GetRightNeighborTile(origin).GetBattleMapPos()) && GetRightNeighborTile(origin).IsWalkable())
             neighbors.Add(GetRightNeighborTile(origin));
 
-       if (IsValidTile(GetLeftNeighborTile(origin).GetBattleMapPos()) && GetLeftNeighborTile(origin).IsWalkable())
+        if (IsValidTile(GetLeftNeighborTile(origin).GetBattleMapPos()) && GetLeftNeighborTile(origin).IsWalkable())
             neighbors.Add(GetLeftNeighborTile(origin));
 
         return neighbors;
@@ -141,14 +142,6 @@ public class BattleMap : MonoBehaviour
            tile_pos.y > -1 &&
            tile_pos.y < map_depth;
     }
-
-    //public bool IsValidTileMovement(Vector2Int tile_pos, bool is_player_unit)
-   // {
-
-
-
-
-    //}
 
     int TileDistance(Tile origin, Tile end)
     {
@@ -199,11 +192,6 @@ public class BattleMap : MonoBehaviour
         }
     }
 
-    public void MovementTileSelection(Tile origin, int range, Material select_mat, bool is_player_unit)
-    {
-        
-    }
-
     public void ResetMaterials(Tile origin, int range)
     {
         if (range == 0)
@@ -234,23 +222,9 @@ public class BattleMap : MonoBehaviour
         CopyMatrix(); //Copy the Tile component of each TileGO to a different array
         SetTileMatrix();
         PlaceTiles();
+        Tiles[0].SetTilePos(new Vector3(Tiles[0].GetBattleMapPos().x, 1, Tiles[0].GetBattleMapPos().y));
     }
 
-    public void OccupyTile(Tile t)
-    {
-
-    }
-
-    public void FreeTile(Tile t)
-    {
-    }
-
-    void CalculateAvailableTilesForMovement(Tile origin, int movement_range, bool is_player_unit)
-    {
-
-    }
-
- 
 
 
 }

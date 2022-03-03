@@ -64,9 +64,9 @@ public class Tile : MonoBehaviour
         battle_map_pos = v;
     }
 
-    public void SetTilePos(Vector2 pos)
+    public void SetTilePos(Vector3 pos)
     {
-        transform.position = new Vector3(Globals.TILE_SIZE * pos.x, 0, Globals.TILE_SIZE * pos.y);
+        transform.position = new Vector3(Globals.TILE_SIZE * pos.x, pos.y, Globals.TILE_SIZE * pos.z);
     }
 
     public Vector3 GetWorldPos() //returns position in vec3
