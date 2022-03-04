@@ -238,9 +238,10 @@ public class TacticsMove : MonoBehaviour
 
         else
         {
+
             fallingDown = false;
             jumpingUp = true;
-            movingToEdge = false;
+            movingToEdge =true;
 
             velocity = heading * moveSpeed / 3; //so it gets close to the edge slower
 
@@ -258,6 +259,8 @@ public class TacticsMove : MonoBehaviour
         if (transform.position.y <= target.y)
         {
             fallingDown = false;
+            jumpingUp = false;
+            movingToEdge = false;
 
             Vector3 pos = transform.position;
             pos.y = target.y;
@@ -291,7 +294,6 @@ public class TacticsMove : MonoBehaviour
             fallingDown = true;
 
             velocity /= 3;
-            velocity.y = 1.5f;
         }
     }
 }

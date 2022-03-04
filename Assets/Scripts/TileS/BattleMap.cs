@@ -222,7 +222,15 @@ public class BattleMap : MonoBehaviour
         CopyMatrix(); //Copy the Tile component of each TileGO to a different array
         SetTileMatrix();
         PlaceTiles();
-        Tiles[0].SetTilePos(new Vector3(Tiles[0].GetBattleMapPos().x, 1, Tiles[0].GetBattleMapPos().y));
+        Tiles[12].SetTilePos(new Vector3(Tiles[12].GetBattleMapPos().x, 1, Tiles[12].GetBattleMapPos().y));
+        Tiles[13].SetTilePos(new Vector3(Tiles[13].GetBattleMapPos().x, 2, Tiles[13].GetBattleMapPos().y));
+        Tiles[14].SetTilePos(new Vector3(Tiles[14].GetBattleMapPos().x, 3, Tiles[14].GetBattleMapPos().y));
+        Tiles[15].SetTilePos(new Vector3(Tiles[15].GetBattleMapPos().x, 3, Tiles[15].GetBattleMapPos().y));
+        Tiles[16].SetTilePos(new Vector3(Tiles[16].GetBattleMapPos().x, 3, Tiles[16].GetBattleMapPos().y));
+        Tiles[17].SetTilePos(new Vector3(Tiles[17].GetBattleMapPos().x, 2, Tiles[17].GetBattleMapPos().y));
+        Tiles[18].SetTilePos(new Vector3(Tiles[18].GetBattleMapPos().x, 1, Tiles[18].GetBattleMapPos().y));
+
+
     }
 
 
