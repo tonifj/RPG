@@ -161,19 +161,13 @@ public class BattleManager : MonoBehaviour
             Vector3 new_position = new Vector3(TurnOrder[i].GetComponent<Unit>().GetPosition().x * Globals.TILE_SIZE, 1.5f, TurnOrder[i].GetComponent<Unit>().GetPosition().y * Globals.TILE_SIZE);
             if (TurnOrder[i].GetComponent<Unit>().IsPlayerUnit())
             {
-                GameObject new_player_unit = Instantiate(PlayerUnitPrefab, new_position, Quaternion.identity);
-                new_player_unit.transform.SetParent(TurnOrder[i].transform);
+                TurnOrder[i] = Instantiate(PlayerUnitPrefab, new_position, Quaternion.identity);
             }
 
             else
             {
-                GameObject new_enemy_unit = Instantiate(EnemyUnitPrefab, new_position, Quaternion.identity);
-                new_enemy_unit.transform.SetParent(TurnOrder[i].transform);
+                TurnOrder[i] = Instantiate(EnemyUnitPrefab, new_position, Quaternion.identity);
             }
-
-            //battleMap.GetTile(TurnOrder[i].GetComponent<Unit>().GetPosition()).SetOccupiedByPlayerUnit(TurnOrder[i].GetComponent<Unit>().IsPlayerUnit());
-           // battleMap.OccupyTile(battleMap.GetTile(TurnOrder[i].GetComponent<Unit>().GetPosition()));
-
         }
     }
 
@@ -221,7 +215,7 @@ public class BattleManager : MonoBehaviour
 
             case CurrentSubmenu.MOVE:
                 {
-                    MoveAction();
+                    CommandMove();
                 }
                 break;
 
@@ -333,39 +327,18 @@ public class BattleManager : MonoBehaviour
     }
 
 
-    void MoveAction()
+    void CommandMove()
     {
         HideBattleUI();
 
-        //paint all tiles where the movement is possible
-       // battleMap.MovementTileSelection(battleMap.GetTile(TurnOrder[current_turn].GetComponent<Unit>().GetPosition()), TurnOrder[current_turn].GetComponent<Unit>().GetMovementRange(), SelectableTilesMaterial, TurnOrder[current_turn].GetComponent<Unit>().IsPlayerUnit());
+        TurnOrder[current_turn].GetComponent<PlayerMove>().ActionMovement();
 
-        //unpaint all tiles where the movement is not possible
+        if (TurnOrder[current_turn].GetComponent<PlayerMove>().finished_movement)
+            EndTurn();
 
-        //paint the current selected tile with a different color
-        SelectTileForAction();
-
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            //if(!battleMap.GetTile(action_tile).IsOccupied())
-            //{
-                //Reset tile materials
-                battleMap.ResetMaterials(battleMap.GetTile(TurnOrder[current_turn].GetComponent<Unit>().GetPosition()), TurnOrder[current_turn].GetComponent<Unit>().GetMovementRange());
-
-                //free the previous tile
-                //FreeTile(battleMap.GetTile(TurnOrder[current_turn].GetComponent<Unit>().GetPosition()));
-
-                //move unit to the tile
-                MoveUnitToTile(action_tile);
-            //}
             
-        }
-
-        else if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            //Reset tile material
-            battleMap.ResetMaterials(battleMap.GetTile(TurnOrder[current_turn].GetComponent<Unit>().GetPosition()), TurnOrder[current_turn].GetComponent<Unit>().GetMovementRange());
-
             ShowBattleUI();
             currentSubmenu = CurrentSubmenu.FIRST;
 
@@ -510,63 +483,8 @@ public class BattleManager : MonoBehaviour
 
     }
 
-    void SelectTileForAction()
+    void PlayerActionMove()
     {
-        //if (Input.GetKeyDown(KeyCode.UpArrow)) //so it doesn't iterate all the time inside this
-        //{
-        //    Vector2Int tile_to_select = action_tile;
-        //    ++tile_to_select.y;
-
-        //    if (battleMap.IsValidTileMovement(tile_to_select, TurnOrder[current_turn].GetComponent<Unit>().IsPlayerUnit()) && battleMap.GetTile(tile_to_select).GetMaterial().color == SelectableTilesMaterial.color)
-        //        ++action_tile.y;
-        //}
-
-        //else if (Input.GetKeyDown(KeyCode.DownArrow)) //so it doesn't iterate all the time inside this
-        //{
-        //    Vector2Int tile_to_select = action_tile;
-        //    --tile_to_select.y;
-
-        //    if (battleMap.IsValidTileMovement(tile_to_select, TurnOrder[current_turn].GetComponent<Unit>().IsPlayerUnit()) && battleMap.GetTile(tile_to_select).GetMaterial().color == SelectableTilesMaterial.color)
-        //        --action_tile.y;
-        //}
-
-        //else if (Input.GetKeyDown(KeyCode.LeftArrow)) //so it doesn't iterate all the time inside this
-        //{
-        //    Vector2Int tile_to_select = action_tile;
-        //    --tile_to_select.x;
-
-        //    if (battleMap.IsValidTileMovement(tile_to_select, TurnOrder[current_turn].GetComponent<Unit>().IsPlayerUnit()) && battleMap.GetTile(tile_to_select).GetMaterial().color == SelectableTilesMaterial.color)
-        //        --action_tile.x;
-        //}
-
-        //else if (Input.GetKeyDown(KeyCode.RightArrow)) //so it doesn't iterate all the time inside this
-        //{
-        //    Vector2Int tile_to_select = action_tile;
-        //    ++tile_to_select.x;
-
-        //    if (battleMap.IsValidTileMovement(tile_to_select, TurnOrder[current_turn].GetComponent<Unit>().IsPlayerUnit()) && battleMap.GetTile(tile_to_select).GetMaterial().color == SelectableTilesMaterial.color)
-        //        ++action_tile.x;
-        //}
-
-        //battleMap.HighlightTile(battleMap.GetTile(action_tile), SelectedTileMaterial);
-        //battleCamera.SetTarget(battleMap.GetTile(action_tile).gameObject.transform);
-
-    }
-
-    void MoveUnitToTile(Vector2Int new_pos)
-    {
-        //occupy the tile
-        //battleMap.GetTile(action_tile).SetOccupied(true);
-
-        //if the tile is occupied by a player unit, indicate it
-        //battleMap.GetTile(action_tile).SetOccupiedByPlayerUnit(TurnOrder[current_turn].GetComponent<Unit>().IsPlayerUnit());
-
-        //Set the tilepos
-        Vector3 new_position = new Vector3(new_pos.x * Globals.TILE_SIZE, 0, new_pos.y * Globals.TILE_SIZE);
-        TurnOrder[current_turn].GetComponent<Unit>().SetPosition(new_pos);
-
-        //set the new world pos
-        TurnOrder[current_turn].transform.position = new_position;
         EndTurn();
     }
 

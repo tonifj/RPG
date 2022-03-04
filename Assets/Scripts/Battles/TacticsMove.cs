@@ -10,6 +10,9 @@ public class TacticsMove : MonoBehaviour
     Stack<Tile> path = new Stack<Tile>();
     Tile currentTile;
 
+    public bool finished_movement = false;
+
+
     public bool moving = false;
     public int move = 5;
     public int jumpHeight = 2;
@@ -31,7 +34,6 @@ public class TacticsMove : MonoBehaviour
     {
         tiles = GameObject.FindGameObjectsWithTag("tile");
         halfHeight = GetComponent<Collider>().bounds.extents.y; //used to jump tiles
-
     }
 
     public void SetCurrentTile()
@@ -119,6 +121,8 @@ public class TacticsMove : MonoBehaviour
 
     protected void Move()
     {
+        finished_movement = false;
+
         if (path.Count > 0)
         {
             Tile t = path.Peek();
@@ -158,6 +162,7 @@ public class TacticsMove : MonoBehaviour
         else
         {
             RemoveSelectableTiles();
+            finished_movement = true;
             moving = false;
         }
     }
@@ -241,7 +246,7 @@ public class TacticsMove : MonoBehaviour
 
             fallingDown = false;
             jumpingUp = true;
-            movingToEdge =true;
+            movingToEdge = true;
 
             velocity = heading * moveSpeed / 3; //so it gets close to the edge slower
 
@@ -294,6 +299,7 @@ public class TacticsMove : MonoBehaviour
             fallingDown = true;
 
             velocity /= 3;
+            //velocity.y = 1.5f;
         }
     }
 }

@@ -229,8 +229,6 @@ public class BattleMap : MonoBehaviour
         Tiles[16].SetTilePos(new Vector3(Tiles[16].GetBattleMapPos().x, 3, Tiles[16].GetBattleMapPos().y));
         Tiles[17].SetTilePos(new Vector3(Tiles[17].GetBattleMapPos().x, 2, Tiles[17].GetBattleMapPos().y));
         Tiles[18].SetTilePos(new Vector3(Tiles[18].GetBattleMapPos().x, 1, Tiles[18].GetBattleMapPos().y));
-
-
     }
 
 

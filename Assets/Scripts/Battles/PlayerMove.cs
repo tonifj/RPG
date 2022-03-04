@@ -9,15 +9,19 @@ public class PlayerMove : TacticsMove
     void Start()
     {
         Init();
-        
     }
 
     // Update is called once per frame
     void Update()
-    {
+    {  
+    }
 
-        if(!moving)
+    public void ActionMovement()
+    {
+        if (!moving)
         {
+            finished_movement = false;
+
             FindSelectableTiles();
             SelectTileMouse();
         }

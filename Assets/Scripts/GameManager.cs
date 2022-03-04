@@ -7,6 +7,9 @@ public class GameManager : MonoBehaviour
     public List<GameObject> playerUnits = new List<GameObject>();
     public List<Mission> missions = new List<Mission>();
 
+    public GameObject playerPrefab;
+    public GameObject enemyPrefab;
+
     GameObject battleManagerGO;
     BattleManager battleManager;
 
@@ -54,12 +57,7 @@ public class GameManager : MonoBehaviour
 
     void CreatePlayerUnit(ClassType type, Genre genre, int lvl)
     {
-        GameObject new_unit = new GameObject();
-        new_unit.AddComponent<Unit>();
-        new_unit.GetComponent<Unit>().SetClass(type);
-        new_unit.GetComponent<Unit>().SetLvl(lvl); //Also sets the stats
-        new_unit.GetComponent<Unit>().SetPlayerUnit();
-        new_unit.GetComponent<Unit>().SetBaseStats();
+        GameObject new_unit = playerPrefab;
         new_unit.GetComponent<Unit>().SetSpeed(190);
         new_unit.GetComponent<Unit>().SetName(Globals.GenerateRandomName(genre));
         playerUnits.Add(new_unit);
