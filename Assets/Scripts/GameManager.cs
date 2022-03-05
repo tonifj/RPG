@@ -23,23 +23,23 @@ public class GameManager : MonoBehaviour
         battleManager = battleManagerGO.GetComponent<BattleManager>();
 
         //Mission 1
-        Mission introduction = CreateMission(1, 50);
-        introduction.CreateEnemyUnit(ClassType.SNIPER, Genre.FEMALE, 1);
-        introduction.PlaceUnit(introduction.GetEnemyUnits()[0], new Vector2Int(2, 2));
-        introduction.CreateEnemyUnit(ClassType.SNIPER, Genre.FEMALE, 1);
-        introduction.PlaceUnit(introduction.GetEnemyUnits()[1], new Vector2Int(5, 3));
-        introduction.CreateEnemyUnit(ClassType.SNIPER, Genre.FEMALE, 1);
-        introduction.PlaceUnit(introduction.GetEnemyUnits()[2], new Vector2Int(5, 2));
+        //Mission introduction = CreateMission(1, 50);
+        //introduction.CreateEnemyUnit(ClassType.SNIPER, Genre.FEMALE, 1);
+        //introduction.PlaceUnit(introduction.GetEnemyUnits()[0], new Vector2Int(2, 2));
+        //introduction.CreateEnemyUnit(ClassType.SNIPER, Genre.FEMALE, 1);
+        //introduction.PlaceUnit(introduction.GetEnemyUnits()[1], new Vector2Int(5, 3));
+        //introduction.CreateEnemyUnit(ClassType.SNIPER, Genre.FEMALE, 1);
+        //introduction.PlaceUnit(introduction.GetEnemyUnits()[2], new Vector2Int(5, 2));
 
-        CreatePlayerUnit(ClassType.RECRUIT, Genre.MALE, 1);
+        //CreatePlayerUnit(ClassType.RECRUIT, Genre.MALE, 1);
 
-        for (int i = 0; i < playerUnits.Count; ++i)
-            introduction.PlaceUnit(playerUnits[i], new Vector2Int(i + 1, 0));
+        //for (int i = 0; i < playerUnits.Count; ++i)
+            //introduction.PlaceUnit(playerUnits[i], new Vector2Int(i + 1, 0));
 
-        missions.Add(introduction);
+       // missions.Add(introduction);
 
-        battleManager.AddUnits(playerUnits);
-        battleManager.AddUnits(introduction.GetEnemyUnits());
+        //battleManager.AddUnits(playerUnits);
+        //battleManager.AddUnits(introduction.GetEnemyUnits());
     }
 
     // Update is called once per frame

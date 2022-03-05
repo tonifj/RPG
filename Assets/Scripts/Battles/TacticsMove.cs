@@ -121,8 +121,6 @@ public class TacticsMove : MonoBehaviour
 
     protected void Move()
     {
-        finished_movement = false;
-
         if (path.Count > 0)
         {
             Tile t = path.Peek();

@@ -8,7 +8,7 @@ public class BattleMap : MonoBehaviour
     int map_width;//x
     int map_depth;//z
     GameObject[] TilesGO;
-    List<Tile> Tiles = new List<Tile>();
+    List<GameObject> Tiles = new List<GameObject>();
 
     Material selection_material;
 
@@ -31,31 +31,7 @@ public class BattleMap : MonoBehaviour
     {
         for (int i = 0; i < TilesGO.Length; ++i)
         {
-            Tiles.Add(TilesGO[i].GetComponent<Tile>());
-        }
-    }
-    public void SetTileMatrix()
-    {
-        foreach (Tile t in Tiles)
-        {
-
-            if (tile_matrix.x >= map_width)
-            {
-                tile_matrix.x = 0;
-                ++tile_matrix.y;
-            }
-
-            t.SetBattleMapPos(tile_matrix);
-            ++tile_matrix.x;
-        }
-    }
-
-    public void PlaceTiles()
-    {
-        foreach (Tile t in Tiles)
-        {
-            Vector3 pos = new Vector3(t.GetBattleMapPos().x, 0, t.GetBattleMapPos().y);
-            t.SetTilePos(pos);
+            Tiles.Add(TilesGO[i]);
         }
     }
 
@@ -64,118 +40,64 @@ public class BattleMap : MonoBehaviour
         return Tiles[v.x + (map_width * v.y)].GetComponent<Tile>();
     }
 
-    public void HighlightTile(Tile tile, Material highlight_material)
+    public void HighlightTile(GameObject tile, Material highlight_material)
     {
-        if (IsValidTile(tile.GetBattleMapPos()))
+        if (IsValidTile(tile.transform.position))
         {
             tile.gameObject.GetComponent<MeshRenderer>().material = highlight_material;
         }
     }
 
-    void ResetTileMaterial(Tile tile)
+    void ResetTileMaterial(GameObject tile)
     {
-        if (IsValidTile(tile.GetBattleMapPos()))
+        if (IsValidTile(tile.transform.position))
         {
-            tile.ResetTileMaterial();
+            tile.GetComponent<Tile>().ResetTileMaterial();
         }
     }
 
-    List<Tile> GetNeighbors(Tile origin)
-    {
-        List<Tile> neighbors = new List<Tile>();
-
-        if (IsValidTile(GetBackNeighborTile(origin).GetBattleMapPos()) && GetBackNeighborTile(origin).IsWalkable())
-            neighbors.Add(GetBackNeighborTile(origin));
-
-        if (IsValidTile(GetFrontNeighborTile(origin).GetBattleMapPos()) && GetFrontNeighborTile(origin).IsWalkable())
-            neighbors.Add(GetFrontNeighborTile(origin));
-
-        if (IsValidTile(GetRightNeighborTile(origin).GetBattleMapPos()) && GetRightNeighborTile(origin).IsWalkable())
-            neighbors.Add(GetRightNeighborTile(origin));
-
-        if (IsValidTile(GetLeftNeighborTile(origin).GetBattleMapPos()) && GetLeftNeighborTile(origin).IsWalkable())
-            neighbors.Add(GetLeftNeighborTile(origin));
-
-        return neighbors;
-    }
-
-    Tile GetRightNeighborTile(Tile origin)
-    {
-        if (origin.GetBattleMapPos().x < map_width - 1)
-            return Tiles[(origin.GetBattleMapPos().x) + 1 + (map_width * origin.GetBattleMapPos().y)];
-
-        else
-            return invalidTile;
-    }
-
-    Tile GetLeftNeighborTile(Tile origin)
-    {
-        if (origin.GetBattleMapPos().x - 1 >= 0)
-            return Tiles[(origin.GetBattleMapPos().x) - 1 + (map_width * origin.GetBattleMapPos().y)];
-
-        else
-            return invalidTile;
-    }
-
-    Tile GetFrontNeighborTile(Tile origin)
-    {
-        if (origin.GetBattleMapPos().y < map_depth - 1)
-            return Tiles[origin.GetBattleMapPos().x + origin.GetBattleMapPos().y * map_depth + map_depth];
-
-        else
-            return invalidTile;
-    }
-
-    Tile GetBackNeighborTile(Tile origin)
-    {
-        if (origin.GetBattleMapPos().y - 1 >= 0)
-            return Tiles[origin.GetBattleMapPos().x + origin.GetBattleMapPos().y * map_depth - map_depth];
-
-        else
-            return invalidTile;
-    }
-    public bool IsValidTile(Vector2Int tile_pos) //there is no tile with negative positions
+    public bool IsValidTile(Vector3 tile_pos) //there is no tile with negative positions
     {
         return tile_pos.x > -1 &&
             tile_pos.x < map_width &&
 
-           tile_pos.y > -1 &&
-           tile_pos.y < map_depth;
+           tile_pos.z > -1 &&
+           tile_pos.z < map_depth;
     }
 
-    int TileDistance(Tile origin, Tile end)
+    int TileDistance(GameObject origin, GameObject end)
     {
         int dist = 0;
 
-        if (origin.GetBattleMapPos().x < end.GetBattleMapPos().x)
+        if (origin.transform.position.x < end.transform.position.x)
         {
-            for (int i = origin.GetBattleMapPos().x; i < end.GetBattleMapPos().x; ++i)
+            for (int i = (int)origin.transform.position.x; i < end.transform.position.x; ++i)
                 ++dist;
         }
 
         else
         {
-            for (int i = end.GetBattleMapPos().x; i < origin.GetBattleMapPos().x; ++i)
+            for (int i = (int)end.transform.position.x; i < origin.transform.position.x; ++i)
                 ++dist;
         }
 
 
-        if (origin.GetBattleMapPos().y < end.GetBattleMapPos().y)
+        if (origin.transform.position.y < end.transform.position.y)
         {
-            for (int i = origin.GetBattleMapPos().y; i < end.GetBattleMapPos().y; ++i)
+            for (int i = (int)origin.transform.position.y; i < end.transform.position.y; ++i)
                 ++dist;
         }
 
         else
         {
-            for (int i = end.GetBattleMapPos().y; i < origin.GetBattleMapPos().y; ++i)
+            for (int i = (int)end.transform.position.y; i < origin.transform.position.y; ++i)
                 ++dist;
         }
 
         return dist;
     }
 
-    public void AttackSkillTileSelection(Tile origin, int range, Material select_mat)
+    public void AttackSkillTileSelection(GameObject origin, int range, Material select_mat)
     {
         selection_material = select_mat;
 
@@ -192,7 +114,7 @@ public class BattleMap : MonoBehaviour
         }
     }
 
-    public void ResetMaterials(Tile origin, int range)
+    public void ResetMaterials(GameObject origin, int range)
     {
         if (range == 0)
             ResetTileMaterial(origin);
@@ -220,15 +142,9 @@ public class BattleMap : MonoBehaviour
 
         TilesGO = GameObject.FindGameObjectsWithTag("tile");
         CopyMatrix(); //Copy the Tile component of each TileGO to a different array
-        SetTileMatrix();
-        PlaceTiles();
-        Tiles[12].SetTilePos(new Vector3(Tiles[12].GetBattleMapPos().x, 1, Tiles[12].GetBattleMapPos().y));
-        Tiles[13].SetTilePos(new Vector3(Tiles[13].GetBattleMapPos().x, 2, Tiles[13].GetBattleMapPos().y));
-        Tiles[14].SetTilePos(new Vector3(Tiles[14].GetBattleMapPos().x, 3, Tiles[14].GetBattleMapPos().y));
-        Tiles[15].SetTilePos(new Vector3(Tiles[15].GetBattleMapPos().x, 3, Tiles[15].GetBattleMapPos().y));
-        Tiles[16].SetTilePos(new Vector3(Tiles[16].GetBattleMapPos().x, 3, Tiles[16].GetBattleMapPos().y));
-        Tiles[17].SetTilePos(new Vector3(Tiles[17].GetBattleMapPos().x, 2, Tiles[17].GetBattleMapPos().y));
-        Tiles[18].SetTilePos(new Vector3(Tiles[18].GetBattleMapPos().x, 1, Tiles[18].GetBattleMapPos().y));
+                      // SetTileMatrix();
+                      //PlaceTiles();
+       
     }
 
 

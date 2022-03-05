@@ -9,6 +9,8 @@ public class Tile : MonoBehaviour
     public bool target = false;
     public bool selectable = false; //selectable to move to
 
+    public bool is_player_unit_on_top = false;
+
     public Vector2Int battle_map_pos;
 
     public List<Tile> adjacents = new List<Tile>();
@@ -115,6 +117,12 @@ public class Tile : MonoBehaviour
                 RaycastHit hit;
                 if (!Physics.Raycast(tile.transform.position, Vector3.up, out hit, 1)); //if there isn't something on top of the tile
                 {
+                    //if (hit.collider.tag == "player unit")
+                    //    is_player_unit_on_top = true;
+
+                    //else if (hit.collider.tag == "enemy unit")
+                    //    is_player_unit_on_top = true;
+
                     adjacents.Add(tile);
                 }
             }

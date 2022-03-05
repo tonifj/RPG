@@ -39,6 +39,7 @@ public class Mission : MonoBehaviour
     {
         GameObject new_unit = new GameObject();
         new_unit.AddComponent<Unit>();
+        new_unit.AddComponent<NPCMove>();
         new_unit.GetComponent<Unit>().SetClass(type);
         new_unit.GetComponent<Unit>().SetLvl(lvl); //Also sets the stats
         new_unit.GetComponent<Unit>().SetEnemyUnit();

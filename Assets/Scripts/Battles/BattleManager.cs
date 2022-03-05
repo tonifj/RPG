@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class BattleManager : MonoBehaviour
 {
-
+    //Important
+    int battle_id;
+    int pesetas_reward;
+    //Equipment reward
 
     //GO
     public GameObject ActionSelectorGO;
@@ -59,6 +62,9 @@ public class BattleManager : MonoBehaviour
     int current_turn;
 
     public List<GameObject> TurnOrder;
+    public GameObject[] EnemyUnits;
+    public GameObject[] PlayerUnits;
+
 
     BattleMap battleMap = new BattleMap();
 
@@ -74,12 +80,19 @@ public class BattleManager : MonoBehaviour
         battleCameraGO = GameObject.FindGameObjectWithTag("MainCamera");
         battleCamera = battleCameraGO.GetComponent<BattleCamera>();
 
+        EnemyUnits = new GameObject[6];
+        PlayerUnits = new GameObject[6];
+
         optionIndex = 0;
         battleState = BattleState.SET;
         battleMap.SetSize(12, 12);
         battleMap.SetMap();
+
+        SetBattle();
+
         SetTurnOrder();
-        InstantiateUnits();
+
+        //InstantiateUnits();
 
         battleState = BattleState.START;
 
@@ -125,6 +138,14 @@ public class BattleManager : MonoBehaviour
 
     void SetTurnOrder()
     {
+        for (int i = 0; i < EnemyUnits.Length; ++i)
+            TurnOrder.Add(EnemyUnits[i]);
+
+        for (int i = 0; i < PlayerUnits.Length; ++i)
+        {
+            TurnOrder.Add(PlayerUnits[i]);
+        }
+
         for (int i = 0; i < TurnOrder.Count; ++i)
         {
             if (i < TurnOrder.Count - 1 && TurnOrder[i].GetComponent<Unit>().GetSpeed() < TurnOrder[i + 1].GetComponent<Unit>().GetSpeed())
@@ -153,7 +174,8 @@ public class BattleManager : MonoBehaviour
         return battleMap;
     }
 
-    void InstantiateUnits()
+    void InstantiateUnits() //this has to change. Enemy units will already be on the map when loading the battle
+                            //Player units will instantiate when he choses where to place its units
     {
         for (int i = 0; i < TurnOrder.Count; ++i)
         {
@@ -162,11 +184,6 @@ public class BattleManager : MonoBehaviour
             if (TurnOrder[i].GetComponent<Unit>().IsPlayerUnit())
             {
                 TurnOrder[i] = Instantiate(PlayerUnitPrefab, new_position, Quaternion.identity);
-            }
-
-            else
-            {
-                TurnOrder[i] = Instantiate(EnemyUnitPrefab, new_position, Quaternion.identity);
             }
         }
     }
@@ -338,7 +355,7 @@ public class BattleManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            
+
             ShowBattleUI();
             currentSubmenu = CurrentSubmenu.FIRST;
 
@@ -486,6 +503,27 @@ public class BattleManager : MonoBehaviour
     void PlayerActionMove()
     {
         EndTurn();
+    }
+
+    void SetBattle() //depending on its id, rewards and enemy units will change
+    {
+        EnemyUnits = GameObject.FindGameObjectsWithTag("enemy unit");
+        PlayerUnits = GameObject.FindGameObjectsWithTag("player unit"); //for the moment
+
+        PlayerUnits[0].GetComponent<Unit>().SetSpeed(190);
+
+        switch (battle_id)
+        {
+            case (0): //introduction mission
+                pesetas_reward = 100;
+
+                break;
+        }
+    }
+
+    void PlacePlayerUnits()
+    {
+
     }
 
 
