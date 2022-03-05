@@ -12,7 +12,6 @@ public class TacticsMove : MonoBehaviour
 
     public bool finished_movement = false;
 
-
     public bool moving = false;
     public int move = 5;
     public int jumpHeight = 2;

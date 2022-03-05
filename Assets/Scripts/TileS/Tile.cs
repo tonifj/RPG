@@ -34,12 +34,8 @@ public class Tile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (current)
-        {
-            GetComponent<Renderer>().material.color = Color.magenta;
-        }
-
-        else if (target)
+        
+        if (target)
         {
             GetComponent<Renderer>().material.color = Color.green;
         }
@@ -53,6 +49,7 @@ public class Tile : MonoBehaviour
         {
             GetComponent<Renderer>().material.color = Color.white;
         }
+
 
     }
 
@@ -100,8 +97,6 @@ public class Tile : MonoBehaviour
         CheckTile(-Vector3.forward, jumpHeight);
         CheckTile(Vector3.right, jumpHeight);
         CheckTile(-Vector3.right, jumpHeight);
-
-
     }
 
     public void CheckTile(Vector3 direction, float jumpHeight)
@@ -115,16 +110,19 @@ public class Tile : MonoBehaviour
             if(tile != null && tile.walkable)
             {
                 RaycastHit hit;
-                if (!Physics.Raycast(tile.transform.position, Vector3.up, out hit, 1)); //if there isn't something on top of the tile
+                if (Physics.Raycast(tile.transform.position, Vector3.up, out hit, 1)) //if there is something on top of the tile
                 {
-                    //if (hit.collider.tag == "player unit")
-                    //    is_player_unit_on_top = true;
+                    if(hit.collider.tag == "player unit" && BattleManager.isPlayerTurn)
+                        adjacents.Add(tile);
 
-                    //else if (hit.collider.tag == "enemy unit")
-                    //    is_player_unit_on_top = true;
+                    else if (hit.collider.tag == "enemy unit" && !BattleManager.isPlayerTurn) //for the enemies
+                        adjacents.Add(tile);
 
-                    adjacents.Add(tile);
                 }
+
+                else
+                    adjacents.Add(tile);
+
             }
         }
     }

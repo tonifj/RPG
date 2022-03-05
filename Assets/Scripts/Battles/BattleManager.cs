@@ -59,7 +59,7 @@ public class BattleManager : MonoBehaviour
 
     //other variables
     int optionIndex;
-    int current_turn;
+    public int current_turn;
 
     public List<GameObject> TurnOrder;
     public GameObject[] EnemyUnits;
@@ -72,6 +72,9 @@ public class BattleManager : MonoBehaviour
     BattleCamera battleCamera;
 
     Vector2Int action_tile; //used to select a tile where to cast an action
+
+    public static bool isPlayerTurn;
+
 
     void Start()
     {
@@ -118,6 +121,8 @@ public class BattleManager : MonoBehaviour
 
             case (BattleState.BATTLE):
                 {
+                    isPlayerTurn = TurnOrder[current_turn].GetComponent<Unit>().is_player_unit;
+
                     if (TurnOrder[current_turn].GetComponent<Unit>().IsPlayerUnit())
                     {
                         PlayerTurn();
@@ -125,8 +130,7 @@ public class BattleManager : MonoBehaviour
 
                     else
                     {
-                        if (enemy_turn_finished)
-                            StartCoroutine(EnemyTurn());
+                        EnemeyCommandMove();
 
                     }
                 }
@@ -362,6 +366,14 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    void EnemeyCommandMove()
+    {
+        TurnOrder[current_turn].GetComponent<NPCMove>().ActionMovement();
+
+        if (TurnOrder[current_turn].GetComponent<NPCMove>().finished_movement)
+            EndTurn();
+    }
+
     void AttackAction()
     {
         HideBattleUI();
@@ -508,9 +520,9 @@ public class BattleManager : MonoBehaviour
     void SetBattle() //depending on its id, rewards and enemy units will change
     {
         EnemyUnits = GameObject.FindGameObjectsWithTag("enemy unit");
-        PlayerUnits = GameObject.FindGameObjectsWithTag("player unit"); //for the moment
+        PlayerUnits = GameObject.FindGameObjectsWithTag("player unit"); //for the moment. the objective is to make the player place the units in a small area
 
-        PlayerUnits[0].GetComponent<Unit>().SetSpeed(190);
+        PlayerUnits[0].GetComponent<Unit>().SetSpeed(190); //for testing
 
         switch (battle_id)
         {
@@ -525,6 +537,4 @@ public class BattleManager : MonoBehaviour
     {
 
     }
-
-
 }
