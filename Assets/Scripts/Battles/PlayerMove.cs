@@ -47,8 +47,8 @@ public class PlayerMove : TacticsMove
 
                     if(t.selectable)
                     {
-                        //move
-                        MoveToTile(t);
+                        if(!t.IsSomethingOnTile())
+                            MoveToTile(t);
                     }
                 }
             }

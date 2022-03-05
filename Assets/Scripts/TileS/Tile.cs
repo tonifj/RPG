@@ -99,6 +99,12 @@ public class Tile : MonoBehaviour
         CheckTile(-Vector3.right, jumpHeight);
     }
 
+    public bool IsSomethingOnTile()
+    {
+        RaycastHit hit;
+        return Physics.Raycast(gameObject.transform.position, Vector3.up, out hit, 1);
+    }
+
     public void CheckTile(Vector3 direction, float jumpHeight)
     {
         Vector3 halfExtents = new Vector3(0.25f, (Globals.TILE_SIZE+jumpHeight)/2, 0.25f);
@@ -112,6 +118,8 @@ public class Tile : MonoBehaviour
                 RaycastHit hit;
                 if (Physics.Raycast(tile.transform.position, Vector3.up, out hit, 1)) //if there is something on top of the tile
                 {
+                    tile.selectable = false;
+
                     if(hit.collider.tag == "player unit" && BattleManager.isPlayerTurn)
                         adjacents.Add(tile);
 

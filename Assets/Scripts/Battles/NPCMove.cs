@@ -47,8 +47,8 @@ public class NPCMove : TacticsMove
 
                     if (t.selectable)
                     {
-                        //move
-                        MoveToTile(t);
+                        if (!t.IsSomethingOnTile())
+                            MoveToTile(t);
                     }
                 }
             }

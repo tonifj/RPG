@@ -83,7 +83,9 @@ public class TacticsMove : MonoBehaviour
         {
             Tile t = process.Dequeue();
             selectableTiles.Add(t);
-            t.selectable = true;
+
+            //if(!t.IsSomethingOnTile())
+                t.selectable = true;
 
             if (t.distance < move)
             {
