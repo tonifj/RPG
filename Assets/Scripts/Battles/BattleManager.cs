@@ -359,7 +359,7 @@ public class BattleManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-
+            TurnOrder[current_turn].GetComponent<PlayerMove>().ResetSelectableTiles();
             ShowBattleUI();
             currentSubmenu = CurrentSubmenu.FIRST;
 

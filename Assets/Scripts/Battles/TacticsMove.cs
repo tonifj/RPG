@@ -414,4 +414,13 @@ public class TacticsMove : MonoBehaviour
 
         Debug.Log("Path not found");
     }
+
+    public void ResetSelectableTiles()
+    {
+        for(int i = 0; i < selectableTiles.Count; ++i)
+        {
+            selectableTiles[i].ResetTile();
+        }
+        selectableTiles.Clear();
+    }
 }
