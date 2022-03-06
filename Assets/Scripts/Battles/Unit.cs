@@ -39,6 +39,7 @@ public class Unit : MonoBehaviour
     public bool is_player_unit;
 
     int movement_range;
+    int jumpPower;
     int lvl;
     int exp;
 
@@ -241,6 +242,7 @@ public class Unit : MonoBehaviour
                     mental_resistance = 50;
                     speed = 100;
                     movement_range = 4;
+                    jumpPower = 2;
                 }
                 break;
             case ClassType.AGENT:
@@ -253,6 +255,7 @@ public class Unit : MonoBehaviour
                     mental_resistance = 70;
                     speed = 100;
                     movement_range = 4;
+                    jumpPower = 2;
                 }
                 break;
 
@@ -266,6 +269,7 @@ public class Unit : MonoBehaviour
                     mental_resistance = 96;
                     speed = 96;
                     movement_range = 3;
+                    jumpPower = 1;
                 }
                 break;
 
@@ -279,6 +283,7 @@ public class Unit : MonoBehaviour
                     mental_resistance = 68;
                     speed = 104;
                     movement_range = 4;
+                    jumpPower = 1;
                 }
                 break;
 
@@ -292,6 +297,7 @@ public class Unit : MonoBehaviour
                     mental_resistance = 70;
                     speed = 106;
                     movement_range = 4;
+                    jumpPower = 2;
                 }
                 break;
 
@@ -305,6 +311,7 @@ public class Unit : MonoBehaviour
                     mental_resistance = 80;
                     speed = 108;
                     movement_range = 3;
+                    jumpPower = 1;
                 }
                 break;
 
@@ -318,6 +325,7 @@ public class Unit : MonoBehaviour
                     mental_resistance = 84;
                     speed = 89;
                     movement_range = 3;
+                    jumpPower = 1;
                 }
                 break;
 
@@ -331,6 +339,7 @@ public class Unit : MonoBehaviour
                     mental_resistance = 75;
                     speed = 105;
                     movement_range = 3;
+                    jumpPower = 2;
                 }
                 break;
 
@@ -344,6 +353,7 @@ public class Unit : MonoBehaviour
                     mental_resistance = 80;
                     speed = 112;
                     movement_range = 4;
+                    jumpPower = 2;
                 }
                 break;
 
@@ -357,6 +367,7 @@ public class Unit : MonoBehaviour
                     mental_resistance = 92;
                     speed = 108;
                     movement_range = 3;
+                    jumpPower = 1;
                 }
                 break;
 
@@ -370,6 +381,7 @@ public class Unit : MonoBehaviour
                     mental_resistance = 80;
                     speed = 90;
                     movement_range = 3;
+                    jumpPower = 1;
                 }
                 break;
 
@@ -383,6 +395,7 @@ public class Unit : MonoBehaviour
                     mental_resistance = 64;
                     speed = 97;
                     movement_range = 4;
+                    jumpPower = 2;
                 }
                 break;
 
@@ -396,6 +409,7 @@ public class Unit : MonoBehaviour
                     mental_resistance = 95;
                     speed = 100;
                     movement_range = 4;
+                    jumpPower = 3;
                 }
                 break;
 
@@ -454,6 +468,11 @@ public class Unit : MonoBehaviour
     public int GetMovementRange()
     {
         return movement_range;
+    }
+
+    public int GetJumpRange()
+    {
+        return jumpPower;
     }
 
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class NPCMove : TacticsMove
 {
+    GameObject target;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,9 +22,11 @@ public class NPCMove : TacticsMove
         if (!moving)
         {
             finished_movement = false;
-
+            FindNearestTarget();
+            CalculatePath();
             FindSelectableTiles();
-            SelectTileMouse();
+
+            actualTargetTile.target = true;
         }
 
         else
@@ -32,26 +35,31 @@ public class NPCMove : TacticsMove
         }
     }
 
-    void SelectTileMouse()
+    void CalculatePath()
     {
-        if (Input.GetMouseButtonUp(0))
+        Tile targetTile = GetTargetTile(target);
+        FindPath(targetTile);
+    }
+
+    void FindNearestTarget() // we want to get close to the nearest unit, at least closest the attack range
+    {
+        GameObject[] targets = GameObject.FindGameObjectsWithTag("player unit");
+
+        GameObject nearest = null; //closest player unit
+
+        float distance = Mathf.Infinity;
+
+        foreach(GameObject obj in targets) // get closest player unit
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            float dist = Vector3.Distance(transform.position, obj.transform.position);
 
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
+            if(dist < distance)
             {
-                if (hit.collider.tag == "tile")
-                {
-                    Tile t = hit.collider.GetComponent<Tile>();
-
-                    if (t.selectable)
-                    {
-                        if (!t.IsSomethingOnTile())
-                            MoveToTile(t);
-                    }
-                }
+                distance = dist;
+                nearest = obj;
             }
         }
+
+        target = nearest;
     }
 }

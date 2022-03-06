@@ -20,6 +20,11 @@ public class Tile : MonoBehaviour
     public Tile parent = null;
     public int distance = 0;
 
+    //A*
+    public float f = 0; // g+h
+    public float g = 0; // cost parent to current tile
+    public float h = 0; // cost processed tile to destination
+
     public Tile()
     {
         battle_map_pos = new Vector2Int(-1, -1);
@@ -28,14 +33,20 @@ public class Tile : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        ResetTile();
         transform.localScale = new Vector3(Globals.TILE_SIZE, 1, Globals.TILE_SIZE);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-        if (target)
+
+        if (current)
+        {
+            GetComponent<Renderer>().material.color = Color.magenta;
+        }
+
+        else if (target)
         {
             GetComponent<Renderer>().material.color = Color.green;
         }
@@ -88,15 +99,19 @@ public class Tile : MonoBehaviour
         visited = false;
         parent = null;
         distance = 0;
+
+        g = 0;
+        h = 0;
+        f = 0;
     }
 
-    public void FindNeighbors(float jumpHeight)
+    public void FindNeighbors(float jumpHeight, Tile target)
     {
         ResetTile();
-        CheckTile(Vector3.forward, jumpHeight);
-        CheckTile(-Vector3.forward, jumpHeight);
-        CheckTile(Vector3.right, jumpHeight);
-        CheckTile(-Vector3.right, jumpHeight);
+        CheckTile(Vector3.forward, jumpHeight, target);
+        CheckTile(-Vector3.forward, jumpHeight, target);
+        CheckTile(Vector3.right, jumpHeight, target);
+        CheckTile(-Vector3.right, jumpHeight, target);
     }
 
     public bool IsSomethingOnTile()
@@ -105,44 +120,50 @@ public class Tile : MonoBehaviour
         return Physics.Raycast(gameObject.transform.position, Vector3.up, out hit, 1);
     }
 
-    public void CheckTile(Vector3 direction, float jumpHeight)
+    public void CheckTile(Vector3 direction, float jumpHeight, Tile target)
     {
-        Vector3 halfExtents = new Vector3(0.25f, (Globals.TILE_SIZE+jumpHeight)/2, 0.25f);
+        Vector3 halfExtents = new Vector3(0.25f, (Globals.TILE_SIZE + jumpHeight) / 2, 0.25f);
         Collider[] colliders = Physics.OverlapBox(transform.position + direction, halfExtents);
 
-        foreach(Collider collider in colliders)
+        foreach (Collider collider in colliders)
         {
             Tile tile = collider.GetComponent<Tile>();
-            if(tile != null && tile.walkable)
+
+
+            if (tile != null && tile.walkable)
             {
                 RaycastHit hit;
-                if (Physics.Raycast(tile.transform.position, Vector3.up, out hit, 1)) //if there is something on top of the tile
-                {
-                    tile.selectable = false;
 
+                if (!Physics.Raycast(tile.transform.position, Vector3.up, out hit, 1) || tile == target) //if there is something on top of the tile or the tile we're looking at is the same we chose to move to
+                {
+                    adjacents.Add(tile);
+                }
+
+                else if(Physics.Raycast(tile.transform.position, Vector3.up, out hit, 1) || tile == target)
+                {
                     if(hit.collider.tag == "player unit" && BattleManager.isPlayerTurn)
                         adjacents.Add(tile);
 
-                    else if (hit.collider.tag == "enemy unit" && !BattleManager.isPlayerTurn) //for the enemies
+                    else if(hit.collider.tag == "enemy unit" && !BattleManager.isPlayerTurn)
                         adjacents.Add(tile);
 
                 }
 
-                else
-                    adjacents.Add(tile);
-
             }
+
         }
-    }
-  
 
-    public bool IsWalkable()
-    {
-        return walkable;
     }
 
-    public void BeingVisited()
-    {
-        visited = true;
-    }
+
+
+public bool IsWalkable()
+{
+    return walkable;
+}
+
+public void BeingVisited()
+{
+    visited = true;
+}
 }

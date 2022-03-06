@@ -29,6 +29,8 @@ public class TacticsMove : MonoBehaviour
 
     float halfHeight = 0;
 
+    public Tile actualTargetTile;
+
     protected void Init()
     {
         tiles = GameObject.FindGameObjectsWithTag("tile");
@@ -58,20 +60,20 @@ public class TacticsMove : MonoBehaviour
         return tile;
     }
 
-    public void ComputeAdjacencyLists()
+    public void ComputeAdjacencyLists(float jump, Tile target)
     {
-        tiles = GameObject.FindGameObjectsWithTag("tile"); //if the map changes size, do this here
+       // tiles = GameObject.FindGameObjectsWithTag("tile"); //if the map changes size, do this here
 
         foreach (GameObject tile in tiles)
         {
             Tile t = tile.GetComponent<Tile>();
-            t.FindNeighbors(jumpHeight);
+            t.FindNeighbors(jumpHeight, target);
         }
     }
 
     public void FindSelectableTiles() //BFS
     {
-        ComputeAdjacencyLists();
+        ComputeAdjacencyLists(jumpHeight, null);
         SetCurrentTile();
 
         Queue<Tile> process = new Queue<Tile>();
@@ -83,9 +85,7 @@ public class TacticsMove : MonoBehaviour
         {
             Tile t = process.Dequeue();
             selectableTiles.Add(t);
-
-            //if(!t.IsSomethingOnTile())
-                t.selectable = true;
+            t.selectable = true;
 
             if (t.distance < move)
             {
@@ -96,12 +96,11 @@ public class TacticsMove : MonoBehaviour
                         tile.parent = t;
                         tile.visited = true;
                         tile.distance = 1 + t.distance;
-
-                        process.Enqueue(tile);
+                        //if(!tile.IsSomethingOnTile())
+                            process.Enqueue(tile);
                     }
                 }
             }
-
         }
     }
 
@@ -298,7 +297,121 @@ public class TacticsMove : MonoBehaviour
             fallingDown = true;
 
             velocity /= 3;
-            //velocity.y = 1.5f;
         }
+    }
+
+    protected Tile FindLowestF(List<Tile> list)
+    {
+        Tile lowest = list[0];
+
+        foreach (Tile t in list)
+        {
+            if (t.f < lowest.f)
+            {
+                lowest = t;
+            }
+        }
+
+        list.Remove(lowest);
+
+        return lowest;
+    }
+
+    protected Tile FindEndTile(Tile t)
+    {
+        Stack<Tile> tempPath = new Stack<Tile>();
+
+        Tile next = t.parent;
+
+        while (next != null)
+        {
+            tempPath.Push(next);
+            next = next.parent;
+        }
+
+        if (tempPath.Count <= move)
+        {
+            if(!t.IsSomethingOnTile())
+            return t.parent;
+        }
+
+        Tile endTile = null;
+
+        for (int i = 0; i <= move; ++i)
+        {
+            endTile = tempPath.Pop();
+        }
+
+        if(!endTile.IsSomethingOnTile())
+            return endTile;
+        else
+        {
+            return endTile.adjacents[Random.Range(0, endTile.adjacents.Count - 1)];
+        }
+    }
+
+    protected void FindPath(Tile target)
+    {
+        ComputeAdjacencyLists(jumpHeight, target);
+        SetCurrentTile();
+
+        List<Tile> openList = new List<Tile>();
+        List<Tile> closedList = new List<Tile>();
+
+        openList.Add(currentTile);
+
+        currentTile.h = Vector3.Distance(currentTile.transform.position, target.transform.position);
+        currentTile.f = currentTile.h;
+
+        while (openList.Count > 0)
+        {
+            Tile t = FindLowestF(openList);
+
+            closedList.Add(t);
+
+            if (t == target)
+            {
+                actualTargetTile = FindEndTile(t);
+                MoveToTile(actualTargetTile);
+                return;
+            }
+
+            foreach (Tile tile in t.adjacents)
+            {
+                if (closedList.Contains(tile))
+                {
+                    //Do Nothing
+                }
+
+                else if (openList.Contains(tile))
+                {
+                    float tempG = t.g + Vector3.Distance(tile.transform.position, t.transform.position);
+
+                    if (tempG < tile.g)
+                    {
+                        tile.parent = t;
+                        tile.g = tempG;
+                        tile.f = tile.g + tile.h;
+                    }
+                }
+
+                else
+                {
+                    tile.parent = t;
+                    tile.g = t.g + Vector3.Distance(tile.transform.position, t.transform.position);
+                    tile.h = Vector3.Distance(tile.transform.position, target.transform.position);
+                    tile.f = tile.g + tile.h;
+
+                    openList.Add(tile);
+                }
+            }
+
+
+
+        }
+
+        //todo - if there is no path to the target file, execute an action or wait
+
+        Debug.Log("Path not found");
     }
 }

@@ -368,9 +368,9 @@ public class BattleManager : MonoBehaviour
 
     void EnemeyCommandMove()
     {
-        TurnOrder[current_turn].GetComponent<NPCMove>().ActionMovement();
+       // TurnOrder[current_turn].GetComponent<NPCMove>().ActionMovement();
 
-        if (TurnOrder[current_turn].GetComponent<NPCMove>().finished_movement)
+        //if (TurnOrder[current_turn].GetComponent<NPCMove>().finished_movement)
             EndTurn();
     }
 

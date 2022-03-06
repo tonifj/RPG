@@ -13,7 +13,7 @@ public class PlayerMove : TacticsMove
 
     // Update is called once per frame
     void Update()
-    {  
+    {
     }
 
     public void ActionMovement()
@@ -34,29 +34,41 @@ public class PlayerMove : TacticsMove
 
     void SelectTileMouse()
     {
-        if(Input.GetMouseButtonUp(0))
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            RaycastHit hit;
-            if(Physics.Raycast(ray, out hit))
+            if (hit.collider.tag == "tile")
             {
-                if(hit.collider.tag == "tile")
-                {
-                    Tile t = hit.collider.GetComponent<Tile>();
+                Tile t = hit.collider.GetComponent<Tile>();
+               
 
-                    if(t.selectable)
+                if (t.selectable)
+                {
+                    t.target = true;
+                    if (Input.GetMouseButtonUp(0))
                     {
-                        if(!t.IsSomethingOnTile())
+                        if (!t.IsSomethingOnTile())
                             MoveToTile(t);
+
+                        else
+                        {
+                            //todo - play a sound that indicates that it isn't a selectable tile
+                        }
                     }
                 }
             }
         }
     }
 
-    void SelectTileKeyboard()
+    void MakeAllSelectable() //this only paints all tiles within movement range to the color. only for aesthetics purposes
     {
         
+    }
+
+    void SelectTileKeyboard()
+    {
+
     }
 }
