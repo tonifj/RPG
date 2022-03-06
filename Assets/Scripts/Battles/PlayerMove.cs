@@ -14,6 +14,7 @@ public class PlayerMove : TacticsMove
     // Update is called once per frame
     void Update()
     {
+
     }
 
     public void ActionMovement()
@@ -21,7 +22,6 @@ public class PlayerMove : TacticsMove
         if (!moving)
         {
             finished_movement = false;
-
             FindSelectableTiles();
             SelectTileMouse();
         }
@@ -42,13 +42,14 @@ public class PlayerMove : TacticsMove
             if (hit.collider.tag == "tile")
             {
                 Tile t = hit.collider.GetComponent<Tile>();
-               
 
                 if (t.selectable)
                 {
                     t.target = true;
                     if (Input.GetMouseButtonUp(0))
                     {
+                        t.target = true;
+
                         if (!t.IsSomethingOnTile())
                             MoveToTile(t);
 
@@ -57,14 +58,16 @@ public class PlayerMove : TacticsMove
                             //todo - play a sound that indicates that it isn't a selectable tile
                         }
                     }
-                }
+                }                    
             }
         }
     }
 
-    void MakeAllSelectable() //this only paints all tiles within movement range to the color. only for aesthetics purposes
+    void PaintTiles() //this only paints all tiles within movement range to the color. only for aesthetics purposes
     {
         
+
+       
     }
 
     void SelectTileKeyboard()

@@ -41,14 +41,9 @@ public class Tile : MonoBehaviour
     void Update()
     {
 
-        if (current)
+        if (target)
         {
-            GetComponent<Renderer>().material.color = Color.magenta;
-        }
-
-        else if (target)
-        {
-            GetComponent<Renderer>().material.color = Color.green;
+            GetComponent<Renderer>().material.color = Color.yellow;
         }
 
         else if (selectable)
@@ -139,14 +134,14 @@ public class Tile : MonoBehaviour
                     adjacents.Add(tile);
                 }
 
-                else if(Physics.Raycast(tile.transform.position, Vector3.up, out hit, 1) || tile == target)
+                else if (Physics.Raycast(tile.transform.position, Vector3.up, out hit, 1) || tile == target)
                 {
-                    if(hit.collider.tag == "player unit" && BattleManager.isPlayerTurn)
+                    if (hit.collider.tag == "player unit" && BattleManager.isPlayerTurn)
                         adjacents.Add(tile);
 
-                    else if(hit.collider.tag == "enemy unit" && !BattleManager.isPlayerTurn)
+                    else if (hit.collider.tag == "enemy unit" && !BattleManager.isPlayerTurn)
                         adjacents.Add(tile);
-
+                   
                 }
 
             }
@@ -157,13 +152,19 @@ public class Tile : MonoBehaviour
 
 
 
-public bool IsWalkable()
-{
-    return walkable;
-}
+    public bool IsWalkable()
+    {
+        return walkable;
+    }
 
-public void BeingVisited()
-{
-    visited = true;
-}
+    public void SetColor(Color c)
+    {
+        GetComponent<Renderer>().material.color = c;
+
+    }
+
+    public void BeingVisited()
+    {
+        visited = true;
+    }
 }

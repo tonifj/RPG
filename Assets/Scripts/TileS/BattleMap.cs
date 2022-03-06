@@ -65,32 +65,32 @@ public class BattleMap : MonoBehaviour
            tile_pos.z < map_depth;
     }
 
-    int TileDistance(GameObject origin, GameObject end)
+    public static int TileDistance(GameObject origin, GameObject end)
     {
         int dist = 0;
 
-        if (origin.transform.position.x < end.transform.position.x)
+        if (origin.GetComponent<Tile>().GetBattleMapPos().x < end.GetComponent<Tile>().GetBattleMapPos().x)
         {
-            for (int i = (int)origin.transform.position.x; i < end.transform.position.x; ++i)
+            for (int i = origin.GetComponent<Tile>().GetBattleMapPos().x; i < end.GetComponent<Tile>().GetBattleMapPos().x; ++i)
                 ++dist;
         }
 
         else
         {
-            for (int i = (int)end.transform.position.x; i < origin.transform.position.x; ++i)
+            for (int i = end.GetComponent<Tile>().GetBattleMapPos().x; i < origin.GetComponent<Tile>().GetBattleMapPos().x; ++i)
                 ++dist;
         }
 
 
-        if (origin.transform.position.y < end.transform.position.y)
+        if (origin.GetComponent<Tile>().GetBattleMapPos().y < end.GetComponent<Tile>().GetBattleMapPos().y)
         {
-            for (int i = (int)origin.transform.position.y; i < end.transform.position.y; ++i)
+            for (int i = origin.GetComponent<Tile>().GetBattleMapPos().y; i < end.GetComponent<Tile>().GetBattleMapPos().y; ++i)
                 ++dist;
         }
 
         else
         {
-            for (int i = (int)end.transform.position.y; i < origin.transform.position.y; ++i)
+            for (int i = end.GetComponent<Tile>().GetBattleMapPos().y; i < origin.GetComponent<Tile>().GetBattleMapPos().y; ++i)
                 ++dist;
         }
 
@@ -135,6 +135,23 @@ public class BattleMap : MonoBehaviour
         map_depth = d;
     }
 
+    void SetTileMatrix()
+    {
+        foreach (GameObject t in Tiles)
+        {
+
+            if (tile_matrix.x >= map_width)
+            {
+                tile_matrix.x = 0;
+                ++tile_matrix.y;
+            }
+
+            t.GetComponent<Tile>().SetBattleMapPos(tile_matrix);
+
+            ++tile_matrix.x;
+        }
+    }
+
     public void SetMap()
     {
         tile_matrix = new Vector2Int(0, 0);
@@ -142,9 +159,8 @@ public class BattleMap : MonoBehaviour
 
         TilesGO = GameObject.FindGameObjectsWithTag("tile");
         CopyMatrix(); //Copy the Tile component of each TileGO to a different array
-                      // SetTileMatrix();
-                      //PlaceTiles();
-       
+        SetTileMatrix();
+                      //PlaceTiles();    
     }
 
 

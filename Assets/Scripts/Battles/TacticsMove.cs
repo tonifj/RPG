@@ -5,7 +5,7 @@ using UnityEngine;
 public class TacticsMove : MonoBehaviour
 {
     List<Tile> selectableTiles = new List<Tile>();
-    GameObject[] tiles;
+    public GameObject[] tiles;
 
     Stack<Tile> path = new Stack<Tile>();
     Tile currentTile;
@@ -62,7 +62,7 @@ public class TacticsMove : MonoBehaviour
 
     public void ComputeAdjacencyLists(float jump, Tile target)
     {
-       // tiles = GameObject.FindGameObjectsWithTag("tile"); //if the map changes size, do this here
+        // tiles = GameObject.FindGameObjectsWithTag("tile"); //if the map changes size, do this here
 
         foreach (GameObject tile in tiles)
         {
@@ -96,8 +96,7 @@ public class TacticsMove : MonoBehaviour
                         tile.parent = t;
                         tile.visited = true;
                         tile.distance = 1 + t.distance;
-                        //if(!tile.IsSomethingOnTile())
-                            process.Enqueue(tile);
+                        process.Enqueue(tile);
                     }
                 }
             }
@@ -121,6 +120,7 @@ public class TacticsMove : MonoBehaviour
 
     protected void Move()
     {
+        ResetTilesColor();   
         if (path.Count > 0)
         {
             Tile t = path.Peek();
@@ -331,8 +331,8 @@ public class TacticsMove : MonoBehaviour
 
         if (tempPath.Count <= move)
         {
-            if(!t.IsSomethingOnTile())
-            return t.parent;
+            if (!t.IsSomethingOnTile())
+                return t.parent;
         }
 
         Tile endTile = null;
@@ -342,7 +342,7 @@ public class TacticsMove : MonoBehaviour
             endTile = tempPath.Pop();
         }
 
-        if(!endTile.IsSomethingOnTile())
+        if (!endTile.IsSomethingOnTile())
             return endTile;
         else
         {
@@ -415,12 +415,13 @@ public class TacticsMove : MonoBehaviour
         Debug.Log("Path not found");
     }
 
-    public void ResetSelectableTiles()
+    public void ResetTilesColor()
     {
-        for(int i = 0; i < selectableTiles.Count; ++i)
+        for (int i = 0; i < tiles.Length; ++i)
         {
-            selectableTiles[i].ResetTile();
+            tiles[i].GetComponent<Tile>().selectable = false;
         }
-        selectableTiles.Clear();
+        //selectableTiles.Clear();
     }
+
 }
