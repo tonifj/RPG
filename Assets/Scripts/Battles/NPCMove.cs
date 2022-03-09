@@ -31,7 +31,7 @@ public class NPCMove : TacticsMove
 
         else
         {
-            Move();
+            StartCoroutine(Move());
         }
     }
 

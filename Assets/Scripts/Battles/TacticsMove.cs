@@ -4,16 +4,20 @@ using UnityEngine;
 
 public class TacticsMove : MonoBehaviour
 {
+    private const float INITIAL_MOVEMENT_DELAY = 3f;
+
     List<Tile> selectableTiles = new List<Tile>();
     public GameObject[] tiles;
 
     Stack<Tile> path = new Stack<Tile>();
     Tile currentTile;
 
+
     public bool finished_movement = false;
 
     public bool moving = false;
     public int move = 5;
+    [SerializeField] private float initialMovementDelay = 3f;
     public int jumpHeight = 2;
     public int moveSpeed = 2;
     public float jumpVelocity = 4.5f;
@@ -118,8 +122,9 @@ public class TacticsMove : MonoBehaviour
         }
     }
 
-    protected void Move()
+    protected IEnumerator Move()
     {
+        yield return new WaitForSeconds(INITIAL_MOVEMENT_DELAY);
         ResetTilesColor();   
         if (path.Count > 0)
         {
