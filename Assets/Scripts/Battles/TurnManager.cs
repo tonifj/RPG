@@ -48,7 +48,9 @@ public class TurnManager : MonoBehaviour
 
     public void InitTurnQueue()
     {
+        //clear list everytime
         gameUnits.Clear();
+
         //add units
         AddUnitsToUnitsList(playerUnits);
         AddUnitsToUnitsList(enemyUnits);
@@ -56,6 +58,7 @@ public class TurnManager : MonoBehaviour
         //order units by speed
         OrganizeUnitsBySpeed();
 
+        //Begin fastest unit's turn
         StartTurn();
     }
 

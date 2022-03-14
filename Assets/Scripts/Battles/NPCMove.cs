@@ -19,7 +19,7 @@ public class NPCMove : TacticsMove
 
     public void ActionMovement()
     {
-        if (!turn)
+        if(!turn)
             return;
 
         if (!moving)

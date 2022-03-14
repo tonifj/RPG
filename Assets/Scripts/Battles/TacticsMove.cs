@@ -126,7 +126,6 @@ public class TacticsMove : MonoBehaviour
 
     protected void Move()
     {
-        //yield return new WaitForSeconds(INITIAL_MOVEMENT_DELAY);
         ResetTilesColor();
         if (path.Count > 0)
         {
@@ -172,6 +171,7 @@ public class TacticsMove : MonoBehaviour
             TurnManager.instance.EndTurn();
         }
     }
+
 
     protected void RemoveSelectableTiles()
     {

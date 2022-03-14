@@ -40,21 +40,28 @@ public class Tile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        GetComponent<Renderer>().material.color = Color.white;
+
+        if (TurnManager.instance.GetUnitWithTurn().GetComponent<Unit>().is_player_unit)
+        {
+            if (selectable)
+            {
+                GetComponent<Renderer>().material.color = Color.blue;
+            }   
+        }
+
 
         if (target)
         {
             GetComponent<Renderer>().material.color = Color.yellow;
         }
 
-        else if (selectable)
-        {
-            GetComponent<Renderer>().material.color = Color.blue;
-        }
+       
+        
 
-        else
-        {
-            GetComponent<Renderer>().material.color = Color.white;
-        }
+
+
+
 
 
     }

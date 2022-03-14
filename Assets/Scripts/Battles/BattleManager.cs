@@ -97,9 +97,6 @@ public class BattleManager : MonoBehaviour
 
         //InstantiateUnits();
 
-        battleState = BattleState.START;
-
-
     }
 
     // Update is called once per frame
@@ -109,6 +106,16 @@ public class BattleManager : MonoBehaviour
 
         switch (battleState)
         {
+
+            case (BattleState.SET):
+                {
+                    //allow player to set its units
+
+                    //start battle
+                    battleState = BattleState.START;
+                }
+                break;
+
             case (BattleState.START):
                 {
                     //ui animations for battle start
@@ -129,14 +136,11 @@ public class BattleManager : MonoBehaviour
 
                     else
                     {
-                        EnemeyCommandMove();
-
+                        EnemyCommandMove();
                     }
                 }
                 break;
         }
-
-
     }
 
     void SetTurnOrder()
@@ -219,8 +223,6 @@ public class BattleManager : MonoBehaviour
 
         //set all other submenus to false
         ActionSelectorGO.transform.position = MoveSelectorGO.transform.position;
-
-
     }
 
     void HandleSubmenus()
@@ -257,10 +259,8 @@ public class BattleManager : MonoBehaviour
             case CurrentSubmenu.WAIT:
                 {
                     WaitAction();
-
                 }
                 break;
-
         }
     }
 
@@ -365,7 +365,7 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    void EnemeyCommandMove()
+    void EnemyCommandMove()
     {
 
         TurnManager.instance.GetUnitWithTurn().GetComponent<NPCMove>().ActionMovement();
@@ -448,7 +448,6 @@ public class BattleManager : MonoBehaviour
         {
             ShowBattleUI();
             currentSubmenu = CurrentSubmenu.FIRST;
-
         }
 
 
