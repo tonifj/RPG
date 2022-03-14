@@ -93,20 +93,19 @@ public class BattleManager : MonoBehaviour
 
         SetBattle();
 
-        SetTurnOrder();
+        //SetTurnOrder();
 
         //InstantiateUnits();
 
         battleState = BattleState.START;
 
-        battleCamera.SetTarget(TurnOrder[current_turn].transform);
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        battleCamera.SetTarget(TurnOrder[current_turn].transform);
+        battleCamera.SetTarget(TurnManager.instance.GetUnitWithTurn().transform);
 
         switch (battleState)
         {
@@ -121,9 +120,9 @@ public class BattleManager : MonoBehaviour
 
             case (BattleState.BATTLE):
                 {
-                    isPlayerTurn = TurnOrder[current_turn].GetComponent<Unit>().is_player_unit;
+                    isPlayerTurn = TurnManager.instance.GetUnitWithTurn().GetComponent<Unit>().is_player_unit;
 
-                    if (TurnOrder[current_turn].GetComponent<Unit>().IsPlayerUnit())
+                    if (TurnManager.instance.GetUnitWithTurn().GetComponent<Unit>().IsPlayerUnit())
                     {
                         PlayerTurn();
                     }
@@ -352,10 +351,10 @@ public class BattleManager : MonoBehaviour
     {
         HideBattleUI();
 
-        TurnOrder[current_turn].GetComponent<PlayerMove>().ActionMovement();
+        TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ActionMovement();
 
-        if (TurnOrder[current_turn].GetComponent<PlayerMove>().finished_movement)
-            EndTurn();
+       // if (TurnOrder[current_turn].GetComponent<PlayerMove>().finished_movement)
+           // EndTurn();
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -368,10 +367,11 @@ public class BattleManager : MonoBehaviour
 
     void EnemeyCommandMove()
     {
-       // TurnOrder[current_turn].GetComponent<NPCMove>().ActionMovement();
+
+        TurnManager.instance.GetUnitWithTurn().GetComponent<NPCMove>().ActionMovement();
 
         //if (TurnOrder[current_turn].GetComponent<NPCMove>().finished_movement)
-            EndTurn();
+           // EndTurn();
     }
 
     void AttackAction()
@@ -478,7 +478,7 @@ public class BattleManager : MonoBehaviour
     {
         if (!action_tile_reseted)
         {
-            action_tile = TurnOrder[current_turn].GetComponent<Unit>().GetPosition();
+            action_tile = TurnManager.instance.GetUnitWithTurn().GetComponent<Unit>().GetPosition();
             action_tile_reseted = true;
         }
 
@@ -519,10 +519,10 @@ public class BattleManager : MonoBehaviour
 
     void SetBattle() //depending on its id, rewards and enemy units will change
     {
-        EnemyUnits = GameObject.FindGameObjectsWithTag("enemy unit");
-        PlayerUnits = GameObject.FindGameObjectsWithTag("player unit"); //for the moment. the objective is to make the player place the units in a small area
+        //EnemyUnits = GameObject.FindGameObjectsWithTag("enemy unit");
+        //PlayerUnits = GameObject.FindGameObjectsWithTag("player unit"); //for the moment. the objective is to make the player place the units in a small area
 
-        PlayerUnits[0].GetComponent<Unit>().SetSpeed(190); //for testing
+        //PlayerUnits[0].GetComponent<Unit>().SetSpeed(190); //for testing
 
         switch (battle_id)
         {

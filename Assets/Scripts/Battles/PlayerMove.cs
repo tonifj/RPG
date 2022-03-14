@@ -19,6 +19,9 @@ public class PlayerMove : TacticsMove
 
     public void ActionMovement()
     {
+        if (!turn)
+            return;
+
         if (!moving)
         {
             finished_movement = false;
@@ -28,7 +31,7 @@ public class PlayerMove : TacticsMove
 
         else
         {
-            StartCoroutine(Move());
+           Move();
         }
     }
 

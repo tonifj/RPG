@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class TacticsMove : MonoBehaviour
 {
+    public bool turn = false;
+
     private const float INITIAL_MOVEMENT_DELAY = 3f;
 
     List<Tile> selectableTiles = new List<Tile>();
@@ -122,10 +124,10 @@ public class TacticsMove : MonoBehaviour
         }
     }
 
-    protected IEnumerator Move()
+    protected void Move()
     {
-        yield return new WaitForSeconds(INITIAL_MOVEMENT_DELAY);
-        ResetTilesColor();   
+        //yield return new WaitForSeconds(INITIAL_MOVEMENT_DELAY);
+        ResetTilesColor();
         if (path.Count > 0)
         {
             Tile t = path.Peek();
@@ -165,8 +167,9 @@ public class TacticsMove : MonoBehaviour
         else
         {
             RemoveSelectableTiles();
-            finished_movement = true;
             moving = false;
+
+            TurnManager.instance.EndTurn();
         }
     }
 
@@ -336,8 +339,7 @@ public class TacticsMove : MonoBehaviour
 
         if (tempPath.Count <= move)
         {
-            if (!t.IsSomethingOnTile())
-                return t.parent;
+            return t.parent;
         }
 
         Tile endTile = null;
@@ -347,12 +349,9 @@ public class TacticsMove : MonoBehaviour
             endTile = tempPath.Pop();
         }
 
-        if (!endTile.IsSomethingOnTile())
-            return endTile;
-        else
-        {
-            return endTile.adjacents[Random.Range(0, endTile.adjacents.Count - 1)];
-        }
+
+        return endTile;
+
     }
 
     protected void FindPath(Tile target)
@@ -411,8 +410,6 @@ public class TacticsMove : MonoBehaviour
                 }
             }
 
-
-
         }
 
         //todo - if there is no path to the target file, execute an action or wait
@@ -427,6 +424,16 @@ public class TacticsMove : MonoBehaviour
             tiles[i].GetComponent<Tile>().selectable = false;
         }
         //selectableTiles.Clear();
+    }
+
+    public void BeginTurn()
+    {
+        turn = true;
+    }
+
+    public void EndTurn()
+    {
+        turn = false;
     }
 
 }

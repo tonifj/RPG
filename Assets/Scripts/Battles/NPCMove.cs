@@ -14,11 +14,14 @@ public class NPCMove : TacticsMove
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void ActionMovement()
     {
+        if (!turn)
+            return;
+
         if (!moving)
         {
             finished_movement = false;
@@ -31,8 +34,14 @@ public class NPCMove : TacticsMove
 
         else
         {
-            StartCoroutine(Move());
+            Move();
         }
+    }
+
+    void CalculateTileToMoveTo()
+    {
+       
+
     }
 
     void CalculatePath()
@@ -49,11 +58,11 @@ public class NPCMove : TacticsMove
 
         float distance = Mathf.Infinity;
 
-        foreach(GameObject obj in targets) // get closest player unit
+        foreach (GameObject obj in targets) // get closest player unit
         {
             float dist = Vector3.Distance(transform.position, obj.transform.position);
 
-            if(dist < distance)
+            if (dist < distance)
             {
                 distance = dist;
                 nearest = obj;

@@ -54,6 +54,7 @@ public class Unit : MonoBehaviour
     int attack_range = 1;
     void Start()
     {
+        SetName(Globals.GenerateRandomName(genre));
     }
 
     // Update is called once per frame
@@ -211,7 +212,6 @@ public class Unit : MonoBehaviour
 
         }
     }
-
 
     public void SetEnemyUnit()
     {
@@ -473,6 +473,11 @@ public class Unit : MonoBehaviour
     public int GetJumpRange()
     {
         return jumpPower;
+    }
+
+    public string GetName()
+    {
+        return unit_name;
     }
 
 }

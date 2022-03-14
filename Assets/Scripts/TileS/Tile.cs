@@ -139,8 +139,8 @@ public class Tile : MonoBehaviour
                     if (hit.collider.tag == "player unit" && BattleManager.isPlayerTurn)
                         adjacents.Add(tile);
 
-                    else if (hit.collider.tag == "enemy unit" && !BattleManager.isPlayerTurn)
-                        adjacents.Add(tile);
+                    //else if (hit.collider.tag == "enemy unit" && !BattleManager.isPlayerTurn)
+                       // adjacents.Add(tile);
                    
                 }
 

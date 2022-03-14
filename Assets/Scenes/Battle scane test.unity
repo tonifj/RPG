@@ -549,9 +549,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2538d8d2351f0246b3cb885f3d7bb6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  turn: 0
+  tiles: []
   finished_movement: 0
   moving: 0
   move: 5
+  initialMovementDelay: 3
   jumpHeight: 2
   moveSpeed: 2
   jumpVelocity: 4.5
@@ -1816,11 +1819,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 80001327}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &83457697 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1351812565883068018, guid: 4f473b111c6b0ac4994e6018f4b5131d, type: 3}
-  m_PrefabInstance: {fileID: 2100899822}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &85602804
 GameObject:
   m_ObjectHideFlags: 0
@@ -3625,7 +3623,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 600934654}
-  - {fileID: 83457697}
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -14842,7 +14839,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1351812565883068018, guid: 4f473b111c6b0ac4994e6018f4b5131d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1351812565883068018, guid: 4f473b111c6b0ac4994e6018f4b5131d, type: 3}
       propertyPath: m_LocalPosition.y
@@ -14850,7 +14847,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1351812565883068018, guid: 4f473b111c6b0ac4994e6018f4b5131d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1351812565883068018, guid: 4f473b111c6b0ac4994e6018f4b5131d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -14882,7 +14879,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1351812565883068030, guid: 4f473b111c6b0ac4994e6018f4b5131d, type: 3}
       propertyPath: m_Name
-      value: Enzo
+      value: PlayerUnit
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4f473b111c6b0ac4994e6018f4b5131d, type: 3}
@@ -18274,6 +18271,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1869545640}
   - component: {fileID: 1869545639}
+  - component: {fileID: 1869545641}
   m_Layer: 0
   m_Name: BattleManager
   m_TagString: battle manager
@@ -18323,6 +18321,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1869545641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1869545638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b42acfa741398a458bf9dcd1dd97107, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameUnits: []
 --- !u!1 &1881322908
 GameObject:
   m_ObjectHideFlags: 0
@@ -20805,70 +20816,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2538d8d2351f0246b3cb885f3d7bb6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  turn: 0
+  tiles: []
   finished_movement: 0
   moving: 0
   move: 5
+  initialMovementDelay: 3
   jumpHeight: 2
   moveSpeed: 2
   jumpVelocity: 4.5
   actualTargetTile: {fileID: 0}
---- !u!1001 &2100899822
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 226359614}
-    m_Modifications:
-    - target: {fileID: 1351812565883068018, guid: 4f473b111c6b0ac4994e6018f4b5131d, type: 3}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1351812565883068018, guid: 4f473b111c6b0ac4994e6018f4b5131d, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1351812565883068018, guid: 4f473b111c6b0ac4994e6018f4b5131d, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1351812565883068018, guid: 4f473b111c6b0ac4994e6018f4b5131d, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1351812565883068018, guid: 4f473b111c6b0ac4994e6018f4b5131d, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1351812565883068018, guid: 4f473b111c6b0ac4994e6018f4b5131d, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1351812565883068018, guid: 4f473b111c6b0ac4994e6018f4b5131d, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1351812565883068018, guid: 4f473b111c6b0ac4994e6018f4b5131d, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1351812565883068018, guid: 4f473b111c6b0ac4994e6018f4b5131d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1351812565883068018, guid: 4f473b111c6b0ac4994e6018f4b5131d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1351812565883068018, guid: 4f473b111c6b0ac4994e6018f4b5131d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1351812565883068030, guid: 4f473b111c6b0ac4994e6018f4b5131d, type: 3}
-      propertyPath: m_Name
-      value: Enzo (1)
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 4f473b111c6b0ac4994e6018f4b5131d, type: 3}
 --- !u!1 &2106972003
 GameObject:
   m_ObjectHideFlags: 0
