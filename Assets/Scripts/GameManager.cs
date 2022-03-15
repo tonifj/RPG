@@ -4,42 +4,15 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public List<GameObject> playerUnits = new List<GameObject>();
-    public List<Mission> missions = new List<Mission>();
+    public Dictionary<string, Item> playerInventory = new Dictionary<string, Item>(); //make player class as singleton?
+    public Dictionary<string, Consumible> gameConsumibles = new Dictionary<string, Consumible>();
 
-    public GameObject playerPrefab;
-    public GameObject enemyPrefab;
-
-    GameObject battleManagerGO;
-    BattleManager battleManager;
-
-
-    Mission[] Missions;
     void Start()
     {
+        CreateConsumibles();
+        playerInventory.Add(gameConsumibles["Potion"].GetName(), gameConsumibles["Potion"]);
 
-
-        battleManagerGO = GameObject.FindGameObjectWithTag("battle manager");
-        battleManager = battleManagerGO.GetComponent<BattleManager>();
-
-        //Mission 1
-        //Mission introduction = CreateMission(1, 50);
-        //introduction.CreateEnemyUnit(ClassType.SNIPER, Genre.FEMALE, 1);
-        //introduction.PlaceUnit(introduction.GetEnemyUnits()[0], new Vector2Int(2, 2));
-        //introduction.CreateEnemyUnit(ClassType.SNIPER, Genre.FEMALE, 1);
-        //introduction.PlaceUnit(introduction.GetEnemyUnits()[1], new Vector2Int(5, 3));
-        //introduction.CreateEnemyUnit(ClassType.SNIPER, Genre.FEMALE, 1);
-        //introduction.PlaceUnit(introduction.GetEnemyUnits()[2], new Vector2Int(5, 2));
-
-        //CreatePlayerUnit(ClassType.RECRUIT, Genre.MALE, 1);
-
-        //for (int i = 0; i < playerUnits.Count; ++i)
-            //introduction.PlaceUnit(playerUnits[i], new Vector2Int(i + 1, 0));
-
-       // missions.Add(introduction);
-
-        //battleManager.AddUnits(playerUnits);
-        //battleManager.AddUnits(introduction.GetEnemyUnits());
+        Debug.Log(playerInventory["Potion"]);
     }
 
     // Update is called once per frame
@@ -48,21 +21,10 @@ public class GameManager : MonoBehaviour
 
     }
 
-    Mission CreateMission(int id, int pesetas_reward)
+    void CreateConsumibles()
     {
-        Mission mission = new Mission();
-        mission.SetMission(id, pesetas_reward);
-        return mission;
+        Consumible potion = new Consumible("Potion", 25, Consumible.ConsumibleType.HEAL, 20);
+        gameConsumibles.Add(potion.GetName(), potion);
     }
-
-    void CreatePlayerUnit(ClassType type, Genre genre, int lvl)
-    {
-        GameObject new_unit = playerPrefab;
-        new_unit.GetComponent<Unit>().SetSpeed(190);
-        new_unit.GetComponent<Unit>().SetName(Globals.GenerateRandomName(genre));
-        playerUnits.Add(new_unit);
-    }
-
-
 
 }

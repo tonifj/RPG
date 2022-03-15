@@ -532,6 +532,11 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    void ShowCurrentUnitInfo()
+    {
+
+    }
+
     void PlacePlayerUnits()
     {
 

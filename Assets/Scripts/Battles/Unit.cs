@@ -43,7 +43,10 @@ public class Unit : MonoBehaviour
     int lvl;
     int exp;
 
+    int max_hp;
     int hp;
+
+    int max_psique;
     int psique;
     int physical_attack;
     int physical_resistance;
@@ -55,6 +58,7 @@ public class Unit : MonoBehaviour
     void Start()
     {
         SetName(Globals.GenerateRandomName(genre));
+        SetBaseStats();
     }
 
     // Update is called once per frame
@@ -68,7 +72,9 @@ public class Unit : MonoBehaviour
         {
             case ClassType.RECRUIT:
                 {
+                    max_hp += 6;
                     hp += 6;
+                    max_psique += 1;
                     psique += 1;
                     physical_attack += 6;
                     physical_resistance += 5;
@@ -79,6 +85,8 @@ public class Unit : MonoBehaviour
 
             case ClassType.AGENT:
                 {
+                    max_hp += 8;
+                    max_psique += 1;
                     hp += 8;
                     psique += 1;
                     physical_attack += 7;
@@ -91,6 +99,8 @@ public class Unit : MonoBehaviour
 
             case ClassType.SPECIALIST:
                 {
+                    max_hp += 5;
+                    max_psique += 4;
                     hp += 5;
                     psique += 4;
                     physical_attack += 6;
@@ -102,6 +112,8 @@ public class Unit : MonoBehaviour
 
             case ClassType.RIOT:
                 {
+                    max_hp += 7;
+                    max_psique += 1;
                     hp += 7;
                     psique += 1;
                     physical_attack += 6;
@@ -113,6 +125,8 @@ public class Unit : MonoBehaviour
 
             case ClassType.SNIPER:
                 {
+                    max_hp += 6;
+                    max_psique += 2;
                     hp += 6;
                     psique += 2;
                     physical_attack += 6;
@@ -124,6 +138,8 @@ public class Unit : MonoBehaviour
 
             case ClassType.COMBAT_MEDIC:
                 {
+                    max_hp += 6;
+                    max_psique += 5;
                     hp += 6;
                     psique += 5;
                     physical_attack += 6;
@@ -135,6 +151,8 @@ public class Unit : MonoBehaviour
 
             case ClassType.ARCANIST:
                 {
+                    max_hp += 2;
+                    max_psique += 4;
                     hp += 2;
                     psique += 4;
                     physical_attack += 6;
@@ -146,6 +164,8 @@ public class Unit : MonoBehaviour
 
             case ClassType.GEO:
                 {
+                    max_hp += 8;
+                    max_psique += 1;
                     hp += 8;
                     psique += 1;
                     physical_attack += 7;
@@ -157,6 +177,8 @@ public class Unit : MonoBehaviour
 
             case ClassType.SPY:
                 {
+                    max_hp += 7;
+                    max_psique += 2;
                     hp += 7;
                     psique += 2;
                     physical_attack += 8;
@@ -168,6 +190,8 @@ public class Unit : MonoBehaviour
 
             case ClassType.WHITE_ARCANIST:
                 {
+                    max_hp += 4;
+                    max_psique += 3;
                     hp += 4;
                     psique += 3;
                     physical_attack += 6;
@@ -179,6 +203,8 @@ public class Unit : MonoBehaviour
 
             case ClassType.MATTER_CONTROLLER:
                 {
+                    max_hp += 4;
+                    max_psique += 3;
                     hp += 4;
                     psique += 3;
                     physical_attack += 6;
@@ -190,6 +216,8 @@ public class Unit : MonoBehaviour
 
             case ClassType.WEAPON_MASTER:
                 {
+                    max_hp += 8;
+                    max_psique += 2;
                     hp += 8;
                     psique += 2;
                     physical_attack += 9;
@@ -201,6 +229,8 @@ public class Unit : MonoBehaviour
 
             case ClassType.GOD:
                 {
+                    max_hp += 20;
+                    max_psique += 7;
                     hp += 20;
                     psique += 7;
                     physical_attack += 9;
@@ -234,6 +264,8 @@ public class Unit : MonoBehaviour
         {
             case ClassType.RECRUIT:
                 {
+                    max_hp = 30;
+                    max_psique = 10;
                     hp = 30;
                     psique = 10;
                     physical_attack = 50;
@@ -247,6 +279,8 @@ public class Unit : MonoBehaviour
                 break;
             case ClassType.AGENT:
                 {
+                    max_hp = 40;
+                    max_psique = 14;
                     hp = 40;
                     psique = 14;
                     physical_attack = 70;
@@ -261,6 +295,8 @@ public class Unit : MonoBehaviour
 
             case ClassType.SPECIALIST:
                 {
+                    max_hp = 28;
+                    max_psique = 36;
                     hp = 28;
                     psique = 36;
                     physical_attack = 64;
@@ -275,6 +311,8 @@ public class Unit : MonoBehaviour
 
             case ClassType.RIOT:
                 {
+                    max_hp = 36;
+                    max_psique = 12;
                     hp = 36;
                     psique = 12;
                     physical_attack = 65;
@@ -289,6 +327,8 @@ public class Unit : MonoBehaviour
 
             case ClassType.SNIPER:
                 {
+                    max_hp = 36;
+                    max_psique = 18;
                     hp = 36;
                     psique = 18;
                     physical_attack = 72;
@@ -303,6 +343,8 @@ public class Unit : MonoBehaviour
 
             case ClassType.COMBAT_MEDIC:
                 {
+                    max_hp = 30;
+                    max_psique = 40;
                     hp = 30;
                     psique = 40;
                     physical_attack = 60;
@@ -317,6 +359,8 @@ public class Unit : MonoBehaviour
 
             case ClassType.ARCANIST:
                 {
+                    max_hp = 26;
+                    max_psique = 38;
                     hp = 26;
                     psique = 38;
                     physical_attack = 60;
@@ -331,6 +375,8 @@ public class Unit : MonoBehaviour
 
             case ClassType.GEO:
                 {
+                    max_hp = 35;
+                    max_psique = 12;
                     hp = 35;
                     psique = 12;
                     physical_attack = 70;
@@ -345,6 +391,8 @@ public class Unit : MonoBehaviour
 
             case ClassType.SPY:
                 {
+                    max_hp = 34;
+                    max_psique = 26;
                     hp = 34;
                     psique = 26;
                     physical_attack = 80;
@@ -359,6 +407,8 @@ public class Unit : MonoBehaviour
 
             case ClassType.WHITE_ARCANIST:
                 {
+                    max_hp = 26;
+                    max_psique = 38;
                     hp = 26;
                     psique = 38;
                     physical_attack = 60;
@@ -373,6 +423,8 @@ public class Unit : MonoBehaviour
 
             case ClassType.MATTER_CONTROLLER:
                 {
+                    max_hp = 28;
+                    max_psique = 34;
                     hp = 28;
                     psique = 34;
                     physical_attack = 64;
@@ -387,6 +439,8 @@ public class Unit : MonoBehaviour
 
             case ClassType.WEAPON_MASTER:
                 {
+                    max_hp = 40;
+                    max_psique = 18;
                     hp = 40;
                     psique = 18;
                     physical_attack = 94;
@@ -401,6 +455,8 @@ public class Unit : MonoBehaviour
 
             case ClassType.GOD:
                 {
+                    max_hp = 100;
+                    max_psique = 70;
                     hp = 100;
                     psique = 70;
                     physical_attack = 90;
@@ -480,4 +536,23 @@ public class Unit : MonoBehaviour
         return unit_name;
     }
 
+    public int GetMaxHP()
+    {
+        return max_hp;
+    }
+
+    public int GetCurrentHP()
+    {
+        return hp;
+    }
+
+    public int GetMaxPsique()
+    {
+        return max_psique;
+    }
+
+    public int GetCurrentPsique()
+    {
+        return psique;
+    }
 }
