@@ -9,6 +9,7 @@ TagManager:
   - enemy unit
   - game manager
   - battle manager
+  - PlayerGO
   layers:
   - Default
   - TransparentFX

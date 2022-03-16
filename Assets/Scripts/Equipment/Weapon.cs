@@ -4,14 +4,28 @@ using UnityEngine;
 
 public class Weapon : Item
 {
-    enum WeaponType //todo
+    public enum WeaponType
     {
         SINGLE_HANDED,
         DUAL_HANDED
     }
-    public Weapon(string name, int phyS, int psiS, int phyR, int psiR, int spe, int hp, int mov, int shop_price)
+
+    int hp;
+    int phy_str;
+    int psi_str;
+    int phy_res;
+    int psi_res;
+    int speed;
+    int mov;
+    int weapon_range;
+    WeaponType weaponType;
+
+    public Weapon(string name, string desc, WeaponType wType, int phyS, int psiS, int phyR, int psiR, int spe, int hp, int mov, int range, int value)
     {
+        weaponType = wType;
+        SetDescription(desc);
         SetItemType(ItemType.WEAPON);
+        SetRange(range);
         SetName(name);
         SetPhyStr(phyS);
         SetPsiStr(psiS);
@@ -20,9 +34,45 @@ public class Weapon : Item
         SetSpeed(spe);
         SetMov(mov);
         SetHP(hp);
-        SetShopPrice(shop_price);
-        SetSellPrice((int)(shop_price*2/3));
+        SetShopPrice(value);
+        SetSellPrice((int)(value * 2/3));
     }
+
+
+    protected void SetPhyStr(int str)
+    {
+        phy_str = str;
+    }
+
+    protected void SetPsiStr(int str)
+    {
+        psi_str = str;
+    }
+
+    protected void SetPhyRes(int res)
+    {
+        phy_res = res;
+    }
+
+    protected void SetPsiRes(int res)
+    {
+        psi_res = res;
+    }
+
+    protected void SetSpeed(int spe)
+    {
+        speed = spe;
+    }
+    protected void SetMov(int new_mov)
+    {
+        mov = new_mov;
+    }
+
+    protected void SetHP(int new_hp)
+    {
+        hp = new_hp;
+    }
+
 
     public string GetName()
     {
@@ -56,5 +106,11 @@ public class Weapon : Item
     public int GetMov()
     {
         return mov;
+    }
+
+
+    public void SetRange(int r)
+    {
+        weapon_range = r;
     }
 }
