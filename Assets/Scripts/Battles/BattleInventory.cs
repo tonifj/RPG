@@ -8,6 +8,8 @@ public class BattleInventory : MonoBehaviour
     Player player;
     public Button button_prefab;
 
+    GameObject help_panel;
+
     bool created_item_buttons = false;
     void Start()
     {

@@ -37,4 +37,9 @@ public class Consumible : Item
     {
         return item_name;
     }
+
+    public string GetDescription()
+    {
+        return item_description;
+    }
 }

@@ -10,6 +10,7 @@ TagManager:
   - game manager
   - battle manager
   - PlayerGO
+  - help panel
   layers:
   - Default
   - TransparentFX
