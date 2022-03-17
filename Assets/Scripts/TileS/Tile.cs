@@ -42,7 +42,7 @@ public class Tile : MonoBehaviour
     {
         GetComponent<Renderer>().material.color = Color.white;
 
-        if (TurnManager.instance.GetUnitWithTurn().GetComponent<Unit>().is_player_unit)
+        if (TurnManager.instance.GetUnitWithTurn() != null && TurnManager.instance.GetUnitWithTurn().GetComponent<Unit>().is_player_unit)
         {
             if (selectable)
             {

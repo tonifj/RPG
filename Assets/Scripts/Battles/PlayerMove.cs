@@ -22,7 +22,7 @@ public class PlayerMove : TacticsMove
         if (!turn)
             return;
 
-        if (!moving)
+        else if (!moving)
         {
             finished_movement = false;
             FindSelectableTiles();

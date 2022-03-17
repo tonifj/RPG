@@ -167,7 +167,7 @@ public class TacticsMove : MonoBehaviour
         {
             RemoveSelectableTiles();
             moving = false;
-
+            finished_movement = true;
             TurnManager.instance.EndTurn();
         }
     }

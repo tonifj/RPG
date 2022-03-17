@@ -28,7 +28,6 @@ public class BattleManager : MonoBehaviour
     public Material SelectedTileMaterial;
 
     //booleans
-    bool menu_is_reset = false;
     bool enemy_turn_finished = true;
     bool is_turn_unit_ally = false;
     bool action_tile_reseted = false;
@@ -102,7 +101,8 @@ public class BattleManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        battleCamera.SetTarget(TurnManager.instance.GetUnitWithTurn().transform);
+        if (TurnManager.instance.GetUnitWithTurn() != null)
+            battleCamera.SetTarget(TurnManager.instance.GetUnitWithTurn().transform);
 
         switch (battleState)
         {
@@ -353,12 +353,13 @@ public class BattleManager : MonoBehaviour
 
         TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ActionMovement();
 
-       // if (TurnOrder[current_turn].GetComponent<PlayerMove>().finished_movement)
-           // EndTurn();
+
+        if (TurnManager.instance.GetUnitWithTurn().GetComponent<Unit>().IsPlayerUnit() && TurnManager.instance.GetUnitWithTurn().GetComponent<TacticsMove>().finished_movement)
+            EndTurn();
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            TurnOrder[current_turn].GetComponent<PlayerMove>().ResetTilesColor();
+            TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ResetTilesColor();
             ShowBattleUI();
             currentSubmenu = CurrentSubmenu.FIRST;
 
@@ -370,7 +371,7 @@ public class BattleManager : MonoBehaviour
 
         TurnManager.instance.GetUnitWithTurn().GetComponent<NPCMove>().ActionMovement();
 
-        //if (TurnOrder[current_turn].GetComponent<NPCMove>().finished_movement)
+        //if (TurnManager.instance.GetUnitWithTurn() != null && TurnManager.instance.GetUnitWithTurn().GetComponent<NPCMove>().finished_movement)
            // EndTurn();
     }
 
@@ -475,29 +476,17 @@ public class BattleManager : MonoBehaviour
 
     void PlayerTurn()
     {
-        if (!action_tile_reseted)
-        {
-            action_tile = TurnManager.instance.GetUnitWithTurn().GetComponent<Unit>().GetPosition();
-            action_tile_reseted = true;
-        }
-
         HandleSubmenus();
     }
 
     void EndTurn()
     {
-        if (current_turn >= TurnOrder.Count - 1)
-            current_turn = 0;
-        else
-            ++current_turn;
-
-        if (TurnOrder[current_turn].GetComponent<Unit>().IsPlayerUnit())
+        if (TurnManager.instance.GetUnitWithTurn().GetComponent<Unit>().is_player_unit)
         {
-            ResetActionMenu();
-            menu_is_reset = false;
+            TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ResetTilesColor();
+            ShowBattleUI();
+            currentSubmenu = CurrentSubmenu.FIRST;
         }
-
-        action_tile_reseted = false;
 
     }
 
@@ -518,10 +507,6 @@ public class BattleManager : MonoBehaviour
 
     void SetBattle() //depending on its id, rewards and enemy units will change
     {
-        //EnemyUnits = GameObject.FindGameObjectsWithTag("enemy unit");
-        //PlayerUnits = GameObject.FindGameObjectsWithTag("player unit"); //for the moment. the objective is to make the player place the units in a small area
-
-        //PlayerUnits[0].GetComponent<Unit>().SetSpeed(190); //for testing
 
         switch (battle_id)
         {
