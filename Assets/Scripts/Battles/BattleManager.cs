@@ -12,12 +12,15 @@ public class BattleManager : MonoBehaviour
     //GO
     public GameObject ActionSelectorGO;
     public GameObject BattleUI;
+
     public GameObject FirstMenu;
     public GameObject MoveSelectorGO;
     public GameObject AttackSelectorGO;
     public GameObject SkillSelectorGO;
     public GameObject ItemSelectorGO;
     public GameObject WaitSelectorGO;
+
+    public GameObject ItemMenu;
 
     //Prefabs
     public GameObject PlayerUnitPrefab;
@@ -227,6 +230,9 @@ public class BattleManager : MonoBehaviour
 
     void HandleSubmenus()
     {
+        if (BattleUI.activeSelf == false)
+            ShowBattleUI();
+
         switch (currentSubmenu)
         {
             case CurrentSubmenu.FIRST:
@@ -253,7 +259,7 @@ public class BattleManager : MonoBehaviour
                 break;
             case CurrentSubmenu.ITEM:
                 {
-                    AttackAction();
+                    ItemAction();
                 }
                 break;
             case CurrentSubmenu.WAIT:
@@ -414,6 +420,7 @@ public class BattleManager : MonoBehaviour
     void ItemAction()
     {
         HideFirstMenu();
+        ShowItemMenu();
 
         if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow) ||
             Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow)) //so it doesn't iterate all the time inside this
@@ -423,10 +430,22 @@ public class BattleManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            ShowBattleUI();
+            //ShowBattleUI();
+            ShowFirstMenu();
+            HideItemMenu();
             currentSubmenu = CurrentSubmenu.FIRST;
 
         }
+    }
+
+    void ShowItemMenu()
+    {
+        ItemMenu.SetActive(true);
+    }
+
+    void HideItemMenu()
+    {
+        ItemMenu.SetActive(false);
     }
 
     void WaitAction()
@@ -497,7 +516,6 @@ public class BattleManager : MonoBehaviour
         yield return new WaitForSeconds(2);
         EndTurn();
         enemy_turn_finished = true;
-
     }
 
     void PlayerActionMove()
