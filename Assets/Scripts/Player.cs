@@ -20,8 +20,8 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        for(int i = 0; i < playerConsumibles.Count; ++i)
-        Debug.Log(playerConsumibles[i].GetName());
+        //for(int i = 0; i < playerConsumibles.Count; ++i)
+        //Debug.Log(playerConsumibles[i].GetName());
     }
 
     public void AddConsumible(Consumible new_item)
@@ -42,5 +42,10 @@ public class Player : MonoBehaviour
     public void AddMisc(Misc new_item)
     {
         playerMisc.Add(new_item);
+    }
+
+    public int GetInventorySize()
+    {
+        return playerWeapons.Count + playerMisc.Count + playerArmors.Count + playerConsumibles.Count;
     }
 }
