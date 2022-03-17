@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public List<Weapon> playerWeapons = new List<Weapon>();
-    public List<Consumible> playerConsumibles = new List<Consumible>();
-    public List<Armor> playerArmors = new List<Armor>();
-    public List<Misc> playerMisc = new List<Misc>();
+    public Dictionary<Weapon, int> playerWeapons = new Dictionary<Weapon, int>();
+    public Dictionary<Consumible, int> playerConsumibles = new Dictionary<Consumible, int>();
+    public Dictionary<Armor, int> playerArmors = new Dictionary<Armor, int>();
+    public Dictionary<Misc, int> playerMisc = new Dictionary<Misc, int>();
     public List<Unit> playerUnits = new List<Unit>();
 
     //public static Player instance { get; private set; }
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -26,22 +26,40 @@ public class Player : MonoBehaviour
 
     public void AddConsumible(Consumible new_item)
     {
-        playerConsumibles.Add(new_item);
+
+        if (!playerConsumibles.ContainsKey(new_item))
+            playerConsumibles.Add(new_item, 1);
+
+        else
+            playerConsumibles[new_item] = playerConsumibles[new_item] + 1;
+
     }
 
     public void AddWeapon(Weapon new_item)
     {
-        playerWeapons.Add(new_item);
+        if (!playerWeapons.ContainsKey(new_item))
+            playerWeapons.Add(new_item, 1);
+
+        else
+            playerWeapons[new_item] = playerWeapons[new_item] + 1;
     }
 
     public void AddArmor(Armor new_item)
     {
-        playerArmors.Add(new_item);
+        if (!playerArmors.ContainsKey(new_item))
+            playerArmors.Add(new_item, 1);
+
+        else
+            playerArmors[new_item] = playerArmors[new_item] + 1;
     }
 
     public void AddMisc(Misc new_item)
     {
-        playerMisc.Add(new_item);
+        if (!playerMisc.ContainsKey(new_item))
+            playerMisc.Add(new_item, 1);
+
+        else
+            playerMisc[new_item] = playerMisc[new_item] + 1;
     }
 
     public int GetInventorySize()

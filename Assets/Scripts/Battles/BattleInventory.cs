@@ -27,19 +27,8 @@ public class BattleInventory : MonoBehaviour
 
     void CreateItemButtons()
     {
-        Dictionary<Consumible, int> num_of_items = new Dictionary<Consumible, int>();
 
-        for (int i = 0; i < player.playerConsumibles.Count; ++i)
-        {
-
-            if (!num_of_items.ContainsKey(player.playerConsumibles[i]))
-                num_of_items.Add(player.playerConsumibles[i], 1);
-
-            else
-                num_of_items[player.playerConsumibles[i]] = num_of_items[player.playerConsumibles[i]] + 1;
-        }
-
-        foreach (KeyValuePair<Consumible, int> item in num_of_items)
+        foreach (KeyValuePair<Consumible, int> item in player.playerConsumibles)
         {
             Button new_button = Instantiate(button_prefab);
             new_button.transform.SetParent(gameObject.transform);
