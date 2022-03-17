@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("PlayerGO").GetComponent<Player>();
         CreateItemDB();
         player.AddConsumible(GetConsumible(0));
+        player.AddConsumible(GetConsumible(1));
+        player.AddConsumible(GetConsumible(0));
     }
 
     // Update is called once per frame
