@@ -28,7 +28,9 @@ public class BattleInventoryButton : MonoBehaviour
             help_text.GetComponent<Text>().enabled = true;
         }
 
+        RectTransform rect = help_text.GetComponent<RectTransform>();
         help_text.GetComponent<Text>().text = message;
+        help_text.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, (help_text.GetComponent<Text>().font.fontSize*2.2f)/3 * message.Length); 
         help_panel.SetActive(true);
     }
 
