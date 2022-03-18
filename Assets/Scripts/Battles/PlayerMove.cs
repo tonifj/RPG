@@ -26,7 +26,7 @@ public class PlayerMove : TacticsMove
         {
             finished_movement = false;
             FindSelectableTiles();
-            SelectTileMouse();
+            SelectTileMovement();
         }
 
         else
@@ -35,7 +35,7 @@ public class PlayerMove : TacticsMove
         }
     }
 
-    void SelectTileMouse()
+    void SelectTileMovement()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -58,7 +58,7 @@ public class PlayerMove : TacticsMove
 
                         else
                         {
-                            //todo - play a sound that indicates that it isn't a selectable tile
+                            //TODO - play a sound that indicates that it isn't a selectable tile
                         }
                     }
                 }                    

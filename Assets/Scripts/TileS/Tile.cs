@@ -114,6 +114,26 @@ public class Tile : MonoBehaviour
         return Physics.Raycast(gameObject.transform.position, Vector3.up, out hit, 1);
     }
 
+    public bool IsUnitOnTile()
+    {
+        RaycastHit hit;
+
+        if (!Physics.Raycast(gameObject.transform.position, Vector3.up, out hit, 1))
+            return false;
+
+        else
+        {
+            if (hit.collider.gameObject.CompareTag("player unit") || hit.collider.gameObject.CompareTag("enemy unit"))
+                return true;
+
+            else
+                return false;
+        }
+
+        
+
+    }
+
     public void CheckTile(Vector3 direction, float jumpHeight, Tile target, TacticsMove.TypeOfAdjacents type)
     {
         Vector3 halfExtents = new Vector3(0.25f, (Globals.TILE_SIZE + jumpHeight) / 2, 0.25f);

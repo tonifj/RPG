@@ -79,6 +79,8 @@ public class BattleManager : MonoBehaviour
 
     public static bool isPlayerTurn;
 
+    public Consumible consumible_to_be_used;
+
 
     void Start()
     {
@@ -420,12 +422,8 @@ public class BattleManager : MonoBehaviour
         HideFirstMenu();
         ShowItemMenu();
         SetTargetTilesForItemUsage();
-
-        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow) ||
-            Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow)) //so it doesn't iterate all the time inside this
-        {
-
-        }
+        SelectTileItem();
+        
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -551,16 +549,23 @@ public class BattleManager : MonoBehaviour
     {
 
     }
+    public void SetItemToBeUsed(Consumible consum) // an inventory button will execute this
+    {
+        consumible_to_be_used = consum;
+    }
 
     void SetTargetTilesForItemUsage()
     {
-        Tile current_tile = TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().GetCurrenntTile();
-        TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ComputeAdjacencyLists(TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().jumpHeight, null, TacticsMove.TypeOfAdjacents.OTHER);
-        current_tile.selectable = true;
-        foreach (Tile t in current_tile.adjacents)
+        if(consumible_to_be_used != null) //if we selected the consumible by pressing the inventory button.
         {
-            t.selectable = true;
-        }
+            Tile current_tile = TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().GetCurrenntTile();
+            TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ComputeAdjacencyLists(TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().jumpHeight, null, TacticsMove.TypeOfAdjacents.OTHER);
+            current_tile.selectable = true;
+            foreach (Tile t in current_tile.adjacents)
+            {
+                t.selectable = true;
+            }
+        }   
     }
 
     void ResetItemUsageTiles()
@@ -571,6 +576,45 @@ public class BattleManager : MonoBehaviour
         foreach (Tile t in current_tile.adjacents)
         {
             t.selectable = false;
+        }
+    }
+
+    void SelectTileItem()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (hit.collider.tag == "tile")
+            {
+                Tile t = hit.collider.GetComponent<Tile>();
+
+                if (t.selectable)
+                {
+                    t.target = true;
+                    if (Input.GetMouseButtonUp(0))
+                    {
+                        if (t.IsUnitOnTile())
+                        {
+                            //TODO: use item
+                        }
+
+                        else
+                        {
+                            // TODO: play a sound indicating this tile is not selectable
+                        }
+                    }
+                }
+
+                else //if the tile is not selectable
+                {
+                    if (Input.GetMouseButtonUp(0))
+                    {
+                        // TODO: play a sound indicating this tile is not selectable
+
+                    }
+                }
+            }
         }
     }
 }

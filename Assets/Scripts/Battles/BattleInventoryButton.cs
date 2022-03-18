@@ -6,18 +6,28 @@ using UnityEngine.UI;
 public class BattleInventoryButton : MonoBehaviour
 {
     public GameObject help_panel;
+    BattleManager bm;
     GameObject help_text;
     public string message;
+
+    Consumible holded_item;
 
     void Start()
     {
         help_text = GameObject.FindGameObjectWithTag("help panel text");
+        bm = GameObject.FindGameObjectWithTag("battle manager").GetComponent<BattleManager>();
+        GetComponent<Button>().onClick.AddListener(SetItem);
     }
 
     void Update()
     {
+        
+    }
 
-        Debug.Log(help_panel);
+    void SetItem()
+    {
+        if(holded_item != null)
+            bm.SetItemToBeUsed(holded_item);
     }
 
     public void ActivateHelpPanel()
@@ -29,13 +39,16 @@ public class BattleInventoryButton : MonoBehaviour
         }
 
         help_text.GetComponent<Text>().text = message;
-        //help_panel.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, (help_text.GetComponent<Text>().font.fontSize * 2.2f) / 3 * message.Length);
-        //help_text.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, (help_text.GetComponent<Text>().font.fontSize * 1.87f) / 3 * message.Length);
         help_panel.SetActive(true);
     }
 
     public void HideHelpPanel()
     {
         help_panel.SetActive(false);
+    }
+
+    public void SetConsumible(Consumible consum)
+    {
+        holded_item = consum;
     }
 }
