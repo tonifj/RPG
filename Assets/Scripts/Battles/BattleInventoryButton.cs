@@ -22,15 +22,15 @@ public class BattleInventoryButton : MonoBehaviour
 
     public void ActivateHelpPanel()
     {
-        if(help_panel.GetComponent<Image>().enabled == false)
+        if (help_panel.GetComponent<Image>().enabled == false)
         {
             help_panel.GetComponent<Image>().enabled = true;
             help_text.GetComponent<Text>().enabled = true;
         }
 
-        RectTransform rect = help_text.GetComponent<RectTransform>();
         help_text.GetComponent<Text>().text = message;
-        help_text.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, (help_text.GetComponent<Text>().font.fontSize*2.2f)/3 * message.Length); 
+        //help_panel.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, (help_text.GetComponent<Text>().font.fontSize * 2.2f) / 3 * message.Length);
+        //help_text.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, (help_text.GetComponent<Text>().font.fontSize * 1.87f) / 3 * message.Length);
         help_panel.SetActive(true);
     }
 
