@@ -11,6 +11,7 @@ TagManager:
   - battle manager
   - PlayerGO
   - help panel
+  - help panel text
   layers:
   - Default
   - TransparentFX

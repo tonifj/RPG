@@ -9,12 +9,12 @@ public class BattleInventory : MonoBehaviour
     public Button button_prefab;
 
     GameObject help_panel;
+    List<Button> button_list = new List<Button>();
 
     bool created_item_buttons = false;
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("PlayerGO").GetComponent<Player>();
-
     }
 
     // Update is called once per frame
@@ -33,9 +33,11 @@ public class BattleInventory : MonoBehaviour
         foreach (KeyValuePair<Consumible, int> item in player.playerConsumibles)
         {
             Button new_button = Instantiate(button_prefab);
+            new_button.gameObject.AddComponent<BattleInventoryButton>();
             new_button.transform.SetParent(gameObject.transform);
             new_button.GetComponentInChildren<Text>().text = item.Key.GetName() + " x" + item.Value.ToString();
-        }
-            
+        }      
     }
+
+    
 }
