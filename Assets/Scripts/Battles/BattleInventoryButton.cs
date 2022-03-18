@@ -5,21 +5,34 @@ using UnityEngine.UI;
 
 public class BattleInventoryButton : MonoBehaviour
 {
-    GameObject help_panel;
-    Text help_text;
+    public GameObject help_panel;
+    GameObject help_text;
+    public string message;
 
-    private void Start()
+    void Start()
     {
-        help_panel = GameObject.FindGameObjectWithTag("help panel");
-        help_text = help_panel.GetComponentInChildren<Text>();
+        help_text = GameObject.FindGameObjectWithTag("help panel text");
     }
-    void ActivateHelpPanel()
+
+    void Update()
     {
+
+        Debug.Log(help_panel);
+    }
+
+    public void ActivateHelpPanel()
+    {
+        if(help_panel.GetComponent<Image>().enabled == false)
+        {
+            help_panel.GetComponent<Image>().enabled = true;
+            help_text.GetComponent<Text>().enabled = true;
+        }
+
+        help_text.GetComponent<Text>().text = message;
         help_panel.SetActive(true);
-
     }
 
-    void HideHelpPanel()
+    public void HideHelpPanel()
     {
         help_panel.SetActive(false);
     }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BattleManager : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class BattleManager : MonoBehaviour
     public GameObject WaitSelectorGO;
 
     public GameObject ItemMenu;
+    GameObject help_panel;
 
     //Prefabs
     public GameObject PlayerUnitPrefab;
@@ -95,9 +97,8 @@ public class BattleManager : MonoBehaviour
 
         SetBattle();
 
-        //SetTurnOrder();
-
-        //InstantiateUnits();
+        help_panel = GameObject.FindGameObjectWithTag("help panel");
+        HideHelpPanel();
 
     }
 
@@ -535,9 +536,10 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    void ShowCurrentUnitInfo()
+    void HideHelpPanel()
     {
-
+        help_panel.GetComponent<Image>().enabled = false;
+        help_panel.GetComponentInChildren<Text>().enabled = false;
     }
 
     void PlacePlayerUnits()

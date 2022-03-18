@@ -40,17 +40,17 @@ public class GameManager : MonoBehaviour
     {
         consumibles = new Dictionary<int, Consumible>()
         {
-            {0, new Consumible("Mineral water", "Stay Hydrated. Helas 25 hp", Consumible.ConsumibleType.HP_HEAL, 25, 25) },
+            {0, new Consumible("Mineral water", "Stay Hydrated. Heals 25 hp", Consumible.ConsumibleType.HP_HEAL, 25, 25) },
             {1, new Consumible("Cola loca", "Sugary hudration! Heals 50 hp", Consumible.ConsumibleType.HP_HEAL, 50, 45) },
-            {2, new Consumible("Aquarius", "Stay Hydrated. Helas 25 hp", Consumible.ConsumibleType.HP_HEAL, 25, 25) },
-            {3, new Consumible("Cerveza", "Stay Hydrated. Helas 25 hp", Consumible.ConsumibleType.HP_HEAL, 25, 25) },
-            {4, new Consumible("Aigongas", "Stay Hydrated. Helas 25 hp", Consumible.ConsumibleType.HP_HEAL, 25, 25) },
-            {5, new Consumible("Saltwater", "Stay Hydrated. Helas 25 hp", Consumible.ConsumibleType.HP_HEAL, 25, 25) },
-            {6, new Consumible("Agua de fiordo", "Stay Hydrated. Helas 25 hp", Consumible.ConsumibleType.HP_HEAL, 25, 25) },
-            {7, new Consumible("Estreya damn", "Stay Hydrated. Helas 25 hp", Consumible.ConsumibleType.HP_HEAL, 25, 25) },
-            {8, new Consumible("Moritz", "Stay Hydrated. Helas 25 hp", Consumible.ConsumibleType.HP_HEAL, 25, 25) },
-            {9, new Consumible("Leche fresca", "Stay Hydrated. Helas 25 hp", Consumible.ConsumibleType.HP_HEAL, 25, 25) },
-            {10, new Consumible("Nestea", "Stay Hydrated. Helas 25 hp", Consumible.ConsumibleType.HP_HEAL, 25, 25) },
+            {2, new Consumible("Aquarius", "Taronjada amb merda", Consumible.ConsumibleType.HP_HEAL, 25, 25) },
+            {3, new Consumible("Cerveza", "Glorious breverage of the gods", Consumible.ConsumibleType.HP_HEAL, 25, 25) },
+            {4, new Consumible("Aigongas", "Healthy and fancy", Consumible.ConsumibleType.HP_HEAL, 25, 25) },
+            {5, new Consumible("Saltwater", "Evaporate to obtain salt. Good for pambolis", Consumible.ConsumibleType.HP_HEAL, 25, 25) },
+            {6, new Consumible("Agua de fiordo", "Fancy shmancy. Also expensive", Consumible.ConsumibleType.HP_HEAL, 25, 25) },
+            {7, new Consumible("Estreya damn", "AAaaaaAAaaAAAAAaa is good", Consumible.ConsumibleType.HP_HEAL, 25, 25) },
+            {8, new Consumible("Moritz", "Same", Consumible.ConsumibleType.HP_HEAL, 25, 25) },
+            {9, new Consumible("Leche fresca", "Me drinks and me happi", Consumible.ConsumibleType.HP_HEAL, 25, 25) },
+            {10, new Consumible("Nestea", "Do people still drink this?", Consumible.ConsumibleType.HP_HEAL, 25, 25) },
 
         };
 
