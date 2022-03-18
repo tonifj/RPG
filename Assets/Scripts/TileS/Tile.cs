@@ -56,14 +56,6 @@ public class Tile : MonoBehaviour
             GetComponent<Renderer>().material.color = Color.yellow;
         }
 
-       
-        
-
-
-
-
-
-
     }
 
     public Vector2Int GetBattleMapPos() //Returns position in tilepos (vector2int)
@@ -107,13 +99,13 @@ public class Tile : MonoBehaviour
         f = 0;
     }
 
-    public void FindNeighbors(float jumpHeight, Tile target)
+    public void FindNeighbors(float jumpHeight, Tile target, TacticsMove.TypeOfAdjacents type)
     {
         ResetTile();
-        CheckTile(Vector3.forward, jumpHeight, target);
-        CheckTile(-Vector3.forward, jumpHeight, target);
-        CheckTile(Vector3.right, jumpHeight, target);
-        CheckTile(-Vector3.right, jumpHeight, target);
+        CheckTile(Vector3.forward, jumpHeight, target, type);
+        CheckTile(-Vector3.forward, jumpHeight, target, type);
+        CheckTile(Vector3.right, jumpHeight, target, type);
+        CheckTile(-Vector3.right, jumpHeight, target, type);
     }
 
     public bool IsSomethingOnTile()
@@ -122,7 +114,7 @@ public class Tile : MonoBehaviour
         return Physics.Raycast(gameObject.transform.position, Vector3.up, out hit, 1);
     }
 
-    public void CheckTile(Vector3 direction, float jumpHeight, Tile target)
+    public void CheckTile(Vector3 direction, float jumpHeight, Tile target, TacticsMove.TypeOfAdjacents type)
     {
         Vector3 halfExtents = new Vector3(0.25f, (Globals.TILE_SIZE + jumpHeight) / 2, 0.25f);
         Collider[] colliders = Physics.OverlapBox(transform.position + direction, halfExtents);
@@ -143,12 +135,17 @@ public class Tile : MonoBehaviour
 
                 else if (Physics.Raycast(tile.transform.position, Vector3.up, out hit, 1) || tile == target)
                 {
-                    if (hit.collider.tag == "player unit" && BattleManager.isPlayerTurn)
+                    if(type == TacticsMove.TypeOfAdjacents.MOVEMENT)
+                    {
+                        if (hit.collider.tag == "player unit" && BattleManager.isPlayerTurn)
+                            adjacents.Add(tile);
+                    }
+                    
+                    else if (type == TacticsMove.TypeOfAdjacents.OTHER)
+                    {
                         adjacents.Add(tile);
+                    }
 
-                    //else if (hit.collider.tag == "enemy unit" && !BattleManager.isPlayerTurn)
-                       // adjacents.Add(tile);
-                   
                 }
 
             }

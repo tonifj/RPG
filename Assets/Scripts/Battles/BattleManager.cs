@@ -105,6 +105,8 @@ public class BattleManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(currentSubmenu);
+
         if (TurnManager.instance.GetUnitWithTurn() != null)
             battleCamera.SetTarget(TurnManager.instance.GetUnitWithTurn().transform);
 
@@ -140,6 +142,7 @@ public class BattleManager : MonoBehaviour
 
                     else
                     {
+                        HideBattleUI();
                         EnemyCommandMove();
                     }
                 }
@@ -197,11 +200,6 @@ public class BattleManager : MonoBehaviour
                 TurnOrder[i] = Instantiate(PlayerUnitPrefab, new_position, Quaternion.identity);
             }
         }
-    }
-
-    void PlayerActionSelect()
-    {
-
     }
 
     void EnemyMovement()
@@ -357,11 +355,10 @@ public class BattleManager : MonoBehaviour
     void CommandMove()
     {
         HideBattleUI();
-
         TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ActionMovement();
 
 
-        if (TurnManager.instance.GetUnitWithTurn().GetComponent<Unit>().IsPlayerUnit() && TurnManager.instance.GetUnitWithTurn().GetComponent<TacticsMove>().finished_movement)
+        if (TurnManager.instance.GetUnitWithTurn().GetComponent<TacticsMove>().finished_movement)
             EndTurn();
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -378,8 +375,8 @@ public class BattleManager : MonoBehaviour
 
         TurnManager.instance.GetUnitWithTurn().GetComponent<NPCMove>().ActionMovement();
 
-        //if (TurnManager.instance.GetUnitWithTurn() != null && TurnManager.instance.GetUnitWithTurn().GetComponent<NPCMove>().finished_movement)
-           // EndTurn();
+        if (TurnManager.instance.GetUnitWithTurn() != null && TurnManager.instance.GetUnitWithTurn().GetComponent<NPCMove>().finished_movement)
+            EndTurn();
     }
 
     void AttackAction()
@@ -422,6 +419,7 @@ public class BattleManager : MonoBehaviour
     {
         HideFirstMenu();
         ShowItemMenu();
+        SetTargetTilesForItemUsage();
 
         if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow) ||
             Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow)) //so it doesn't iterate all the time inside this
@@ -431,7 +429,7 @@ public class BattleManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            //ShowBattleUI();
+            ResetItemUsageTiles();
             ShowFirstMenu();
             HideItemMenu();
             currentSubmenu = CurrentSubmenu.FIRST;
@@ -504,9 +502,16 @@ public class BattleManager : MonoBehaviour
         if (TurnManager.instance.GetUnitWithTurn().GetComponent<Unit>().is_player_unit)
         {
             TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ResetTilesColor();
-            ShowBattleUI();
+            //ShowBattleUI();
+            //ShowFirstMenu();
             currentSubmenu = CurrentSubmenu.FIRST;
+            TurnManager.instance.EndTurn();
+
         }
+
+        else
+            TurnManager.instance.EndTurn();
+
 
     }
 
@@ -545,5 +550,27 @@ public class BattleManager : MonoBehaviour
     void PlacePlayerUnits()
     {
 
+    }
+
+    void SetTargetTilesForItemUsage()
+    {
+        Tile current_tile = TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().GetCurrenntTile();
+        TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ComputeAdjacencyLists(TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().jumpHeight, null, TacticsMove.TypeOfAdjacents.OTHER);
+        current_tile.selectable = true;
+        foreach (Tile t in current_tile.adjacents)
+        {
+            t.selectable = true;
+        }
+    }
+
+    void ResetItemUsageTiles()
+    {
+        Tile current_tile = TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().GetCurrenntTile();
+
+        current_tile.selectable = false;
+        foreach (Tile t in current_tile.adjacents)
+        {
+            t.selectable = false;
+        }
     }
 }

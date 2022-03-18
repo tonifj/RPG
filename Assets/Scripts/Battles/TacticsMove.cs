@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class TacticsMove : MonoBehaviour
 {
+    public enum TypeOfAdjacents
+    {
+        MOVEMENT,
+        OTHER,
+    }
     public bool turn = false;
 
     private const float INITIAL_MOVEMENT_DELAY = 3f;
@@ -66,20 +71,19 @@ public class TacticsMove : MonoBehaviour
         return tile;
     }
 
-    public void ComputeAdjacencyLists(float jump, Tile target)
+    public void ComputeAdjacencyLists(float jump, Tile target, TypeOfAdjacents type)
     {
-        // tiles = GameObject.FindGameObjectsWithTag("tile"); //if the map changes size, do this here
 
         foreach (GameObject tile in tiles)
         {
             Tile t = tile.GetComponent<Tile>();
-            t.FindNeighbors(jumpHeight, target);
+            t.FindNeighbors(jumpHeight, target, type);
         }
     }
 
     public void FindSelectableTiles() //BFS
     {
-        ComputeAdjacencyLists(jumpHeight, null);
+        ComputeAdjacencyLists(jumpHeight, null, TypeOfAdjacents.MOVEMENT);
         SetCurrentTile();
 
         Queue<Tile> process = new Queue<Tile>();
@@ -168,7 +172,6 @@ public class TacticsMove : MonoBehaviour
             RemoveSelectableTiles();
             moving = false;
             finished_movement = true;
-            TurnManager.instance.EndTurn();
         }
     }
 
@@ -356,7 +359,7 @@ public class TacticsMove : MonoBehaviour
 
     protected void FindPath(Tile target)
     {
-        ComputeAdjacencyLists(jumpHeight, target);
+        ComputeAdjacencyLists(jumpHeight, target,TypeOfAdjacents.MOVEMENT);
         SetCurrentTile();
 
         List<Tile> openList = new List<Tile>();
