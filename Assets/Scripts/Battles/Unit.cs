@@ -53,6 +53,7 @@ public class Unit : MonoBehaviour
     int mental_attack;
     int mental_resistance;
     int speed;
+    int evade;
 
     int attack_range = 1;
     void Start()
@@ -276,6 +277,7 @@ public class Unit : MonoBehaviour
                     speed = 100;
                     movement_range = 4;
                     jumpPower = 2;
+                    evade = 50;
                 }
                 break;
             case ClassType.AGENT:
@@ -291,6 +293,7 @@ public class Unit : MonoBehaviour
                     speed = 100;
                     movement_range = 4;
                     jumpPower = 2;
+                    evade = 60;
                 }
                 break;
 
@@ -307,6 +310,7 @@ public class Unit : MonoBehaviour
                     speed = 96;
                     movement_range = 3;
                     jumpPower = 1;
+                    evade = 40;
                 }
                 break;
 
@@ -323,6 +327,7 @@ public class Unit : MonoBehaviour
                     speed = 104;
                     movement_range = 4;
                     jumpPower = 1;
+                    evade = 50;
                 }
                 break;
 
@@ -339,6 +344,7 @@ public class Unit : MonoBehaviour
                     speed = 106;
                     movement_range = 4;
                     jumpPower = 2;
+                    evade = 60;
                 }
                 break;
 
@@ -355,6 +361,7 @@ public class Unit : MonoBehaviour
                     speed = 108;
                     movement_range = 3;
                     jumpPower = 1;
+                    evade = 50;
                 }
                 break;
 
@@ -371,6 +378,7 @@ public class Unit : MonoBehaviour
                     speed = 89;
                     movement_range = 3;
                     jumpPower = 1;
+                    evade = 40;
                 }
                 break;
 
@@ -387,6 +395,7 @@ public class Unit : MonoBehaviour
                     speed = 105;
                     movement_range = 3;
                     jumpPower = 2;
+                    evade = 50;
                 }
                 break;
 
@@ -403,6 +412,7 @@ public class Unit : MonoBehaviour
                     speed = 112;
                     movement_range = 4;
                     jumpPower = 2;
+                    evade = 60;
                 }
                 break;
 
@@ -419,6 +429,7 @@ public class Unit : MonoBehaviour
                     speed = 108;
                     movement_range = 3;
                     jumpPower = 1;
+                    evade = 35;
                 }
                 break;
 
@@ -435,6 +446,7 @@ public class Unit : MonoBehaviour
                     speed = 90;
                     movement_range = 3;
                     jumpPower = 1;
+                    evade = 40;
                 }
                 break;
 
@@ -451,6 +463,7 @@ public class Unit : MonoBehaviour
                     speed = 97;
                     movement_range = 4;
                     jumpPower = 2;
+                    evade = 50;
                 }
                 break;
 
@@ -467,6 +480,7 @@ public class Unit : MonoBehaviour
                     speed = 100;
                     movement_range = 4;
                     jumpPower = 3;
+                    evade = 60;
                 }
                 break;
 
@@ -506,6 +520,11 @@ public class Unit : MonoBehaviour
     #endregion
 
     #region GETTERS
+
+    public int GetEvasion()
+    {
+        return evade;
+    }
     public int GetSpeed()
     {
         return speed;

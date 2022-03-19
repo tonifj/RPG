@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class BattleManager : MonoBehaviour
 {
@@ -44,6 +45,7 @@ public class BattleManager : MonoBehaviour
     public bool cancel_action_button_clicked = false;
 
     //enums
+
     enum BattleState
     {
         SET,
@@ -83,12 +85,11 @@ public class BattleManager : MonoBehaviour
 
     Player player;
     public Consumible consumible_to_be_used;
-    Image accuracy_bar_filler;
+    FillBar accuracy_bar_filler;
 
     Button confirmation_button;
     Button cancel_button;
     Unit unit_to_cast_action;
-
 
     void Start()
     {
@@ -111,7 +112,7 @@ public class BattleManager : MonoBehaviour
         help_panel = GameObject.FindGameObjectWithTag("help panel");
         HideHelpPanel();
 
-        accuracy_bar_filler = GameObject.FindGameObjectWithTag("accuracy bar filler").GetComponent<Image>();
+        accuracy_bar_filler = GameObject.FindGameObjectWithTag("accuracy bar filler").GetComponent<FillBar>();
         AccuracyBarGO = GameObject.FindGameObjectWithTag("accuracyBarGO");
         HideAccuracyBar();
 
@@ -126,6 +127,7 @@ public class BattleManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (TurnManager.instance.GetUnitWithTurn() != null)
             battleCamera.SetTarget(TurnManager.instance.GetUnitWithTurn().transform);
 
@@ -537,6 +539,8 @@ public class BattleManager : MonoBehaviour
     {
         if (TurnManager.instance.GetUnitWithTurn().GetComponent<Unit>().is_player_unit)
         {
+            GetComponent<TargetUnitInfoManager>().SetUnit(null);
+            unit_to_cast_action = null;
             TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ResetTilesColor();
             currentSubmenu = CurrentSubmenu.FIRST;
             HideAccuracyBar();
@@ -601,66 +605,80 @@ public class BattleManager : MonoBehaviour
 
     void SelectTileItem()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        Tile t;
-        if (Physics.Raycast(ray, out hit))
+        if(unit_to_cast_action == null)
         {
-            if (hit.collider.tag == "tile")
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            Tile t;
+            if (Physics.Raycast(ray, out hit))
             {
-                t = hit.collider.GetComponent<Tile>();
-
-                if (t.selectable)
+                if (hit.collider.tag == "tile")
                 {
-                    t.target = true;
-                    if (Input.GetMouseButtonUp(0))
-                    {
-                        if (t.IsUnitOnTile())
-                        {
-                            ShowUnitInfoAndAccBar(100);
-                            ShowButtons();
-                            unit_to_cast_action = t.GetUnitOnTop();
-                        }
+                    t = hit.collider.GetComponent<Tile>();
 
-                        else
+                    if (t.selectable)
+                    {
+                        t.target = true;
+                        if (Input.GetMouseButtonUp(0))
                         {
-                            // TODO: play a sound indicating this tile is not selectable
+                            if (t.IsUnitOnTile())
+                            {
+                                ShowButtons();
+                                unit_to_cast_action = t.GetUnitOnTop();
+                                GetComponent<TargetUnitInfoManager>().SetUnit(unit_to_cast_action);
+                            }
+
+                            else
+                            {
+                                // TODO: play a sound indicating this tile is not selectable
+                            }
                         }
                     }
-                }
 
-                else //if the tile is not selectable
-                {
-                    if (Input.GetMouseButtonUp(0))
+                    else //if the tile is not selectable
                     {
-                        // TODO: play a sound indicating this tile is not selectable
+                        if (Input.GetMouseButtonUp(0))
+                        {
+                            // TODO: play a sound indicating this tile is not selectable
 
+                        }
                     }
                 }
             }
         }
 
-        if (confirmation_button_clicked)
+       
+        else
         {
-            ApplyItemEffects(unit_to_cast_action);
-            player.RemoveConsumible(consumible_to_be_used);
-            HideItemMenu();
-            ShowFirstMenu();
-            consumible_to_be_used = null;
-            HideButtons();
-            confirmation_button_clicked = false;
+            ShowUnitInfoAndAccBar(100); //because items have 100% accuracy
 
-            EndTurn();
-        }
+            if (confirmation_button_clicked)
+            {
+                ApplyItemEffects(unit_to_cast_action);
+                player.RemoveConsumible(consumible_to_be_used);
+                HideItemMenu();
+                ShowFirstMenu();
+                consumible_to_be_used = null;
+                HideButtons();
+                confirmation_button_clicked = false;
 
-        else if (cancel_action_button_clicked)
-        {
-            HideItemMenu();
-            HideButtons();
-            ShowFirstMenu();
-            cancel_action_button_clicked = false;
-            currentSubmenu = CurrentSubmenu.FIRST;
-        }
+                EndTurn();
+            }
+
+            else if (cancel_action_button_clicked)
+            {
+                HideAccuracyBar();
+                HideItemMenu();
+                HideButtons();
+                ShowFirstMenu();
+                TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ResetTilesColor();
+                consumible_to_be_used = null;
+                unit_to_cast_action = null;
+                GetComponent<TargetUnitInfoManager>().SetUnit(null);
+                cancel_action_button_clicked = false;
+                currentSubmenu = CurrentSubmenu.FIRST;
+            }
+        }      
     }
 
     void ApplyItemEffects(Unit target)
@@ -677,12 +695,7 @@ public class BattleManager : MonoBehaviour
     }
     #endregion
 
-    #region PRECISION_BAR_MANAGEMENT
-
-    void SetAccuracyBar(int precision)
-    {
-        accuracy_bar_filler.fillAmount = precision/100;
-    }
+    #region ACCURACY BAR AND "DO IT - CANCEL" BUTTONS
 
     void ShowAccuracyBar()
     {
@@ -706,14 +719,9 @@ public class BattleManager : MonoBehaviour
 
     void ShowUnitInfoAndAccBar(int precision)
     {
-        ShowUnitInfo();
-        SetAccuracyBar(precision);
+        ShowUnitInfo();     
         ShowAccuracyBar();
-    }
-
-    void ShowActionConfirmationButtons()
-    {
-
+        accuracy_bar_filler.SetPercentage(precision);
     }
 
     public void ConfirmationButton()
@@ -733,21 +741,9 @@ public class BattleManager : MonoBehaviour
         cancel_button.gameObject.SetActive(false);
     }
 
-    void ToggleButtons()
-    {
-        confirmation_button.gameObject.SetActive(!confirmation_button.IsActive());
-        cancel_button.gameObject.SetActive(!cancel_button.IsActive());
-    }
-
     public void CancelButton()
     {
         cancel_action_button_clicked = true;
-    }
-
-    void ResetButtonsState()
-    {
-        confirmation_button_clicked = false;
-        cancel_action_button_clicked = false;
     }
 
     #endregion
