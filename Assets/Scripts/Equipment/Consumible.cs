@@ -5,7 +5,7 @@ using UnityEngine;
 public class Consumible : Item
 {
     //item image
-    public enum ConsumibleType //todo
+    public enum ConsumibleType
     {
         HP_HEAL,
         PSI_HEAL,
@@ -32,6 +32,7 @@ public class Consumible : Item
         SetShopPrice(value);
         SetSellPrice((int)(value * 2 / 3));
         consumibleType = type;
+        power = pow;
     }
     public string GetName()
     {
@@ -41,5 +42,15 @@ public class Consumible : Item
     public string GetDescription()
     {
         return item_description;
+    }
+
+    public ConsumibleType GetConsumibleType()
+    {
+        return consumibleType;
+    }
+
+    public int GetPower()
+    {
+        return power;
     }
 }

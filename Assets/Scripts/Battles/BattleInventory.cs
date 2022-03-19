@@ -12,21 +12,22 @@ public class BattleInventory : MonoBehaviour
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("PlayerGO").GetComponent<Player>();
+        CreateItemButtons();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!created_item_buttons)
+        if (player.battle_inv_updated)
         {
+            DeleteItemButtons();
             CreateItemButtons();
-            created_item_buttons = true;
+            player.battle_inv_updated = false;
         }
     }
 
     void CreateItemButtons()
     {
-
         foreach (KeyValuePair<Consumible, int> item in player.playerConsumibles)
         {
             new_button = Instantiate(button_prefab);
@@ -36,5 +37,16 @@ public class BattleInventory : MonoBehaviour
             new_button.GetComponent<BattleInventoryButton>().message = item.Key.GetDescription();
             new_button.GetComponentInChildren<Text>().text = item.Key.GetName() + " x" + item.Value.ToString();
         }      
-    }   
+    }  
+    
+    void DeleteItemButtons()
+    {
+        List<GameObject> to_delete = new List<GameObject>();
+        for (int i = 0; i < gameObject.transform.childCount; ++i)
+            to_delete.Add(gameObject.transform.GetChild(i).gameObject);
+
+        foreach (GameObject button in to_delete)
+            Destroy(button);
+
+    }
 }

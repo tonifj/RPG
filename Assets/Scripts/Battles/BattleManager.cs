@@ -36,6 +36,8 @@ public class BattleManager : MonoBehaviour
     bool enemy_turn_finished = true;
     bool is_turn_unit_ally = false;
     bool action_tile_reseted = false;
+    public static bool isPlayerTurn;
+
 
     //enums
     enum BattleState
@@ -77,8 +79,7 @@ public class BattleManager : MonoBehaviour
 
     Vector2Int action_tile; //used to select a tile where to cast an action
 
-    public static bool isPlayerTurn;
-
+    Player player;
     public Consumible consumible_to_be_used;
 
 
@@ -99,6 +100,7 @@ public class BattleManager : MonoBehaviour
 
         SetBattle();
 
+        player = GameObject.FindGameObjectWithTag("PlayerGO").GetComponent<Player>();
         help_panel = GameObject.FindGameObjectWithTag("help panel");
         HideHelpPanel();
 
@@ -107,7 +109,6 @@ public class BattleManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(currentSubmenu);
 
         if (TurnManager.instance.GetUnitWithTurn() != null)
             battleCamera.SetTarget(TurnManager.instance.GetUnitWithTurn().transform);
@@ -421,16 +422,32 @@ public class BattleManager : MonoBehaviour
     {
         HideFirstMenu();
         ShowItemMenu();
-        SetTargetTilesForItemUsage();
-        SelectTileItem();
         
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (consumible_to_be_used != null)
         {
-            ResetItemUsageTiles();
-            ShowFirstMenu();
-            HideItemMenu();
-            currentSubmenu = CurrentSubmenu.FIRST;
+            HideBattleUI();
+            SetTargetTilesForItemUsage();
+            SelectTileItem();
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                HideHelpPanel();
+                ShowBattleUI();
+                ResetItemUsageTiles();
+                consumible_to_be_used = null;
+            }
+        }
+
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                ShowFirstMenu();
+                HideItemMenu();
+                currentSubmenu = CurrentSubmenu.FIRST;
+            }
+
 
         }
     }
@@ -500,8 +517,6 @@ public class BattleManager : MonoBehaviour
         if (TurnManager.instance.GetUnitWithTurn().GetComponent<Unit>().is_player_unit)
         {
             TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ResetTilesColor();
-            //ShowBattleUI();
-            //ShowFirstMenu();
             currentSubmenu = CurrentSubmenu.FIRST;
             TurnManager.instance.EndTurn();
 
@@ -511,20 +526,6 @@ public class BattleManager : MonoBehaviour
             TurnManager.instance.EndTurn();
 
 
-    }
-
-    IEnumerator EnemyTurn()
-    {
-        action_tile = TurnOrder[current_turn].GetComponent<Unit>().GetPosition(); //reset action tile to the turn unit's position
-        enemy_turn_finished = false;
-        yield return new WaitForSeconds(2);
-        EndTurn();
-        enemy_turn_finished = true;
-    }
-
-    void PlayerActionMove()
-    {
-        EndTurn();
     }
 
     void SetBattle() //depending on its id, rewards and enemy units will change
@@ -556,7 +557,7 @@ public class BattleManager : MonoBehaviour
 
     void SetTargetTilesForItemUsage()
     {
-        if(consumible_to_be_used != null) //if we selected the consumible by pressing the inventory button.
+        if (consumible_to_be_used != null) //if we selected the consumible by pressing the inventory button.
         {
             Tile current_tile = TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().GetCurrenntTile();
             TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ComputeAdjacencyLists(TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().jumpHeight, null, TacticsMove.TypeOfAdjacents.OTHER);
@@ -565,7 +566,7 @@ public class BattleManager : MonoBehaviour
             {
                 t.selectable = true;
             }
-        }   
+        }
     }
 
     void ResetItemUsageTiles()
@@ -596,7 +597,15 @@ public class BattleManager : MonoBehaviour
                     {
                         if (t.IsUnitOnTile())
                         {
-                            //TODO: use item
+                            //TODO: ERROR HERE
+                            ApplyItemEffects(t.GetUnitOnTop());
+                            player.RemoveConsumible(consumible_to_be_used);
+                            HideItemMenu();                         
+                            HideHelpPanel();
+                            ShowFirstMenu();
+                            consumible_to_be_used = null;
+
+                            EndTurn();
                         }
 
                         else
@@ -614,6 +623,19 @@ public class BattleManager : MonoBehaviour
 
                     }
                 }
+            }
+        }
+    }
+
+    void ApplyItemEffects(Unit target)
+    {
+        if (consumible_to_be_used != null)
+        {
+            switch (consumible_to_be_used.GetConsumibleType())
+            {
+                case Consumible.ConsumibleType.HP_HEAL:
+                    target.Heal(consumible_to_be_used.GetPower());
+                    break;
             }
         }
     }

@@ -242,6 +242,12 @@ public class Unit : MonoBehaviour
 
         }
     }
+    public bool IsPlayerUnit()
+    {
+        return is_player_unit;
+    }
+
+    #region SETTERS
 
     public void SetEnemyUnit()
     {
@@ -251,11 +257,6 @@ public class Unit : MonoBehaviour
     public void SetPlayerUnit()
     {
         is_player_unit = true;
-    }
-
-    public bool IsPlayerUnit()
-    {
-        return is_player_unit;
     }
 
     public void SetBaseStats()
@@ -501,6 +502,10 @@ public class Unit : MonoBehaviour
         unit_name = new_name;
         this.name = unit_name;
     }
+
+    #endregion
+
+    #region GETTERS
     public int GetSpeed()
     {
         return speed;
@@ -554,5 +559,20 @@ public class Unit : MonoBehaviour
     public int GetCurrentPsique()
     {
         return psique;
+    }
+
+    #endregion
+
+    public void Heal(int amount)
+    {
+        hp += amount;
+
+        if (hp > max_hp)
+            hp = max_hp;
+    }
+
+    public void TakeDamage()
+    {
+
     }
 }

@@ -129,9 +129,14 @@ public class Tile : MonoBehaviour
             else
                 return false;
         }
+    }
 
-        
+    public Unit GetUnitOnTop()
+    {
+        RaycastHit hit;
+        Physics.Raycast(transform.position, Vector3.up, out hit, 1);
 
+        return hit.collider.gameObject.GetComponent<Unit>();
     }
 
     public void CheckTile(Vector3 direction, float jumpHeight, Tile target, TacticsMove.TypeOfAdjacents type)

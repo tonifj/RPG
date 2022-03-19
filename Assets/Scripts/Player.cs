@@ -10,6 +10,8 @@ public class Player : MonoBehaviour
     public Dictionary<Misc, int> playerMisc = new Dictionary<Misc, int>();
     public List<Unit> playerUnits = new List<Unit>();
 
+    public bool battle_inv_updated = false;
+
     //public static Player instance { get; private set; }
     // Start is called before the first frame update
     void Start()
@@ -60,6 +62,24 @@ public class Player : MonoBehaviour
 
         else
             playerMisc[new_item] = playerMisc[new_item] + 1;
+    }
+
+    public void RemoveConsumible(Consumible consum)
+    {
+       // if(playerConsumibles.ContainsKey(consum))
+       // {   
+            if(playerConsumibles[consum] > 1)
+                playerConsumibles[consum] = playerConsumibles[consum] - 1;
+
+            else if (playerConsumibles[consum] == 1)
+            {
+                playerConsumibles.Remove(consum);
+            }
+       // }
+
+        
+
+        battle_inv_updated = true;
     }
 
     public int GetInventorySize()
