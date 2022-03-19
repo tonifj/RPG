@@ -76,8 +76,5 @@ public class Armor : Item
     {
         return item_name;
     }
-    public void SetDescription(string s)
-    {
-        item_description = s;
-    }
+    
 }

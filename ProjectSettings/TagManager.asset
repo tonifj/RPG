@@ -12,6 +12,11 @@ TagManager:
   - PlayerGO
   - help panel
   - help panel text
+  - accuracy bar filler
+  - accuracyBarGO
+  - uinfoGO
+  - confirmation button
+  - cancel button
   layers:
   - Default
   - TransparentFX

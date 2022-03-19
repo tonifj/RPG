@@ -11,6 +11,9 @@ public class BattleManager : MonoBehaviour
     //Equipment reward
 
     //GO
+    GameObject battleCameraGO;
+    BattleCamera battleCamera;
+
     public GameObject ActionSelectorGO;
     public GameObject BattleUI;
 
@@ -20,6 +23,9 @@ public class BattleManager : MonoBehaviour
     public GameObject SkillSelectorGO;
     public GameObject ItemSelectorGO;
     public GameObject WaitSelectorGO;
+
+    GameObject AccuracyBarGO;
+    GameObject UnitInfoGO;
 
     public GameObject ItemMenu;
     GameObject help_panel;
@@ -33,11 +39,9 @@ public class BattleManager : MonoBehaviour
     public Material SelectedTileMaterial;
 
     //booleans
-    bool enemy_turn_finished = true;
-    bool is_turn_unit_ally = false;
-    bool action_tile_reseted = false;
     public static bool isPlayerTurn;
-
+    public bool confirmation_button_clicked = false;
+    public bool cancel_action_button_clicked = false;
 
     //enums
     enum BattleState
@@ -74,13 +78,16 @@ public class BattleManager : MonoBehaviour
 
     BattleMap battleMap = new BattleMap();
 
-    GameObject battleCameraGO;
-    BattleCamera battleCamera;
 
     Vector2Int action_tile; //used to select a tile where to cast an action
 
     Player player;
     public Consumible consumible_to_be_used;
+    Image accuracy_bar_filler;
+
+    Button confirmation_button;
+    Button cancel_button;
+    Unit unit_to_cast_action;
 
 
     void Start()
@@ -104,12 +111,21 @@ public class BattleManager : MonoBehaviour
         help_panel = GameObject.FindGameObjectWithTag("help panel");
         HideHelpPanel();
 
+        accuracy_bar_filler = GameObject.FindGameObjectWithTag("accuracy bar filler").GetComponent<Image>();
+        AccuracyBarGO = GameObject.FindGameObjectWithTag("accuracyBarGO");
+        HideAccuracyBar();
+
+        UnitInfoGO = GameObject.FindGameObjectWithTag("uinfoGO");
+
+        confirmation_button = GameObject.FindGameObjectWithTag("confirmation button").GetComponent<Button>();
+        cancel_button = GameObject.FindGameObjectWithTag("cancel button").GetComponent<Button>();
+        HideButtons();
+
     }
 
     // Update is called once per frame
     void Update()
     {
-
         if (TurnManager.instance.GetUnitWithTurn() != null)
             battleCamera.SetTarget(TurnManager.instance.GetUnitWithTurn().transform);
 
@@ -429,9 +445,12 @@ public class BattleManager : MonoBehaviour
             HideBattleUI();
             SetTargetTilesForItemUsage();
             SelectTileItem();
+            HideUnitInfo();
 
             if (Input.GetKeyDown(KeyCode.Escape))
             {
+                ShowUnitInfo();
+                HideAccuracyBar();
                 HideHelpPanel();
                 ShowBattleUI();
                 ResetItemUsageTiles();
@@ -460,6 +479,8 @@ public class BattleManager : MonoBehaviour
     void HideItemMenu()
     {
         ItemMenu.SetActive(false);
+        HideHelpPanel();
+
     }
 
     void WaitAction()
@@ -518,6 +539,7 @@ public class BattleManager : MonoBehaviour
         {
             TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ResetTilesColor();
             currentSubmenu = CurrentSubmenu.FIRST;
+            HideAccuracyBar();
             TurnManager.instance.EndTurn();
 
         }
@@ -546,10 +568,7 @@ public class BattleManager : MonoBehaviour
         help_panel.GetComponentInChildren<Text>().enabled = false;
     }
 
-    void PlacePlayerUnits()
-    {
-
-    }
+    #region ITEM_STUFF
     public void SetItemToBeUsed(Consumible consum) // an inventory button will execute this
     {
         consumible_to_be_used = consum;
@@ -584,11 +603,12 @@ public class BattleManager : MonoBehaviour
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
+        Tile t;
         if (Physics.Raycast(ray, out hit))
         {
             if (hit.collider.tag == "tile")
             {
-                Tile t = hit.collider.GetComponent<Tile>();
+                t = hit.collider.GetComponent<Tile>();
 
                 if (t.selectable)
                 {
@@ -597,15 +617,9 @@ public class BattleManager : MonoBehaviour
                     {
                         if (t.IsUnitOnTile())
                         {
-                            //TODO: ERROR HERE
-                            ApplyItemEffects(t.GetUnitOnTop());
-                            player.RemoveConsumible(consumible_to_be_used);
-                            HideItemMenu();                         
-                            HideHelpPanel();
-                            ShowFirstMenu();
-                            consumible_to_be_used = null;
-
-                            EndTurn();
+                            ShowUnitInfoAndAccBar(100);
+                            ShowButtons();
+                            unit_to_cast_action = t.GetUnitOnTop();
                         }
 
                         else
@@ -625,6 +639,28 @@ public class BattleManager : MonoBehaviour
                 }
             }
         }
+
+        if (confirmation_button_clicked)
+        {
+            ApplyItemEffects(unit_to_cast_action);
+            player.RemoveConsumible(consumible_to_be_used);
+            HideItemMenu();
+            ShowFirstMenu();
+            consumible_to_be_used = null;
+            HideButtons();
+            confirmation_button_clicked = false;
+
+            EndTurn();
+        }
+
+        else if (cancel_action_button_clicked)
+        {
+            HideItemMenu();
+            HideButtons();
+            ShowFirstMenu();
+            cancel_action_button_clicked = false;
+            currentSubmenu = CurrentSubmenu.FIRST;
+        }
     }
 
     void ApplyItemEffects(Unit target)
@@ -639,4 +675,81 @@ public class BattleManager : MonoBehaviour
             }
         }
     }
+    #endregion
+
+    #region PRECISION_BAR_MANAGEMENT
+
+    void SetAccuracyBar(int precision)
+    {
+        accuracy_bar_filler.fillAmount = precision/100;
+    }
+
+    void ShowAccuracyBar()
+    {
+        AccuracyBarGO.SetActive(true);
+    }
+
+    void HideAccuracyBar()
+    {
+        AccuracyBarGO.SetActive(false);
+    }
+
+    void ShowUnitInfo()
+    {
+        UnitInfoGO.SetActive(true);
+    }
+
+    void HideUnitInfo()
+    {
+        UnitInfoGO.SetActive(false);
+    }
+
+    void ShowUnitInfoAndAccBar(int precision)
+    {
+        ShowUnitInfo();
+        SetAccuracyBar(precision);
+        ShowAccuracyBar();
+    }
+
+    void ShowActionConfirmationButtons()
+    {
+
+    }
+
+    public void ConfirmationButton()
+    {
+        confirmation_button_clicked = true;
+    }
+    
+    void ShowButtons()
+    {
+        confirmation_button.gameObject.SetActive(true);
+        cancel_button.gameObject.SetActive(true);
+    }
+
+    void HideButtons()
+    {
+        confirmation_button.gameObject.SetActive(false);
+        cancel_button.gameObject.SetActive(false);
+    }
+
+    void ToggleButtons()
+    {
+        confirmation_button.gameObject.SetActive(!confirmation_button.IsActive());
+        cancel_button.gameObject.SetActive(!cancel_button.IsActive());
+    }
+
+    public void CancelButton()
+    {
+        cancel_action_button_clicked = true;
+    }
+
+    void ResetButtonsState()
+    {
+        confirmation_button_clicked = false;
+        cancel_action_button_clicked = false;
+    }
+
+    #endregion
+
 }

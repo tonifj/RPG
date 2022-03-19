@@ -24,7 +24,6 @@ public class TacticsMove : MonoBehaviour
 
     public bool moving = false;
     public int move = 5;
-    [SerializeField] private float initialMovementDelay = 3f;
     public int jumpHeight = 2;
     public int moveSpeed = 2;
     public float jumpVelocity = 4.5f;

@@ -8,7 +8,6 @@ public class BattleInventory : MonoBehaviour
     Player player;
     public Button button_prefab;
     Button new_button;
-    bool created_item_buttons = false;
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("PlayerGO").GetComponent<Player>();
