@@ -57,6 +57,7 @@ public class BattleManager : MonoBehaviour
 
     enum CurrentSubmenu
     {
+        LOOK,
         FIRST,
         MOVE,
         ATTACK,
@@ -250,11 +251,16 @@ public class BattleManager : MonoBehaviour
 
     void HandleSubmenus()
     {
-        if (BattleUI.activeSelf == false)
-            ShowBattleUI();
+        // if (BattleUI.activeSelf == false)
+        //ShowBattleUI();
 
         switch (currentSubmenu)
         {
+            case CurrentSubmenu.LOOK:
+                {
+                    LookAction();
+                }
+                break;
             case CurrentSubmenu.FIRST:
                 {
                     FirstMenuNav();
@@ -292,6 +298,8 @@ public class BattleManager : MonoBehaviour
 
     void FirstMenuNav()
     {
+        ShowBattleUI();
+
         if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow)) //so it doesn't iterate all the time inside this
         {
             if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -309,6 +317,12 @@ public class BattleManager : MonoBehaviour
                 else
                     optionIndex = 0;
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            HideBattleUI();
+            currentSubmenu = CurrentSubmenu.LOOK;
         }
 
         switch (optionIndex)
@@ -440,7 +454,7 @@ public class BattleManager : MonoBehaviour
     {
         HideFirstMenu();
         ShowItemMenu();
-        
+
 
         if (consumible_to_be_used != null)
         {
@@ -506,8 +520,38 @@ public class BattleManager : MonoBehaviour
             ShowBattleUI();
             currentSubmenu = CurrentSubmenu.FIRST;
         }
+    }
 
+    void LookAction()
+    {
+        TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ResetTilesColor();
 
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            currentSubmenu = CurrentSubmenu.FIRST;
+        }
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        Tile t;
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (hit.collider.tag == "tile")
+            {
+                t = hit.collider.GetComponent<Tile>();
+
+                t.selectable = true;
+
+                if (t.IsUnitOnTile())
+                {
+                    GetComponent<TargetUnitInfoManager>().SetUnit(t.GetUnitOnTop());
+                }
+                else
+                {
+                    GetComponent<TargetUnitInfoManager>().SetUnit(null);
+                }
+            }
+        }
     }
 
     void HideBattleUI()
@@ -585,6 +629,7 @@ public class BattleManager : MonoBehaviour
             Tile current_tile = TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().GetCurrenntTile();
             TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ComputeAdjacencyLists(TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().jumpHeight, null, TacticsMove.TypeOfAdjacents.OTHER);
             current_tile.selectable = true;
+
             foreach (Tile t in current_tile.adjacents)
             {
                 t.selectable = true;
@@ -595,8 +640,8 @@ public class BattleManager : MonoBehaviour
     void ResetItemUsageTiles()
     {
         Tile current_tile = TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().GetCurrenntTile();
-
         current_tile.selectable = false;
+
         foreach (Tile t in current_tile.adjacents)
         {
             t.selectable = false;
@@ -605,7 +650,7 @@ public class BattleManager : MonoBehaviour
 
     void SelectTileItem()
     {
-        if(unit_to_cast_action == null)
+        if (unit_to_cast_action == null)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -647,7 +692,7 @@ public class BattleManager : MonoBehaviour
             }
         }
 
-       
+
         else
         {
             ShowUnitInfoAndAccBar(100); //because items have 100% accuracy
@@ -678,7 +723,7 @@ public class BattleManager : MonoBehaviour
                 cancel_action_button_clicked = false;
                 currentSubmenu = CurrentSubmenu.FIRST;
             }
-        }      
+        }
     }
 
     void ApplyItemEffects(Unit target)
@@ -719,7 +764,7 @@ public class BattleManager : MonoBehaviour
 
     void ShowUnitInfoAndAccBar(int precision)
     {
-        ShowUnitInfo();     
+        ShowUnitInfo();
         ShowAccuracyBar();
         accuracy_bar_filler.SetPercentage(precision);
     }
@@ -728,7 +773,7 @@ public class BattleManager : MonoBehaviour
     {
         confirmation_button_clicked = true;
     }
-    
+
     void ShowButtons()
     {
         confirmation_button.gameObject.SetActive(true);
