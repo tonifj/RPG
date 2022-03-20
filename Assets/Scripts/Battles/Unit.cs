@@ -28,6 +28,12 @@ public enum Genre
 
 public class Unit : MonoBehaviour
 {
+    public enum unit_status
+    {
+        ALIVE,
+        DEAD
+    }
+
     string unit_name = "";
     GameObject model;
 
@@ -54,6 +60,7 @@ public class Unit : MonoBehaviour
     int mental_resistance;
     int speed;
     int evade;
+    unit_status status = unit_status.ALIVE;
 
     int attack_range = 1;
     void Start()
@@ -65,7 +72,21 @@ public class Unit : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (hp > max_hp)
+            hp = max_hp;
 
+        if (hp < 0)
+            hp = 0;
+
+        if(hp == 0)
+        {
+            status = unit_status.DEAD;
+        }
+
+        if(status == unit_status.DEAD)
+        {
+            //dead animation
+        }
     }
     void LvlUp()
     {
@@ -584,14 +605,27 @@ public class Unit : MonoBehaviour
 
     public void Heal(int amount)
     {
-        hp += amount;
+        hp += amount;      
+    }
 
-        if (hp > max_hp)
-            hp = max_hp;
+    public int GetPhyAttack()
+    {
+        return physical_attack;
+    }
+
+    public void ReceivePhyDamage(int damage)
+    {
+        //play take damage animation
+        hp -= damage - Mathf.RoundToInt(physical_resistance / 2);
     }
 
     public void TakeDamage()
     {
 
+    }
+
+    public unit_status GetStatus()
+    {
+        return status;
     }
 }

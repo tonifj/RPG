@@ -8,6 +8,13 @@ public class Globals : MonoBehaviour
     public static int TILE_SIZE = 1;
     public static int MAX_BATTLE_UNITS = 6;
 
+    public enum RelativePosition
+    {
+        FRONT,
+        REAR,
+        SIDE
+    }
+
     public static string GenerateRandomName(Genre genre)
     {
         switch (genre)
@@ -50,5 +57,17 @@ public class Globals : MonoBehaviour
                 return "";
         }
 
+    }
+
+    public static RelativePosition GetRelativePosition(TacticsMove u1, TacticsMove u2)
+    {
+        float angle = Vector3.Dot(u1.GetFacingDirection(), u2.GetFacingDirection());
+
+        if (angle == 0)
+            return RelativePosition.FRONT;
+        else if (angle == 90)
+            return RelativePosition.SIDE;
+        else
+            return RelativePosition.REAR;
     }
 }

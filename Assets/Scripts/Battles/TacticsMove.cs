@@ -33,7 +33,7 @@ public class TacticsMove : MonoBehaviour
     bool movingToEdge = false;
 
 
-    Vector3 velocity = new Vector3(); //speed the player mooves from tile to tile
+    Vector3 velocity = new Vector3(); //speed the player moves from tile to tile
     Vector3 heading = new Vector3(); //direction the character is facing
     Vector3 jumpTarget = new Vector3();
 
@@ -436,6 +436,11 @@ public class TacticsMove : MonoBehaviour
     public void EndTurn()
     {
         turn = false;
+    }
+
+    public Vector3 GetFacingDirection()
+    {
+        return heading;
     }
 
 }

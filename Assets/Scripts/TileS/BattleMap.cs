@@ -97,35 +97,54 @@ public class BattleMap : MonoBehaviour
         return dist;
     }
 
-    public void AttackSkillTileSelection(GameObject origin, int range, Material select_mat)
+    public void AttackSkillTileSelection(GameObject origin, int range)
     {
-        selection_material = select_mat;
 
         if (range == 0)
-            HighlightTile(origin, select_mat);
+            origin.GetComponent<Tile>().selectable = true;
+
+        else if (range == 1)
+        {
+            for (int i = 0; i < Tiles.Count; ++i)
+            {
+                if (origin.transform.position.y == Tiles[i].transform.position.y ||
+                    origin.transform.position.y + 1 == Tiles[i].transform.position.y || 
+                    origin.transform.position.y - 1 == Tiles[i].transform.position.y) //if there is a diff of 1 tile of height
+                {
+                    if (TileDistance(origin, Tiles[i]) <= range)
+                    {
+                        Tiles[i].GetComponent<Tile>().selectable = true;
+                        Tiles[i].GetComponent<Tile>().target = false;
+
+                    }
+                }
+            }
+        }
+
         else
         {
             for (int i = 0; i < Tiles.Count; ++i)
             {
                 if (TileDistance(origin, Tiles[i]) <= range)
-                    HighlightTile(Tiles[i], select_mat);
+                {
+                    Tiles[i].GetComponent<Tile>().selectable = true;
+                    Tiles[i].GetComponent<Tile>().target = false;
+                }
             }
-            HighlightTile(origin, select_mat);
         }
     }
 
-    public void ResetMaterials(GameObject origin, int range)
+    public void ResetTilesByRange(GameObject origin, int range)
     {
         if (range == 0)
-            ResetTileMaterial(origin);
+            origin.GetComponent<Tile>().selectable = false;
         else
         {
             for (int i = 0; i < Tiles.Count; ++i)
             {
                 if (TileDistance(origin, Tiles[i]) <= range)
-                    ResetTileMaterial(Tiles[i]);
+                    Tiles[i].GetComponent<Tile>().selectable = false;
             }
-            ResetTileMaterial(origin);
         }
     }
 
@@ -160,7 +179,12 @@ public class BattleMap : MonoBehaviour
         TilesGO = GameObject.FindGameObjectsWithTag("tile");
         CopyMatrix(); //Copy the Tile component of each TileGO to a different array
         SetTileMatrix();
-                      //PlaceTiles();    
+        //PlaceTiles();    
+    }
+
+    public List<GameObject> GetTiles()
+    {
+        return Tiles;
     }
 
 

@@ -45,6 +45,14 @@ public class BattleManager : MonoBehaviour
     public bool cancel_action_button_clicked = false;
 
     //enums
+    enum ActionType
+    {
+        LOOK,
+        MOVE,
+        ATTACK,
+        ITEM,
+        WAIT
+    }
 
     enum BattleState
     {
@@ -94,6 +102,8 @@ public class BattleManager : MonoBehaviour
 
     void Start()
     {
+        Random.seed = 42;
+
         currentSubmenu = CurrentSubmenu.FIRST;
 
         battleCameraGO = GameObject.FindGameObjectWithTag("MainCamera");
@@ -258,7 +268,7 @@ public class BattleManager : MonoBehaviour
         {
             case CurrentSubmenu.LOOK:
                 {
-                    LookAction();
+                    MouseTileSelection(ActionType.LOOK);
                 }
                 break;
             case CurrentSubmenu.FIRST:
@@ -390,7 +400,7 @@ public class BattleManager : MonoBehaviour
     void CommandMove()
     {
         HideBattleUI();
-        TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ActionMovement();
+        MouseTileSelection(ActionType.MOVE);
 
 
         if (TurnManager.instance.GetUnitWithTurn().GetComponent<TacticsMove>().finished_movement)
@@ -418,18 +428,9 @@ public class BattleManager : MonoBehaviour
     {
         HideBattleUI();
 
-        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow) ||
-            Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow)) //so it doesn't iterate all the time inside this
-        {
+        MouseTileSelection(ActionType.ATTACK);
 
-        }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            ShowBattleUI();
-            currentSubmenu = CurrentSubmenu.FIRST;
-
-        }
     }
 
     void SkillAction()
@@ -460,7 +461,7 @@ public class BattleManager : MonoBehaviour
         {
             HideBattleUI();
             SetTargetTilesForItemUsage();
-            SelectTileItem();
+            MouseTileSelection(ActionType.ITEM);
             HideUnitInfo();
 
             if (Input.GetKeyDown(KeyCode.Escape))
@@ -482,8 +483,6 @@ public class BattleManager : MonoBehaviour
                 HideItemMenu();
                 currentSubmenu = CurrentSubmenu.FIRST;
             }
-
-
         }
     }
 
@@ -522,9 +521,8 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    void LookAction()
+    void MouseTileSelection(ActionType actionType)
     {
-        TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ResetTilesColor();
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -533,32 +531,60 @@ public class BattleManager : MonoBehaviour
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-        Tile t;
-        if (Physics.Raycast(ray, out hit))
+
+        switch (actionType)
         {
-            if (hit.collider.tag == "tile")
-            {
-                t = hit.collider.GetComponent<Tile>();
-
-                t.selectable = true;
-
-                if (t.IsUnitOnTile())
+            case ActionType.LOOK:
                 {
-                    GetComponent<TargetUnitInfoManager>().SetUnit(t.GetUnitOnTop());
+                    TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ResetTilesColor();
+
+                    Tile t;
+                    if (Physics.Raycast(ray, out hit))
+                    {
+                        if (hit.collider.tag == "tile")
+                        {
+                            t = hit.collider.GetComponent<Tile>();
+
+                            t.selectable = true;
+
+                            if (t.IsUnitOnTile())
+                            {
+                                GetComponent<TargetUnitInfoManager>().SetUnit(t.GetUnitOnTop());
+                            }
+                            else
+                            {
+                                GetComponent<TargetUnitInfoManager>().SetUnit(null);
+                            }
+                        }
+
+                        else if (hit.collider.tag == "enemy unit" || hit.collider.tag == "player unit")
+                        {
+                            GetComponent<TargetUnitInfoManager>().SetUnit(hit.collider.GetComponent<Unit>());
+                        }
+
+                        else
+                            GetComponent<TargetUnitInfoManager>().SetUnit(null);
+                    }
+                    break;
                 }
-                else
+
+            case ActionType.MOVE:
                 {
-                    GetComponent<TargetUnitInfoManager>().SetUnit(null);
+                    TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ActionMovement();
+                    break;
                 }
-            }
 
-            else if(hit.collider.tag == "enemy unit" || hit.collider.tag == "player unit")
-            {
-                GetComponent<TargetUnitInfoManager>().SetUnit(hit.collider.GetComponent<Unit>());
-            }
+            case ActionType.ITEM:
+                {
+                    SelectTileItem();
+                    break;
+                }
 
-            else
-                GetComponent<TargetUnitInfoManager>().SetUnit(null);
+            case ActionType.ATTACK:
+                {
+                    SelectTileAttack();
+                    break;
+                }
         }
     }
 
@@ -801,4 +827,124 @@ public class BattleManager : MonoBehaviour
 
     #endregion
 
+    void SelectTileAttack()
+    {
+        int range = TurnManager.instance.GetUnitWithTurn().GetComponent<Unit>().GetAttackRange();
+        battleMap.AttackSkillTileSelection(TurnManager.instance.GetUnitWithTurn().GetComponent<TacticsMove>().GetTargetTile(TurnManager.instance.GetUnitWithTurn()).gameObject, range);
+
+        if (unit_to_cast_action == null)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            Tile t;
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.collider.tag == "tile")
+                {
+                    t = hit.collider.GetComponent<Tile>();
+
+                    if (t.selectable)
+                    {
+                        t.target = true;
+                        if (t.IsUnitOnTile())
+                        {
+                            GetComponent<TargetUnitInfoManager>().SetUnit(t.GetUnitOnTop());
+
+                            if (Input.GetMouseButtonUp(0))
+                            {
+                                unit_to_cast_action = t.GetUnitOnTop();
+                            }
+                        }                  
+                    }
+                    else
+                    {
+                        GetComponent<TargetUnitInfoManager>().SetUnit(null);
+                    }
+                }     
+            }
+        }
+
+        else
+        {
+            ShowButtons();
+            ShowUnitInfoAndAccBar(ComputeAttackAccuracy()); //because items have 100% accuracy
+
+            if (confirmation_button_clicked)
+            {
+                int random_num = Random.Range(0, 100);
+                Debug.Log("Acc: " + ComputeAttackAccuracy().ToString());
+                Debug.Log("RGN: " + random_num.ToString());
+                if(random_num <= ComputeAttackAccuracy())
+                {
+                    unit_to_cast_action.ReceivePhyDamage(TurnManager.instance.GetUnitWithTurn().GetComponent<Unit>().GetPhyAttack()); 
+                }
+
+                else
+                {
+                    Debug.Log("MISS");
+                }
+
+                ShowFirstMenu();
+                HideButtons();
+                confirmation_button_clicked = false;
+                EndTurn();
+            }
+
+            else if (cancel_action_button_clicked)
+            {
+                HideAccuracyBar();
+                HideButtons();
+                ShowFirstMenu();
+                TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ResetTilesColor();
+                unit_to_cast_action = null;
+                GetComponent<TargetUnitInfoManager>().SetUnit(null);
+                cancel_action_button_clicked = false;
+                currentSubmenu = CurrentSubmenu.FIRST;
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            battleMap.ResetTilesByRange(TurnManager.instance.GetUnitWithTurn().GetComponent<TacticsMove>().GetTargetTile(TurnManager.instance.GetUnitWithTurn()).gameObject, range);
+
+            HideAccuracyBar();
+            HideHelpPanel();
+            ShowBattleUI();
+            currentSubmenu = CurrentSubmenu.FIRST;
+
+        }
+    }
+
+    int ComputeAttackAccuracy()
+    {
+        float accuracy = 100;
+
+        //check if target is alive
+        if (unit_to_cast_action.GetStatus() != Unit.unit_status.DEAD)
+        {
+            switch(Globals.GetRelativePosition(TurnManager.instance.GetUnitWithTurn().GetComponent<TacticsMove>(), unit_to_cast_action.gameObject.GetComponent<TacticsMove>()))
+            {
+                case Globals.RelativePosition.FRONT:
+                    {
+                        accuracy -= unit_to_cast_action.GetEvasion();
+                        break;
+                    }
+
+                case Globals.RelativePosition.SIDE:
+                    {
+                        accuracy -= unit_to_cast_action.GetEvasion()/2;
+                        break;
+                    }
+
+                case Globals.RelativePosition.REAR:
+                    {
+                        accuracy -= unit_to_cast_action.GetEvasion()/4;
+                        break;
+                    }
+            }
+
+        }
+
+        return Mathf.RoundToInt(accuracy);
+    }
 }

@@ -20,7 +20,7 @@ public class FillBar : MonoBehaviour
 
     public void SetPercentage(float p)
     {
-        percentage = p;
+        percentage = p/100;
         gameObject.GetComponentInChildren<TMP_Text>().text = "Accuracity " + (GetComponent<Image>().fillAmount * 100).ToString() + "%";
     }
 }
