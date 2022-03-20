@@ -551,6 +551,14 @@ public class BattleManager : MonoBehaviour
                     GetComponent<TargetUnitInfoManager>().SetUnit(null);
                 }
             }
+
+            else if(hit.collider.tag == "enemy unit" || hit.collider.tag == "player unit")
+            {
+                GetComponent<TargetUnitInfoManager>().SetUnit(hit.collider.GetComponent<Unit>());
+            }
+
+            else
+                GetComponent<TargetUnitInfoManager>().SetUnit(null);
         }
     }
 

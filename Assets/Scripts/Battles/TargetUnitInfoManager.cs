@@ -24,6 +24,8 @@ public class TargetUnitInfoManager : MonoBehaviour
     {
         if (target != null)
         {
+            //TODO: make the character glow intermitently
+
             ContainerGO.SetActive(true);
             unit_name.text = target.GetName();
             max_hp.text = "/ " + target.GetMaxHP().ToString();
