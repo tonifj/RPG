@@ -38,13 +38,13 @@ public class PlayerMove : TacticsMove
     void SelectTileMovement()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
+        Tile t;
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
         {
             if (hit.collider.tag == "tile")
             {
-                Tile t = hit.collider.GetComponent<Tile>();
+              t  = hit.collider.GetComponent<Tile>();
 
                 if (t.selectable)
                 {
@@ -64,7 +64,19 @@ public class PlayerMove : TacticsMove
                 }                    
             }
         }
-    }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.collider.tag == "tile")
+                {
+                    t = hit.collider.GetComponent<Tile>();
+                    t.target = false;
+                }
+            }
+        }
+        }
 
     void PaintTiles() //this only paints all tiles within movement range to the color. only for aesthetics purposes
     {
