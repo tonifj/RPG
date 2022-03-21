@@ -868,6 +868,15 @@ public class BattleManager : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Escape))
             {
+                if (Physics.Raycast(ray, out hit))
+                {
+                    if (hit.collider.tag == "tile")
+                    {
+                        t = hit.collider.GetComponent<Tile>();
+                        t.target = false;
+                    }
+                }
+
                 battleMap.ResetTilesByRange(TurnManager.instance.GetUnitWithTurn().GetComponent<TacticsMove>().GetTargetTile(TurnManager.instance.GetUnitWithTurn()).gameObject, range);
                 GetComponent<TargetUnitInfoManager>().SetUnit(null);
                 HideAccuracyBar();
