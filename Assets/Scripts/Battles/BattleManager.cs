@@ -869,7 +869,7 @@ public class BattleManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 battleMap.ResetTilesByRange(TurnManager.instance.GetUnitWithTurn().GetComponent<TacticsMove>().GetTargetTile(TurnManager.instance.GetUnitWithTurn()).gameObject, range);
-
+                GetComponent<TargetUnitInfoManager>().SetUnit(null);
                 HideAccuracyBar();
                 HideHelpPanel();
                 ShowBattleUI();
