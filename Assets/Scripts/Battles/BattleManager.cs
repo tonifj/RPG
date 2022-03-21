@@ -102,7 +102,7 @@ public class BattleManager : MonoBehaviour
 
     void Start()
     {
-        Random.seed = 42;
+        Random.seed = Random.Range(0, 100);
 
         currentSubmenu = CurrentSubmenu.FIRST;
 
@@ -524,11 +524,6 @@ public class BattleManager : MonoBehaviour
     void MouseTileSelection(ActionType actionType)
     {
 
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            currentSubmenu = CurrentSubmenu.FIRST;
-        }
-
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
@@ -565,6 +560,14 @@ public class BattleManager : MonoBehaviour
                         else
                             GetComponent<TargetUnitInfoManager>().SetUnit(null);
                     }
+
+                    if (Input.GetKeyDown(KeyCode.Escape))
+                    {
+                        TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ResetTilesColor();
+                        currentSubmenu = CurrentSubmenu.FIRST;
+                        GetComponent<TargetUnitInfoManager>().SetUnit(null);
+                    }
+
                     break;
                 }
 
@@ -862,6 +865,17 @@ public class BattleManager : MonoBehaviour
                     }
                 }     
             }
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                battleMap.ResetTilesByRange(TurnManager.instance.GetUnitWithTurn().GetComponent<TacticsMove>().GetTargetTile(TurnManager.instance.GetUnitWithTurn()).gameObject, range);
+
+                HideAccuracyBar();
+                HideHelpPanel();
+                ShowBattleUI();
+                currentSubmenu = CurrentSubmenu.FIRST;
+
+            }
         }
 
         else
@@ -871,6 +885,7 @@ public class BattleManager : MonoBehaviour
 
             if (confirmation_button_clicked)
             {
+                Random.seed = Random.Range(0, 100);
                 int random_num = Random.Range(0, 100);
                 Debug.Log("Acc: " + ComputeAttackAccuracy().ToString());
                 Debug.Log("RGN: " + random_num.ToString());
@@ -890,29 +905,21 @@ public class BattleManager : MonoBehaviour
                 EndTurn();
             }
 
-            else if (cancel_action_button_clicked)
+            else if (cancel_action_button_clicked || Input.GetKeyDown(KeyCode.Escape))
             {
+                unit_to_cast_action = null;
+                cancel_action_button_clicked = false;
+                GetComponent<TargetUnitInfoManager>().SetUnit(null);
+
                 HideAccuracyBar();
                 HideButtons();
-                ShowFirstMenu();
-                TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ResetTilesColor();
-                unit_to_cast_action = null;
-                GetComponent<TargetUnitInfoManager>().SetUnit(null);
-                cancel_action_button_clicked = false;
-                currentSubmenu = CurrentSubmenu.FIRST;
+                //ShowFirstMenu();
+                //TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ResetTilesColor();
+                //currentSubmenu = CurrentSubmenu.FIRST;
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            battleMap.ResetTilesByRange(TurnManager.instance.GetUnitWithTurn().GetComponent<TacticsMove>().GetTargetTile(TurnManager.instance.GetUnitWithTurn()).gameObject, range);
-
-            HideAccuracyBar();
-            HideHelpPanel();
-            ShowBattleUI();
-            currentSubmenu = CurrentSubmenu.FIRST;
-
-        }
+        
     }
 
     int ComputeAttackAccuracy()
