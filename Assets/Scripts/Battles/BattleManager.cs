@@ -100,6 +100,8 @@ public class BattleManager : MonoBehaviour
     Button cancel_button;
     Unit unit_to_cast_action;
 
+    GameObject wait_selectorGO;
+
     void Start()
     {
         Random.seed = Random.Range(0, 100);
@@ -120,6 +122,7 @@ public class BattleManager : MonoBehaviour
         SetBattle();
 
         player = GameObject.FindGameObjectWithTag("PlayerGO").GetComponent<Player>();
+
         help_panel = GameObject.FindGameObjectWithTag("help panel");
         HideHelpPanel();
 
@@ -133,6 +136,8 @@ public class BattleManager : MonoBehaviour
         cancel_button = GameObject.FindGameObjectWithTag("cancel button").GetComponent<Button>();
         HideButtons();
 
+        wait_selectorGO = GameObject.FindGameObjectWithTag("waiterGO");
+        wait_selectorGO.SetActive(false);
     }
 
     // Update is called once per frame
@@ -502,20 +507,12 @@ public class BattleManager : MonoBehaviour
     {
         HideBattleUI();
 
-        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow) ||
-            Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow)) //so it doesn't iterate all the time inside this
-        {
-
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            EndTurn();
-        }
+        wait_selectorGO.SetActive(true);
 
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            wait_selectorGO.SetActive(false);
             ShowBattleUI();
             currentSubmenu = CurrentSubmenu.FIRST;
         }

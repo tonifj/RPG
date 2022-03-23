@@ -45,6 +45,7 @@ public class TacticsMove : MonoBehaviour
     {
         tiles = GameObject.FindGameObjectsWithTag("tile");
         halfHeight = GetComponent<Collider>().bounds.extents.y; //used to jump tiles
+        heading = new Vector3(0, 0, -1);
     }
 
     public void SetCurrentTile()
@@ -441,6 +442,11 @@ public class TacticsMove : MonoBehaviour
     public Vector3 GetFacingDirection()
     {
         return heading;
+    }
+
+    public void SetFacingDirection(Vector3 dir)
+    {
+        heading = dir;
     }
 
 }
