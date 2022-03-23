@@ -45,15 +45,6 @@ public class BattleManager : MonoBehaviour
     public bool cancel_action_button_clicked = false;
 
     //enums
-    enum ActionType
-    {
-        LOOK,
-        MOVE,
-        ATTACK,
-        ITEM,
-        WAIT
-    }
-
     enum BattleState
     {
         SET,
@@ -74,9 +65,18 @@ public class BattleManager : MonoBehaviour
         WAIT,
         NONE
     }
+    enum ActionType
+    {
+        LOOK,
+        MOVE,
+        ATTACK,
+        ITEM,
+        WAIT
+    }
 
     BattleState battleState;
     CurrentSubmenu currentSubmenu;
+    ActionType[] actions_done;
 
     //other variables
     int optionIndex;
@@ -409,7 +409,10 @@ public class BattleManager : MonoBehaviour
 
 
         if (TurnManager.instance.GetUnitWithTurn().GetComponent<TacticsMove>().finished_movement)
-            EndTurn();
+        {
+            ShowBattleUI();
+            currentSubmenu = CurrentSubmenu.FIRST;
+        }
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -507,7 +510,13 @@ public class BattleManager : MonoBehaviour
     {
         HideBattleUI();
 
+        wait_selectorGO.GetComponent<WaitSelectorIndicator>().SetIndicators();
         wait_selectorGO.SetActive(true);
+        
+        if (wait_selectorGO.GetComponent<WaitSelectorIndicator>().wait_dir_completed)
+        {
+            EndTurn();
+        }
 
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -617,11 +626,19 @@ public class BattleManager : MonoBehaviour
     {
         if (TurnManager.instance.GetUnitWithTurn().GetComponent<Unit>().is_player_unit)
         {
+            optionIndex = 0;
+
             GetComponent<TargetUnitInfoManager>().SetUnit(null);
             unit_to_cast_action = null;
+
+            wait_selectorGO.SetActive(false);
+            wait_selectorGO.GetComponent<WaitSelectorIndicator>().wait_dir_completed = false;
+
             TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ResetTilesColor();
             currentSubmenu = CurrentSubmenu.FIRST;
+
             HideAccuracyBar();
+
             TurnManager.instance.EndTurn();
 
         }

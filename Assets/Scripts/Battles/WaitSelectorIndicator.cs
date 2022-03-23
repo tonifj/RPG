@@ -4,14 +4,7 @@ using UnityEngine;
 
 public class WaitSelectorIndicator : MonoBehaviour
 {
-    public enum WaitDirection
-    {
-        FRONT,
-        RIGHT,
-        BACK,
-        LEFT
-    }
-
+    public bool wait_dir_completed = false;
     GameObject[] indicators;
     void Start()
     {
@@ -26,14 +19,10 @@ public class WaitSelectorIndicator : MonoBehaviour
         pos.y += 2;
         transform.position = pos;
 
-        SetIndicators();
         CheckUnitHeading();
-
-
-
     }
 
-    void SetIndicators()
+    public void SetIndicators()
     {
         if (TurnManager.instance.GetUnitWithTurn().GetComponent<TacticsMove>().GetFacingDirection().z == 1)
         {
@@ -66,7 +55,6 @@ public class WaitSelectorIndicator : MonoBehaviour
             indicators[2].SetActive(false);
             indicators[3].SetActive(true);
         }
-
     }
 
     void CheckUnitHeading()
@@ -97,6 +85,11 @@ public class WaitSelectorIndicator : MonoBehaviour
             Vector3 dir = new Vector3(-1, 0, 0);
             dir.Normalize();
             TurnManager.instance.GetUnitWithTurn().GetComponent<TacticsMove>().SetFacingDirection(dir);
+        }
+
+        else if (Input.GetKeyDown(KeyCode.Space))
+        {
+            wait_dir_completed = true;
         }
     }
 }

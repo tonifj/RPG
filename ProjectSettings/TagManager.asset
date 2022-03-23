@@ -17,6 +17,8 @@ TagManager:
   - uinfoGO
   - confirmation button
   - cancel button
+  - wait indicator
+  - waiterGO
   layers:
   - Default
   - TransparentFX

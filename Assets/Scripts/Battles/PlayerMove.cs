@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class PlayerMove : TacticsMove
 {
-    Tile selectedTileForKeyboardMovement;
+    Tile start_tile;
 
     void Start()
     {
         Init();
+        
     }
 
     // Update is called once per frame
@@ -78,15 +79,8 @@ public class PlayerMove : TacticsMove
         }
         }
 
-    void PaintTiles() //this only paints all tiles within movement range to the color. only for aesthetics purposes
+    public void SetStartTile(Tile tile) //TODO
     {
-        
-
-       
-    }
-
-    void SelectTileKeyboard()
-    {
-
+        start_tile = tile;
     }
 }
