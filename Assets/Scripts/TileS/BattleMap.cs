@@ -100,38 +100,44 @@ public class BattleMap : MonoBehaviour
     public void AttackSkillTileSelection(GameObject origin, int range)
     {
 
-        if (range == 0)
+        if (range == 0) //only for self-targeted skills
             origin.GetComponent<Tile>().selectable = true;
 
-        else if (range == 1)
+        else
         {
-            for (int i = 0; i < Tiles.Count; ++i)
+            if (range == 1)
             {
-                if (origin.transform.position.y == Tiles[i].transform.position.y ||
-                    origin.transform.position.y + 1 == Tiles[i].transform.position.y || 
-                    origin.transform.position.y - 1 == Tiles[i].transform.position.y) //if there is a diff of 1 tile of height
+                for (int i = 0; i < Tiles.Count; ++i)
+                {
+                    if (origin.transform.position.y == Tiles[i].transform.position.y ||
+                        origin.transform.position.y + 1 == Tiles[i].transform.position.y ||
+                        origin.transform.position.y - 1 == Tiles[i].transform.position.y) //if there is a diff of 1 tile of height
+                    {
+                        if (TileDistance(origin, Tiles[i]) <= range)
+                        {
+                            Tiles[i].GetComponent<Tile>().selectable = true;
+                            Tiles[i].GetComponent<Tile>().target = false;
+                        }
+                    }
+                }
+            }
+
+            else
+            {
+                for (int i = 0; i < Tiles.Count; ++i)
                 {
                     if (TileDistance(origin, Tiles[i]) <= range)
                     {
                         Tiles[i].GetComponent<Tile>().selectable = true;
                         Tiles[i].GetComponent<Tile>().target = false;
-
                     }
                 }
             }
+
+            origin.GetComponent<Tile>().selectable = false;
         }
 
-        else
-        {
-            for (int i = 0; i < Tiles.Count; ++i)
-            {
-                if (TileDistance(origin, Tiles[i]) <= range)
-                {
-                    Tiles[i].GetComponent<Tile>().selectable = true;
-                    Tiles[i].GetComponent<Tile>().target = false;
-                }
-            }
-        }
+        
     }
 
     public void ResetTilesByRange(GameObject origin, int range)
