@@ -15,15 +15,15 @@ public class BattleManager : MonoBehaviour
     GameObject battleCameraGO;
     BattleCamera battleCamera;
 
-    public GameObject ActionSelectorGO;
+    public GameObject ActionSelectorItemGO;
     public GameObject BattleUI;
 
     public GameObject FirstMenu;
     public GameObject MoveSelectorGO;
-    public GameObject AttackSelectorGO;
-    public GameObject SkillSelectorGO;
-    public GameObject ItemSelectorGO;
+    public GameObject ActionSelectorMenuGO;
     public GameObject WaitSelectorGO;
+    public GameObject StatusSelectorGO;
+    public GameObject StatusSubmenuGO;
 
     GameObject AccuracyBarGO;
     GameObject UnitInfoGO;
@@ -59,6 +59,8 @@ public class BattleManager : MonoBehaviour
         LOOK,
         FIRST,
         MOVE,
+        ACTION,
+        STATUS,
         ATTACK,
         SKILL,
         ITEM,
@@ -71,18 +73,18 @@ public class BattleManager : MonoBehaviour
         MOVE,
         ATTACK,
         ITEM,
-        WAIT
+        ACTION,
+        WAIT,
+        STATUS
     }
 
     BattleState battleState;
     CurrentSubmenu currentSubmenu;
-    ActionType[] actions_done;
 
     //other variables
     int optionIndex;
     public int current_turn;
 
-    public List<GameObject> TurnOrder;
     public GameObject[] EnemyUnits;
     public GameObject[] PlayerUnits;
 
@@ -187,61 +189,9 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    void SetTurnOrder()
-    {
-        for (int i = 0; i < EnemyUnits.Length; ++i)
-            TurnOrder.Add(EnemyUnits[i]);
-
-        for (int i = 0; i < PlayerUnits.Length; ++i)
-        {
-            TurnOrder.Add(PlayerUnits[i]);
-        }
-
-        for (int i = 0; i < TurnOrder.Count; ++i)
-        {
-            if (i < TurnOrder.Count - 1 && TurnOrder[i].GetComponent<Unit>().GetSpeed() < TurnOrder[i + 1].GetComponent<Unit>().GetSpeed())
-            {
-                GameObject temp = TurnOrder[i];
-                TurnOrder[i] = TurnOrder[i + 1];
-
-                TurnOrder[i + 1] = temp;
-                i = 0;
-            }
-        }
-    }
-
-    public void AddUnits(List<GameObject> units)
-    {
-        for (int i = 0; i < units.Count; ++i)
-        {
-            if (units[i].GetComponent<Unit>().IsPlayerUnit())
-                units[i].GetComponent<Unit>().SetSpeed(190);
-            TurnOrder.Add(units[i]);
-        }
-    }
-
     public BattleMap GetBattleMap()
     {
         return battleMap;
-    }
-
-    void InstantiateUnits() //this has to change. Enemy units will already be on the map when loading the battle
-                            //Player units will instantiate when he choses where to place its units
-    {
-        for (int i = 0; i < TurnOrder.Count; ++i)
-        {
-
-            Vector3 new_position = new Vector3(TurnOrder[i].GetComponent<Unit>().GetPosition().x * Globals.TILE_SIZE, 1.5f, TurnOrder[i].GetComponent<Unit>().GetPosition().y * Globals.TILE_SIZE);
-            if (TurnOrder[i].GetComponent<Unit>().IsPlayerUnit())
-            {
-                TurnOrder[i] = Instantiate(PlayerUnitPrefab, new_position, Quaternion.identity);
-            }
-        }
-    }
-
-    void EnemyMovement()
-    {
-        //IA to decide where to move
     }
 
     void EnemyAction()
@@ -261,7 +211,7 @@ public class BattleManager : MonoBehaviour
         optionIndex = 0;
 
         //set all other submenus to false
-        ActionSelectorGO.transform.position = MoveSelectorGO.transform.position;
+        ActionSelectorItemGO.transform.position = MoveSelectorGO.transform.position;
     }
 
     void HandleSubmenus()
@@ -288,6 +238,12 @@ public class BattleManager : MonoBehaviour
                 }
                 break;
 
+            case CurrentSubmenu.ACTION:
+                {
+                    CommandMove();
+                }
+                break;
+
             case CurrentSubmenu.ATTACK:
                 {
                     AttackAction();
@@ -303,6 +259,13 @@ public class BattleManager : MonoBehaviour
                     ItemAction();
                 }
                 break;
+
+            case CurrentSubmenu.STATUS:
+                {
+                    CommandMove();
+                }
+                break;
+
             case CurrentSubmenu.WAIT:
                 {
                     WaitAction();
@@ -314,7 +277,7 @@ public class BattleManager : MonoBehaviour
     void FirstMenuNav()
     {
         ShowBattleUI();
-
+        Debug.Log(optionIndex);
         if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow)) //so it doesn't iterate all the time inside this
         {
             if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -322,7 +285,7 @@ public class BattleManager : MonoBehaviour
                 if (optionIndex != 0)
                     --optionIndex;
                 else
-                    optionIndex = 4;
+                    optionIndex = 3;
             }
 
             if (Input.GetKeyDown(KeyCode.DownArrow))
@@ -344,7 +307,7 @@ public class BattleManager : MonoBehaviour
         {
             case 0:
                 {
-                    ActionSelectorGO.transform.position = MoveSelectorGO.transform.position;
+                    ActionSelectorItemGO.transform.position = MoveSelectorGO.transform.position;
                     if (Input.GetKeyDown(KeyCode.Space))
                     {
                         currentSubmenu = CurrentSubmenu.MOVE;
@@ -354,47 +317,37 @@ public class BattleManager : MonoBehaviour
 
             case 1:
                 {
-                    ActionSelectorGO.transform.position = AttackSelectorGO.transform.position;
+                    ActionSelectorItemGO.transform.position = ActionSelectorMenuGO.transform.position;
                     if (Input.GetKeyDown(KeyCode.Space))
                     {
-                        currentSubmenu = CurrentSubmenu.ATTACK;
+                        currentSubmenu = CurrentSubmenu.ACTION;
                     }
                 }
                 break;
 
             case 2:
                 {
-                    ActionSelectorGO.transform.position = SkillSelectorGO.transform.position;
+                    ActionSelectorItemGO.transform.position = WaitSelectorGO.transform.position;
                     if (Input.GetKeyDown(KeyCode.Space))
                     {
-                        currentSubmenu = CurrentSubmenu.SKILL;
-                    }
+                        currentSubmenu = CurrentSubmenu.WAIT;
+                    }                   
                 }
                 break;
 
             case 3:
                 {
-                    ActionSelectorGO.transform.position = ItemSelectorGO.transform.position;
+                    ActionSelectorItemGO.transform.position = StatusSelectorGO.transform.position;
                     if (Input.GetKeyDown(KeyCode.Space))
                     {
-                        currentSubmenu = CurrentSubmenu.ITEM;
-                    }
-                }
-                break;
-
-            case 4:
-                {
-                    ActionSelectorGO.transform.position = WaitSelectorGO.transform.position;
-                    if (Input.GetKeyDown(KeyCode.Space))
-                    {
-                        currentSubmenu = CurrentSubmenu.WAIT;
+                        currentSubmenu = CurrentSubmenu.STATUS;
                     }
                 }
                 break;
 
             default: //in case there is some error
                 {
-                    ActionSelectorGO.transform.position = MoveSelectorGO.transform.position;
+                    ActionSelectorItemGO.transform.position = MoveSelectorGO.transform.position;
                     optionIndex = 0;
                 }
                 break;
@@ -437,8 +390,6 @@ public class BattleManager : MonoBehaviour
         HideBattleUI();
 
         MouseTileSelection(ActionType.ATTACK);
-
-
     }
 
     void SkillAction()

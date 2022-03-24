@@ -12,6 +12,12 @@ public class TurnManager : MonoBehaviour
 
     [SerializeField]
     string current_unit;
+    public enum UnitAction
+    {
+        MOVE,
+        ACTION
+    }
+    UnitAction[] actions_done;
 
     public static TurnManager instance { get; private set; } //free to read, but settable only from here
 
@@ -35,7 +41,7 @@ public class TurnManager : MonoBehaviour
         enemyUnits = GameObject.FindGameObjectsWithTag("enemy unit");
         playerUnits = GameObject.FindGameObjectsWithTag("player unit"); //for the moment. the objective is to make the player place the units in a small area
 
-        //InitTurnQueue();
+        actions_done = new UnitAction[2];
 
     }
 
@@ -127,6 +133,16 @@ public class TurnManager : MonoBehaviour
         }
 
         return null;
+    }
+
+    public void AddAction(UnitAction actionType)
+    {
+        actions_done[0] = actionType;
+    }
+
+    public UnitAction[] GetActionsDone()
+    {
+        return actions_done;
     }
 }
 
