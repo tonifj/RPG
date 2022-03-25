@@ -63,11 +63,11 @@ public class Globals : MonoBehaviour
     {
         float angle = Vector3.Dot(u1.GetFacingDirection(), u2.GetFacingDirection());
 
-        if (angle == 0)
+        if (angle == -1)
             return RelativePosition.FRONT;
-        else if (angle == 90)
-            return RelativePosition.SIDE;
-        else
+        else if (angle == 1)
             return RelativePosition.REAR;
+        else
+            return RelativePosition.SIDE;
     }
 }
