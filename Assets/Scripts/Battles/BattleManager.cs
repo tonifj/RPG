@@ -16,14 +16,17 @@ public class BattleManager : MonoBehaviour
     BattleCamera battleCamera;
 
     public GameObject ActionSelectorItemGO;
-    public GameObject BattleUI;
+    public GameObject FirstMenuUI;
+    public GameObject ActionUI;
 
-    public GameObject FirstMenu;
     public GameObject MoveSelectorGO;
     public GameObject ActionSelectorMenuGO;
     public GameObject WaitSelectorGO;
     public GameObject StatusSelectorGO;
-    public GameObject StatusSubmenuGO;
+
+    public GameObject AttackSelectorGO;
+    public GameObject SkillSelectorGO;
+    public GameObject ItemSelectorGO;
 
     GameObject AccuracyBarGO;
     GameObject UnitInfoGO;
@@ -181,7 +184,8 @@ public class BattleManager : MonoBehaviour
 
                     else
                     {
-                        HideBattleUI();
+                        HideFirstMenu();
+                        HideActionMenu();
                         EnemyCommandMove();
                     }
                 }
@@ -202,23 +206,8 @@ public class BattleManager : MonoBehaviour
         //Wait
     }
 
-    void ResetActionMenu()
-    {
-
-        ShowBattleUI();
-        ShowFirstMenu();
-        currentSubmenu = CurrentSubmenu.FIRST;
-        optionIndex = 0;
-
-        //set all other submenus to false
-        ActionSelectorItemGO.transform.position = MoveSelectorGO.transform.position;
-    }
-
     void HandleSubmenus()
     {
-        // if (BattleUI.activeSelf == false)
-        //ShowBattleUI();
-
         switch (currentSubmenu)
         {
             case CurrentSubmenu.LOOK:
@@ -240,7 +229,7 @@ public class BattleManager : MonoBehaviour
 
             case CurrentSubmenu.ACTION:
                 {
-                    CommandMove();
+                    ActionMenuNav();
                 }
                 break;
 
@@ -276,8 +265,8 @@ public class BattleManager : MonoBehaviour
 
     void FirstMenuNav()
     {
-        ShowBattleUI();
-        Debug.Log(optionIndex);
+        ShowActionSelector();
+        ShowFirstMenu();
         if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow)) //so it doesn't iterate all the time inside this
         {
             if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -299,7 +288,7 @@ public class BattleManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            HideBattleUI();
+            HideFirstMenu();
             currentSubmenu = CurrentSubmenu.LOOK;
         }
 
@@ -321,6 +310,7 @@ public class BattleManager : MonoBehaviour
                     if (Input.GetKeyDown(KeyCode.Space))
                     {
                         currentSubmenu = CurrentSubmenu.ACTION;
+                        optionIndex = 0;
                     }
                 }
                 break;
@@ -353,24 +343,100 @@ public class BattleManager : MonoBehaviour
                 break;
         }
     }
+    void ActionMenuNav()
+    {
+        HideFirstMenu();
+        ShowActionSelector();
+        ShowActionMenu();
+        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow)) //so it doesn't iterate all the time inside this
+        {
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                if (optionIndex != 0)
+                    --optionIndex;
+                else
+                    optionIndex = 2;
+            }
 
+            if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                if (optionIndex != 3)
+                    ++optionIndex;
+                else
+                    optionIndex = 0;
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            HideActionSelector();
+            HideActionMenu();
+            currentSubmenu = CurrentSubmenu.FIRST;
+        }
+
+        switch (optionIndex)
+        {
+            case 0:
+                {
+                    ActionSelectorItemGO.transform.position = AttackSelectorGO.transform.position;
+                    if (Input.GetKeyDown(KeyCode.Space))
+                    {
+                        HideActionSelector();
+                        currentSubmenu = CurrentSubmenu.ATTACK;
+                    }
+                }
+                break;
+
+            case 1:
+                {
+                    ActionSelectorItemGO.transform.position = SkillSelectorGO.transform.position;
+                    if (Input.GetKeyDown(KeyCode.Space))
+                    {
+
+                        currentSubmenu = CurrentSubmenu.SKILL;
+                        
+                    }
+                }
+                break;
+
+            case 2:
+                {
+                    ActionSelectorItemGO.transform.position = ItemSelectorGO.transform.position;
+                    if (Input.GetKeyDown(KeyCode.Space))
+                    {
+                        HideActionSelector();
+                        currentSubmenu = CurrentSubmenu.ITEM;
+                    }
+                }
+                break;
+
+            default: //in case there is some error
+                {
+                    ActionSelectorItemGO.transform.position = AttackSelectorGO.transform.position;
+                    optionIndex = 0;
+                }
+                break;
+        }
+    }
 
     void CommandMove()
     {
-        HideBattleUI();
+        HideActionSelector();
+        HideFirstMenu();
         MouseTileSelection(ActionType.MOVE);
-
 
         if (TurnManager.instance.GetUnitWithTurn().GetComponent<TacticsMove>().finished_movement)
         {
-            ShowBattleUI();
+            ShowFirstMenu();
+            ShowActionSelector();
             currentSubmenu = CurrentSubmenu.FIRST;
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ResetTilesColor();
-            ShowBattleUI();
+            ShowFirstMenu();
+            ShowActionSelector();
             currentSubmenu = CurrentSubmenu.FIRST;
 
         }
@@ -378,7 +444,6 @@ public class BattleManager : MonoBehaviour
 
     void EnemyCommandMove()
     {
-
         TurnManager.instance.GetUnitWithTurn().GetComponent<NPCMove>().ActionMovement();
 
         if (TurnManager.instance.GetUnitWithTurn() != null && TurnManager.instance.GetUnitWithTurn().GetComponent<NPCMove>().finished_movement)
@@ -387,14 +452,13 @@ public class BattleManager : MonoBehaviour
 
     void AttackAction()
     {
-        HideBattleUI();
-
+        HideActionMenu();
         MouseTileSelection(ActionType.ATTACK);
     }
 
     void SkillAction()
     {
-        BattleUI.SetActive(false);
+        FirstMenuUI.SetActive(false);
 
         if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow) ||
             Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow)) //so it doesn't iterate all the time inside this
@@ -412,13 +476,12 @@ public class BattleManager : MonoBehaviour
 
     void ItemAction()
     {
-        HideFirstMenu();
+        HideActionMenu();
         ShowItemMenu();
-
 
         if (consumible_to_be_used != null)
         {
-            HideBattleUI();
+            HideActionMenu();
             SetTargetTilesForItemUsage();
             MouseTileSelection(ActionType.ITEM);
             HideUnitInfo();
@@ -428,7 +491,7 @@ public class BattleManager : MonoBehaviour
                 ShowUnitInfo();
                 HideAccuracyBar();
                 HideHelpPanel();
-                ShowBattleUI();
+                ShowActionMenu();
                 ResetItemUsageTiles();
                 consumible_to_be_used = null;
             }
@@ -438,9 +501,9 @@ public class BattleManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                ShowFirstMenu();
+                ShowActionMenu();
                 HideItemMenu();
-                currentSubmenu = CurrentSubmenu.FIRST;
+                currentSubmenu = CurrentSubmenu.ACTION;
             }
         }
     }
@@ -454,13 +517,12 @@ public class BattleManager : MonoBehaviour
     {
         ItemMenu.SetActive(false);
         HideHelpPanel();
-
     }
 
     void WaitAction()
     {
-        HideBattleUI();
-
+        HideFirstMenu();
+        HideActionSelector();
         wait_selectorGO.GetComponent<WaitSelectorIndicator>().SetIndicators();
         wait_selectorGO.SetActive(true);
         
@@ -473,7 +535,8 @@ public class BattleManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             wait_selectorGO.SetActive(false);
-            ShowBattleUI();
+            ShowFirstMenu();
+            ShowActionSelector();
             currentSubmenu = CurrentSubmenu.FIRST;
         }
     }
@@ -488,6 +551,7 @@ public class BattleManager : MonoBehaviour
         {
             case ActionType.LOOK:
                 {
+                    HideActionSelector();
                     TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ResetTilesColor();
 
                     Tile t;
@@ -520,6 +584,7 @@ public class BattleManager : MonoBehaviour
 
                     if (Input.GetKeyDown(KeyCode.Escape))
                     {
+
                         TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ResetTilesColor();
                         currentSubmenu = CurrentSubmenu.FIRST;
                         GetComponent<TargetUnitInfoManager>().SetUnit(null);
@@ -530,12 +595,14 @@ public class BattleManager : MonoBehaviour
 
             case ActionType.MOVE:
                 {
+                    HideActionSelector();
                     TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ActionMovement();
                     break;
                 }
 
             case ActionType.ITEM:
                 {
+                    HideActionSelector();
                     SelectTileItem();
                     break;
                 }
@@ -548,24 +615,24 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    void HideBattleUI()
+    void ShowActionMenu()
     {
-        BattleUI.SetActive(false);
+        ActionUI.SetActive(true);
     }
 
-    void ShowBattleUI()
+    void HideActionMenu()
     {
-        BattleUI.SetActive(true);
+        ActionUI.SetActive(false);
     }
 
     void HideFirstMenu()
     {
-        FirstMenu.SetActive(false);
+        FirstMenuUI.SetActive(false);
     }
 
     void ShowFirstMenu()
     {
-        FirstMenu.SetActive(true);
+        FirstMenuUI.SetActive(true);
     }
 
     void PlayerTurn()
@@ -706,7 +773,6 @@ public class BattleManager : MonoBehaviour
             }
         }
 
-
         else
         {
             ShowUnitInfoAndAccBar(100); //because items have 100% accuracy
@@ -729,15 +795,25 @@ public class BattleManager : MonoBehaviour
                 HideAccuracyBar();
                 HideItemMenu();
                 HideButtons();
-                ShowFirstMenu();
+                ShowActionMenu();
                 TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ResetTilesColor();
                 consumible_to_be_used = null;
                 unit_to_cast_action = null;
                 GetComponent<TargetUnitInfoManager>().SetUnit(null);
                 cancel_action_button_clicked = false;
-                currentSubmenu = CurrentSubmenu.FIRST;
+                currentSubmenu = CurrentSubmenu.ACTION;
             }
         }
+    }
+
+    void HideActionSelector()
+    {
+        ActionSelectorItemGO.SetActive(false);
+    }
+
+    void ShowActionSelector()
+    {
+        ActionSelectorItemGO.SetActive(true);
     }
 
     void ApplyItemEffects(Unit target)
@@ -858,8 +934,8 @@ public class BattleManager : MonoBehaviour
                 GetComponent<TargetUnitInfoManager>().SetUnit(null);
                 HideAccuracyBar();
                 HideHelpPanel();
-                ShowBattleUI();
-                currentSubmenu = CurrentSubmenu.FIRST;
+                ShowActionMenu();
+                currentSubmenu = CurrentSubmenu.ACTION;
 
             }
         }
@@ -899,13 +975,8 @@ public class BattleManager : MonoBehaviour
 
                 HideAccuracyBar();
                 HideButtons();
-                //ShowFirstMenu();
-                //TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ResetTilesColor();
-                //currentSubmenu = CurrentSubmenu.FIRST;
             }
-        }
-
-        
+        }      
     }
 
     int ComputeAttackAccuracy()
