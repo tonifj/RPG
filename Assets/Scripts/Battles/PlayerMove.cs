@@ -55,7 +55,10 @@ public class PlayerMove : TacticsMove
                         t.target = true;
 
                         if (!t.IsSomethingOnTile())
+                        {
                             MoveToTile(t);
+                            previous_position = GetCurrenntTile().transform.position;
+                        }
 
                         else
                         {

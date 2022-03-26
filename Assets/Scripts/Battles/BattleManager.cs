@@ -321,8 +321,19 @@ public class BattleManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            HideFirstMenu();
-            currentSubmenu = CurrentSubmenu.LOOK;
+            if(TurnManager.instance.movement_available && TurnManager.instance.action_available)
+            {
+                HideFirstMenu();
+                currentSubmenu = CurrentSubmenu.LOOK;
+            }
+
+            else if(!TurnManager.instance.movement_available)
+            {
+                TurnManager.instance.movement_available = true;
+                optionIndex = 0;
+                TurnManager.instance.GetUnitWithTurn().GetComponent<TacticsMove>().GoToPreviousPos();
+            }
+           
         }
 
         switch (optionIndex)

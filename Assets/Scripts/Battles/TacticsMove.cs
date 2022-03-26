@@ -41,6 +41,8 @@ public class TacticsMove : MonoBehaviour
 
     public Tile actualTargetTile;
 
+    protected Vector3 previous_position;
+
     protected void Init()
     {
         tiles = GameObject.FindGameObjectsWithTag("tile");
@@ -448,6 +450,11 @@ public class TacticsMove : MonoBehaviour
     public void SetFacingDirection(Vector3 dir)
     {
         heading = dir;
+    }
+
+    public void GoToPreviousPos()
+    {
+        gameObject.transform.position = new Vector3(previous_position.x, previous_position.y+1.5f, previous_position.z) ;
     }
 
 }
