@@ -458,14 +458,19 @@ public class BattleManager : MonoBehaviour
 
         if (TurnManager.instance.GetUnitWithTurn().GetComponent<TacticsMove>().finished_movement)
         {
-            ShowFirstMenu();
-            ShowActionSelector();
-            currentSubmenu = CurrentSubmenu.FIRST;
+
 
             if (TurnManager.instance.action_available)
+            {
+                ShowFirstMenu();
+                ShowActionSelector();
+                currentSubmenu = CurrentSubmenu.FIRST;
                 optionIndex = 1;
 
-            //else force to wait
+            }
+
+            else
+                currentSubmenu = CurrentSubmenu.WAIT;
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -818,12 +823,20 @@ public class BattleManager : MonoBehaviour
                 ApplyItemEffects(unit_to_cast_action);
                 player.RemoveConsumible(consumible_to_be_used);
                 HideItemMenu();
-                ShowFirstMenu();
                 consumible_to_be_used = null;
                 HideButtons();
                 confirmation_button_clicked = false;
                 TurnManager.instance.action_available = false;
-                EndTurn();
+
+                if (TurnManager.instance.movement_available)
+                {
+                    TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ResetTilesColor();
+                    ShowFirstMenu();
+                    optionIndex = 0;
+                }
+
+                else
+                    currentSubmenu = CurrentSubmenu.WAIT;
             }
 
             else if (cancel_action_button_clicked)
@@ -996,11 +1009,25 @@ public class BattleManager : MonoBehaviour
                 {
                     Debug.Log("MISS");
                 }
-                TurnManager.instance.action_available = false;
-                ShowFirstMenu();
-                HideButtons();
+
+                TurnManager.instance.action_available = false;      
                 confirmation_button_clicked = false;
-                EndTurn();
+                unit_to_cast_action = null;
+                GetComponent<TargetUnitInfoManager>().SetUnit(null);
+                HideButtons();
+                HideAccuracyBar();
+                TurnManager.instance.GetUnitWithTurn().GetComponent<PlayerMove>().ResetTilesColor();
+
+                if (TurnManager.instance.movement_available)
+                {
+                    ShowFirstMenu();
+                    currentSubmenu = CurrentSubmenu.FIRST;
+                    optionIndex = 0;
+                }
+                else
+                {
+                    currentSubmenu = CurrentSubmenu.WAIT;
+                }
             }
 
             else if (cancel_action_button_clicked || Input.GetKeyDown(KeyCode.Escape))
