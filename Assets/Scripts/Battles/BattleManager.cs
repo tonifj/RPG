@@ -461,6 +461,11 @@ public class BattleManager : MonoBehaviour
             ShowFirstMenu();
             ShowActionSelector();
             currentSubmenu = CurrentSubmenu.FIRST;
+
+            if (TurnManager.instance.action_available)
+                optionIndex = 1;
+
+            //else force to wait
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
