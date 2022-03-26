@@ -267,24 +267,57 @@ public class BattleManager : MonoBehaviour
     {
         ShowActionSelector();
         ShowFirstMenu();
-        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow)) //so it doesn't iterate all the time inside this
-        {
-            if (Input.GetKeyDown(KeyCode.UpArrow))
-            {
-                if (optionIndex != 0)
-                    --optionIndex;
-                else
-                    optionIndex = 3;
-            }
 
-            if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            if (optionIndex != 0)
+                --optionIndex;
+            else
+                optionIndex = 3;
+
+            switch (optionIndex)
             {
-                if (optionIndex != 4)
-                    ++optionIndex;
-                else
-                    optionIndex = 0;
+                case 0:
+                    {
+                        if (!TurnManager.instance.movement_available)
+                            optionIndex = 3;
+                        break;
+                    }
+
+                case 1:
+                    {
+                        if (!TurnManager.instance.action_available)
+                            optionIndex = 0;
+                        break;
+                    }
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            if (optionIndex != 4)
+                ++optionIndex;
+            else
+                optionIndex = 0;
+
+            switch (optionIndex)
+            {
+                case 4:
+                    {
+                        if (!TurnManager.instance.movement_available)
+                            optionIndex = 1;
+                        break;
+                    }
+
+                case 1:
+                    {
+                        if (!TurnManager.instance.action_available)
+                            optionIndex = 2;
+                        break;
+                    }
+            }
+        }
+
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -321,7 +354,7 @@ public class BattleManager : MonoBehaviour
                     if (Input.GetKeyDown(KeyCode.Space))
                     {
                         currentSubmenu = CurrentSubmenu.WAIT;
-                    }                   
+                    }
                 }
                 break;
 
@@ -355,7 +388,7 @@ public class BattleManager : MonoBehaviour
                 if (optionIndex != 0)
                     --optionIndex;
                 else
-                    optionIndex = 2;
+                    optionIndex = 3;
             }
 
             if (Input.GetKeyDown(KeyCode.DownArrow))
@@ -392,9 +425,7 @@ public class BattleManager : MonoBehaviour
                     ActionSelectorItemGO.transform.position = SkillSelectorGO.transform.position;
                     if (Input.GetKeyDown(KeyCode.Space))
                     {
-
                         currentSubmenu = CurrentSubmenu.SKILL;
-                        
                     }
                 }
                 break;
@@ -525,7 +556,7 @@ public class BattleManager : MonoBehaviour
         HideActionSelector();
         wait_selectorGO.GetComponent<WaitSelectorIndicator>().SetIndicators();
         wait_selectorGO.SetActive(true);
-        
+
         if (wait_selectorGO.GetComponent<WaitSelectorIndicator>().wait_dir_completed)
         {
             EndTurn();
@@ -786,7 +817,7 @@ public class BattleManager : MonoBehaviour
                 consumible_to_be_used = null;
                 HideButtons();
                 confirmation_button_clicked = false;
-
+                TurnManager.instance.action_available = false;
                 EndTurn();
             }
 
@@ -910,13 +941,13 @@ public class BattleManager : MonoBehaviour
                             {
                                 unit_to_cast_action = t.GetUnitOnTop();
                             }
-                        }                  
+                        }
                     }
                     else
                     {
                         GetComponent<TargetUnitInfoManager>().SetUnit(null);
                     }
-                }     
+                }
             }
 
             if (Input.GetKeyDown(KeyCode.Escape))
@@ -951,16 +982,16 @@ public class BattleManager : MonoBehaviour
                 int random_num = Random.Range(0, 100);
                 Debug.Log("Acc: " + ComputeAttackAccuracy().ToString());
                 Debug.Log("RGN: " + random_num.ToString());
-                if(random_num <= ComputeAttackAccuracy())
+                if (random_num <= ComputeAttackAccuracy())
                 {
-                    unit_to_cast_action.ReceivePhyDamage(TurnManager.instance.GetUnitWithTurn().GetComponent<Unit>().GetPhyAttack()); 
+                    unit_to_cast_action.ReceivePhyDamage(TurnManager.instance.GetUnitWithTurn().GetComponent<Unit>().GetPhyAttack());
                 }
 
                 else
                 {
                     Debug.Log("MISS");
                 }
-
+                TurnManager.instance.action_available = false;
                 ShowFirstMenu();
                 HideButtons();
                 confirmation_button_clicked = false;
@@ -976,7 +1007,7 @@ public class BattleManager : MonoBehaviour
                 HideAccuracyBar();
                 HideButtons();
             }
-        }      
+        }
     }
 
     int ComputeAttackAccuracy()
@@ -986,7 +1017,7 @@ public class BattleManager : MonoBehaviour
         //check if target is alive
         if (unit_to_cast_action.GetStatus() != Unit.unit_status.DEAD)
         {
-            switch(Globals.GetRelativePosition(TurnManager.instance.GetUnitWithTurn().GetComponent<TacticsMove>(), unit_to_cast_action.gameObject.GetComponent<TacticsMove>()))
+            switch (Globals.GetRelativePosition(TurnManager.instance.GetUnitWithTurn().GetComponent<TacticsMove>(), unit_to_cast_action.gameObject.GetComponent<TacticsMove>()))
             {
                 case Globals.RelativePosition.FRONT:
                     {
@@ -996,13 +1027,13 @@ public class BattleManager : MonoBehaviour
 
                 case Globals.RelativePosition.SIDE:
                     {
-                        accuracy -= unit_to_cast_action.GetEvasion()/2;
+                        accuracy -= unit_to_cast_action.GetEvasion() / 2;
                         break;
                     }
 
                 case Globals.RelativePosition.REAR:
                     {
-                        accuracy -= unit_to_cast_action.GetEvasion()/4;
+                        accuracy -= unit_to_cast_action.GetEvasion() / 4;
                         break;
                     }
             }

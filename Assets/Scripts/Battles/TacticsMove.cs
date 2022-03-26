@@ -172,6 +172,7 @@ public class TacticsMove : MonoBehaviour
             RemoveSelectableTiles();
             moving = false;
             finished_movement = true;
+            TurnManager.instance.movement_available = false;
         }
     }
 
