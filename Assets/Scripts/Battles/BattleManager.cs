@@ -575,10 +575,20 @@ public class BattleManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            wait_selectorGO.SetActive(false);
-            ShowFirstMenu();
-            ShowActionSelector();
-            currentSubmenu = CurrentSubmenu.FIRST;
+            if ((TurnManager.instance.action_available && !TurnManager.instance.movement_available) ||
+              (!TurnManager.instance.action_available && TurnManager.instance.movement_available))
+            {
+                wait_selectorGO.SetActive(false);
+                ShowFirstMenu();
+                ShowActionSelector();
+                currentSubmenu = CurrentSubmenu.FIRST;
+            }
+
+            else
+            {
+                //todo: play sound
+
+            }
         }
     }
 
@@ -1010,7 +1020,7 @@ public class BattleManager : MonoBehaviour
                     Debug.Log("MISS");
                 }
 
-                TurnManager.instance.action_available = false;      
+                TurnManager.instance.action_available = false;
                 confirmation_button_clicked = false;
                 unit_to_cast_action = null;
                 GetComponent<TargetUnitInfoManager>().SetUnit(null);
